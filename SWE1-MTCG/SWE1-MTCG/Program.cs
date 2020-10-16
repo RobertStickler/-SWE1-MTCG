@@ -1,4 +1,5 @@
 ﻿using System;
+using Cards;
 
 namespace SWE1_MTCG
 {
@@ -7,6 +8,13 @@ namespace SWE1_MTCG
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+
+
+
+            //BaseCards dragon = new BaseCards();
         }
     }
+
+    
+    
 }

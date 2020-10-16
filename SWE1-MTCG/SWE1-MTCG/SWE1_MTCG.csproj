@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>SWE1_MTCG</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Cards\Monster\" />
+    <Folder Include="Cards\Zauber\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SWE1_MTCG.Tests1\SWE1_MTCG.Tests1.csproj" />
+  </ItemGroup>
+
+</Project>
