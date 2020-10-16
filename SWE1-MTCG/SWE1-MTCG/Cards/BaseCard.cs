@@ -5,7 +5,7 @@ using Enum;
 
 namespace Cards
 {
-	public class BaseCards
+	public abstract class BaseCards
 	{
 		protected elementTypes element_type;
 		protected cardTypes card_type;
@@ -18,6 +18,10 @@ namespace Cards
 		public int getCardDamage()
 		{
 			return card_damage;
+		}
+		public string getCardName()
+		{
+			return card_name;
 		}
 	}
 }

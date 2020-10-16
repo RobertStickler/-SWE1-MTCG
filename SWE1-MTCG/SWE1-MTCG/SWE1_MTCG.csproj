@@ -10,8 +10,4 @@
     <PackageReference Include="Bogus" Version="31.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SWE1_MTCG.Tests1\SWE1_MTCG.Tests1.csproj" />
-  </ItemGroup>
-
 </Project>

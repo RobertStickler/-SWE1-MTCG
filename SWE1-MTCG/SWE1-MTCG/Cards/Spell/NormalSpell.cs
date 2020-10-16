@@ -6,7 +6,7 @@ using Enum;
 
 namespace SWE1_MTCG.Cards.Zauber
 {
-    class NormalSpell : BaseCards
+    public class NormalSpell : BaseCards
     {
         public NormalSpell()
         {

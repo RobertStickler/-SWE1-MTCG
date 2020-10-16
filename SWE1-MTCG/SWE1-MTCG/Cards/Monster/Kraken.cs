@@ -6,13 +6,16 @@ using Enum;
 
 namespace SWE1_MTCG.Cards.Monster
 {
-    class Kraken : BaseCards
+    public class Kraken : BaseCards
     {
-        public Kraken(/*element type*/)
+        public Kraken (int demage, string name)
         {
             this.card_type = cardTypes.Monster;
             this.element_type = elementTypes.Water;
             this.card_property = cardProperty.Kraken;
+
+            this.card_damage = demage;
+            this.card_name = name;
         }
     }
 }

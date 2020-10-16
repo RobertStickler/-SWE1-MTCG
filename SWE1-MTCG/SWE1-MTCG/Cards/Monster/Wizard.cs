@@ -6,13 +6,16 @@ using Enum;
 
 namespace SWE1_MTCG.Cards.Monster
 {
-    class Wizard : BaseCards
+    public class Wizard : BaseCards
     {
-        public Wizard(/*element type*/)
+        public Wizard(int demage, string name)
         {
             this.card_type = cardTypes.Monster;
             this.element_type = elementTypes.Normal;
             this.card_property = cardProperty.Wizard;
+
+            this.card_damage = demage;
+            this.card_name = name;
         }
     }
 }

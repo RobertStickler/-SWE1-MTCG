@@ -6,13 +6,16 @@ using Enum;
 
 namespace SWE1_MTCG.Cards.Monster
 {
-    class Goblin : BaseCards
+    public class Goblin : BaseCards
     {
-        public Goblin(/*element type*/)
+        public Goblin(int demage, string name)
         {
             this.card_type = cardTypes.Monster;
             this.element_type = elementTypes.Fire;
             this.card_property = cardProperty.Goblin;
+
+            this.card_damage = demage;
+            this.card_name = name;
         }
     }
 }

@@ -8,13 +8,16 @@ using System.Text;
 
 namespace SWE1_MTCG.Cards.Monster
 {
-    class Dragon : BaseCards
+    public class Dragon : BaseCards
     {
-        public Dragon(/*element type*/)
+        public Dragon(int demage, string name)
         {
             this.card_type = cardTypes.Monster;
             this.element_type = elementTypes.Water;
             this.card_property = cardProperty.Dragon;
+
+            this.card_damage = demage;
+            this.card_name = name;
         }
     }
 }
