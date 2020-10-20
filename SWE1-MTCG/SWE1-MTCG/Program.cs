@@ -1,5 +1,7 @@
 ﻿using System;
 using Cards;
+using Enum;
+using SWE1_MTCG.Cards.Monster;
 
 namespace SWE1_MTCG
 {
@@ -9,9 +11,7 @@ namespace SWE1_MTCG
         {
             Console.WriteLine("Hello World!");
 
-
-
-            //BaseCards dragon = new BaseCards();
+            Dragon _dragon = new Dragon(25, "Ancalagon");
         }
     }
 

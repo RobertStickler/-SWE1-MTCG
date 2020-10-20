@@ -14,6 +14,7 @@ namespace SWE1_MTCG.Cards.Monster
             this.element_type = elementTypes.Fire;
             this.card_property = cardProperty.Goblin;
 
+
             this.card_damage = demage;
             this.card_name = name;
         }
