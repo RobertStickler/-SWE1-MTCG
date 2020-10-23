@@ -12,7 +12,7 @@ class MyTcpListener
         try
         {
             // Set the TcpListener on port 13000.
-            Int32 port = 13000;
+            Int32 port = 6543;
             IPAddress localAddr = IPAddress.Parse("127.0.0.1");
 
             // TcpListener server = new TcpListener(port);
@@ -26,7 +26,7 @@ class MyTcpListener
             String data = null;
 
             // Enter the listening loop.
-            while (true)
+            do
             {
                 Console.Write("Waiting for a connection... ");
 
@@ -61,7 +61,10 @@ class MyTcpListener
 
                 // Shutdown and end connection
                 client.Close();
+
+                Console.WriteLine("Press \"y\" to continue");
             }
+            while ((Console.ReadLine().ToUpper() == "Y"));
         }
         catch (SocketException e)
         {
