@@ -58,7 +58,14 @@ class MyTcpListener
 
                     RequestContext request = TCPClass.GetRequest(data);
 
+                    //generelle eingabe überprüfen
+                    if ((TCPClass.GetPath ( request.path) != "messages"))
+                    {
+                        Console.WriteLine("Wrong Path");
+                        break;
+                    }
 
+                    //if um die einzelnen Bedingungen abzufragen
                     if (request.method == "GET")
                     {
                         if (request.path == "/messages")
@@ -78,13 +85,14 @@ class MyTcpListener
                         //add message
                         if (request.path == "/messages")
                         {
-                            request = TCPClass.AddMessage(request);
-                            int index = TCPClass.IndexFinder(Liste);
-                            Liste.Insert(index, request);
+                            request = TCPClass.AddMessage(request); //erstellt die uid
+                            int index = TCPClass.IndexFinder(Liste); //findet einen freien platz
+                            Liste.Insert(index, request); //fügt die message hinzu
+                            Console.WriteLine("message added");
                         }
                         else
                         {
-                            Console.WriteLine("Wrong path");
+                            Console.WriteLine("/messages as path expected");
                         }
                     }
                     else if (request.method == "PUT")
@@ -92,12 +100,12 @@ class MyTcpListener
                         //update the message
                         if (request.path != "/messages")
                         {                            
-                            int number = TCPClass.GetNumber(request.path);
-                            TCPClass.UpdateMessage(request.message, Liste, number);
+                            int number = TCPClass.GetNumber(request.path); //sucht die nummer aus dem Path
+                            TCPClass.UpdateMessage(request.message, Liste, number); //ändert die message an der stelle number
                         }
                         else
                         {
-                            Console.WriteLine("Wrong message number");
+                            Console.WriteLine("/messages/ + number expected");
                         }
 
                     }
@@ -105,13 +113,13 @@ class MyTcpListener
                     {
                         if (request.path != "/messages")
                         {
-                            Console.WriteLine("you are in delete");
-                            int number = TCPClass.GetNumber(request.path);
-                            TCPClass.DeleteMessage(Liste, number);
+                            int number = TCPClass.GetNumber(request.path); //nummer suchen
+                            TCPClass.DeleteMessage(Liste, number); //eig wird nur die uid an der stelle auf 0 gesetzt
+                            Console.WriteLine("message {0} deleted", number);
                         }
                         else
                         {
-                            Console.WriteLine("Wrong message number");
+                            Console.WriteLine("/messages/ + number expected");
                         }
                     }
                     else
@@ -119,13 +127,9 @@ class MyTcpListener
                         tcpClass.PrintUsage();
                     }
                     //Console.WriteLine(request.message);
-
                 }
-
                 // Shutdown and end connection
                 client.Close();
-
-                //Console.WriteLine("Press \"y\" to continue");
             }
             while (true);
             //while ((Console.ReadLine().ToUpper() == "Y")) ;
@@ -139,9 +143,7 @@ class MyTcpListener
             // Stop listening for new clients.
             server.Stop();
         }
-
         Console.WriteLine("\nHit enter to continue...");
         Console.Read();
-    }
-    
+    }    
 }
