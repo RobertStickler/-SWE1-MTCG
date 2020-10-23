@@ -40,18 +40,21 @@ namespace SWE1_MTCG
         }
 
 
-        public static void Get1Messages(List<RequestContext> Liste)
+        public static void GetAllMessages(List<RequestContext> Liste)
         {
+            int number = 0;
             foreach (RequestContext aPart in Liste)
             {
-                Console.WriteLine(aPart.unique_id);
-                Console.WriteLine(aPart.message);
+                if (aPart.unique_id == "0")
+                    continue;
+                Console.WriteLine("\n{0} uid: {1} \nmessage: {2}", number, aPart.unique_id, aPart.message);               
+                number++; ;
             }
         }
 
-        public static void GetAnyMessages(List<RequestContext> Liste, int number)
+        public static void GetOneMessages(List<RequestContext> Liste, int number)
         {
-            Console.WriteLine("\nuid: {0} \nmessage: {1}", number, Liste[number].message);
+            Console.WriteLine("\n{0} uid: {1} \nmessage: {2}", number, Liste[number].unique_id, Liste[number].message);
         }
 
         public static int GetNumber(string path)
@@ -65,7 +68,8 @@ namespace SWE1_MTCG
         public static RequestContext AddMessage(RequestContext request)
         {
             string teststring = string.Format("{0:N}", Guid.NewGuid());
-            request.unique_id = teststring.Substring(0, 8);            
+            request.unique_id = teststring.Substring(0, 8);
+            Console.WriteLine("message added");
             return request;
         }
 
@@ -82,6 +86,16 @@ namespace SWE1_MTCG
                 index++;
             }
             return index;
+        }
+
+        public static void UpdateMessage (string message, List<RequestContext> Liste, int number)
+        {
+            Liste[number].message = message;
+        }
+
+        public static void DeleteMessage(List<RequestContext> Liste, int number)
+        {
+            Liste[number].unique_id = "0";
         }
 
 

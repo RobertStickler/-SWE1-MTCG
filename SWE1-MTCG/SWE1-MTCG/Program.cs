@@ -54,7 +54,7 @@ class MyTcpListener
                 {
                     // Translate data bytes to a ASCII string.
                     data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                    Console.WriteLine("Received:\n{0}", data);
+                    //Console.WriteLine("Received:\n{0}", data);
 
                     RequestContext request = TCPClass.GetRequest(data);
 
@@ -64,13 +64,13 @@ class MyTcpListener
                         if (request.path == "/messages")
                         {
                             //lists all messages
-                            TCPClass.Get1Messages(Liste);
+                            TCPClass.GetAllMessages(Liste);
                         }
                         else
                         {
                             //list messege with number
                             int number = TCPClass.GetNumber(request.path);
-                            TCPClass.GetAnyMessages(Liste, number);
+                            TCPClass.GetOneMessages(Liste, number);
                         }
                     }
                     else if (request.method == "POST")
@@ -91,8 +91,9 @@ class MyTcpListener
                     {
                         //update the message
                         if (request.path != "/messages")
-                        {
-
+                        {                            
+                            int number = TCPClass.GetNumber(request.path);
+                            TCPClass.UpdateMessage(request.message, Liste, number);
                         }
                         else
                         {
@@ -104,7 +105,9 @@ class MyTcpListener
                     {
                         if (request.path != "/messages")
                         {
-
+                            Console.WriteLine("you are in delete");
+                            int number = TCPClass.GetNumber(request.path);
+                            TCPClass.DeleteMessage(Liste, number);
                         }
                         else
                         {
