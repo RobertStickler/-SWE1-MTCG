@@ -3,25 +3,22 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Collections.Generic;
 using SWE1_MTCG;
 
 class MyTcpListener
 {
-    public void PrintUsage()
-    {
-        Console.WriteLine("Usage:");
-        Console.WriteLine("<Option> <Path>");
-        Console.WriteLine("<Text>");
-    }
+    //static void muss angegeben werden
+
     public static void Main()
     {
+        TCPClass tcpClass = new TCPClass();
         TcpListener server = null;
-        RequestContext request = new RequestContext();
-        ResponseContext resonse = new ResponseContext();
+        List<RequestContext> Liste = new List<RequestContext>();
 
         try
         {
-            // Set the TcpListener on port 13000.
+            // Set the TcpListener port.
             Int32 port = 6543;
             IPAddress localAddr = IPAddress.Parse("127.0.0.1");
 
@@ -59,40 +56,31 @@ class MyTcpListener
                     data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
                     Console.WriteLine("Received:\n{0}", data);
 
-                    string[] line = data.Split("\n");
-                    string temp_header = null;
-                    string[] tempfirstline = line[0].Split(" ");
+                    RequestContext request = TCPClass.GetRequest(data);
 
-                    for (i = 1; i < line.Length; i++)
-                    {
-                        temp_header += line[i];
-                        temp_header += "\n";
-                    }
-                    //Console.WriteLine(header);
-                    request.header = temp_header;
-                    request.method = tempfirstline[0];
-                    request.path = tempfirstline[1];
-                    request.version = tempfirstline[2];
-                    //Console.WriteLine(request.method);
 
-                    if(request.method == "GET")
+                    if (request.method == "GET")
                     {
-                        //lists all messages
-                        if(request.path == "/messages")
+                        if (request.path == "/messages")
                         {
-
+                            //lists all messages
+                            TCPClass.Get1Messages(Liste);
                         }
                         else
                         {
                             //list messege with number
+                            int number = TCPClass.GetNumber(request.path);
+                            TCPClass.GetAnyMessages(Liste, number);
                         }
                     }
-                    else if((request.method == "POST")
+                    else if (request.method == "POST")
                     {
                         //add message
-                        if(request.path == "/messages")
+                        if (request.path == "/messages")
                         {
-
+                            request = TCPClass.AddMessage(request);
+                            int index = TCPClass.IndexFinder(Liste);
+                            Liste.Insert(index, request);
                         }
                         else
                         {
@@ -110,7 +98,7 @@ class MyTcpListener
                         {
                             Console.WriteLine("Wrong message number");
                         }
-                        
+
                     }
                     else if (request.method == "DELETE")
                     {
@@ -125,17 +113,19 @@ class MyTcpListener
                     }
                     else
                     {
-                        //PrintUsage();
+                        tcpClass.PrintUsage();
                     }
+                    //Console.WriteLine(request.message);
 
                 }
 
                 // Shutdown and end connection
                 client.Close();
 
-                Console.WriteLine("Press \"y\" to continue");
+                //Console.WriteLine("Press \"y\" to continue");
             }
-            while ((Console.ReadLine().ToUpper() == "Y"));
+            while (true);
+            //while ((Console.ReadLine().ToUpper() == "Y")) ;
         }
         catch (SocketException e)
         {
@@ -150,4 +140,5 @@ class MyTcpListener
         Console.WriteLine("\nHit enter to continue...");
         Console.Read();
     }
+    
 }
