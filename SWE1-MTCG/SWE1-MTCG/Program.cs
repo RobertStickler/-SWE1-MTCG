@@ -3,12 +3,22 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using SWE1_MTCG;
 
 class MyTcpListener
 {
+    public void PrintUsage()
+    {
+        Console.WriteLine("Usage:");
+        Console.WriteLine("<Option> <Path>");
+        Console.WriteLine("<Text>");
+    }
     public static void Main()
     {
         TcpListener server = null;
+        RequestContext request = new RequestContext();
+        ResponseContext resonse = new ResponseContext();
+
         try
         {
             // Set the TcpListener on port 13000.
@@ -43,20 +53,81 @@ class MyTcpListener
                 int i;
 
                 // Loop to receive all the data sent by the client.
-                while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+                if ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
                 {
                     // Translate data bytes to a ASCII string.
                     data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                    Console.WriteLine("Received: {0}", data);
+                    Console.WriteLine("Received:\n{0}", data);
 
-                    // Process the data sent by the client.
-                    data = data.ToUpper();
+                    string[] line = data.Split("\n");
+                    string temp_header = null;
+                    string[] tempfirstline = line[0].Split(" ");
 
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                    for (i = 1; i < line.Length; i++)
+                    {
+                        temp_header += line[i];
+                        temp_header += "\n";
+                    }
+                    //Console.WriteLine(header);
+                    request.header = temp_header;
+                    request.method = tempfirstline[0];
+                    request.path = tempfirstline[1];
+                    request.version = tempfirstline[2];
+                    //Console.WriteLine(request.method);
 
-                    // Send back a response.
-                    stream.Write(msg, 0, msg.Length);
-                    Console.WriteLine("Sent: {0}", data);
+                    if(request.method == "GET")
+                    {
+                        //lists all messages
+                        if(request.path == "/messages")
+                        {
+
+                        }
+                        else
+                        {
+                            //list messege with number
+                        }
+                    }
+                    else if((request.method == "POST")
+                    {
+                        //add message
+                        if(request.path == "/messages")
+                        {
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("Wrong path");
+                        }
+                    }
+                    else if (request.method == "PUT")
+                    {
+                        //update the message
+                        if (request.path != "/messages")
+                        {
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("Wrong message number");
+                        }
+                        
+                    }
+                    else if (request.method == "DELETE")
+                    {
+                        if (request.path != "/messages")
+                        {
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("Wrong message number");
+                        }
+                    }
+                    else
+                    {
+                        //PrintUsage();
+                    }
+
                 }
 
                 // Shutdown and end connection
