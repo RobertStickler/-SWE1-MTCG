@@ -63,10 +63,11 @@ namespace SWE1_MTCG
             catch (ArgumentOutOfRangeException outOfRange)
             {
                 Console.WriteLine("Error: {0}", outOfRange.Message);
+                //throw new System.ArgumentOutOfRangeException("index parameter is out of range.", outOfRange);
             }
         }
 //###################################################################################
-            public static int GetNumber(string path)
+        public static int GetNumber(string path)
         {
             //der Pfad wird an den / getrennt
             string[] temp_path = path.Split("/");
@@ -117,7 +118,6 @@ namespace SWE1_MTCG
             {
                 Console.WriteLine("Error: {0}", outOfRange.Message);
             }
-
         }
 //###################################################################################
         public static void DeleteMessage(List<RequestContext> Liste, int number)
@@ -130,10 +130,7 @@ namespace SWE1_MTCG
             catch (ArgumentOutOfRangeException outOfRange)
             {
                 Console.WriteLine("Error: {0}", outOfRange.Message);
-            }
-            
+            }            
         }
-
-
     }
 }

@@ -138,6 +138,10 @@ class MyTcpListener
         {
             Console.WriteLine("SocketException: {0}", e);
         }
+        catch (ArgumentOutOfRangeException outOfRange)
+        {
+            Console.WriteLine("Error: {0}", outOfRange.Message);
+        }
         finally
         {
             // Stop listening for new clients.
