@@ -8,10 +8,11 @@ namespace SWE1_MTCG.Cards.Zauber
 {
     public class FireSpell : BaseCards
     {
-        public FireSpell()
+        public FireSpell(int damage, string name) : base(damage, name)
         {
             this.card_type = cardTypes.Spell;
             this.element_type = elementTypes.Fire;
         }
+
     }
 }

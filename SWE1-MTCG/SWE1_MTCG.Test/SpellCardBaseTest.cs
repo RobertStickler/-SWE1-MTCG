@@ -1,6 +1,7 @@
 using Bogus.Extensions;
 using NUnit.Framework;
 using SWE1_MTCG.Cards.Zauber;
+using Enum;
 
 namespace SWE1_MTCG.Test
 {
@@ -12,7 +13,7 @@ namespace SWE1_MTCG.Test
         [SetUp]
         public void Setup()
         {
-            _fireSpell = new FireSpell();
+            _fireSpell = new FireSpell(25, "Gnorsig");
         }
 
         [Test]
@@ -39,7 +40,7 @@ namespace SWE1_MTCG.Test
         [SetUp]
         public void Setup()
         {
-            _waterSpell = new WaterSpell();
+            _waterSpell = new WaterSpell(25, "Gnorsig");
         }
 
         [Test]
@@ -66,7 +67,7 @@ namespace SWE1_MTCG.Test
         [SetUp]
         public void Setup()
         {
-            _normalSpell = new NormalSpell();
+            _normalSpell = new NormalSpell(25, "Gnorsig");
         }
 
         [Test]

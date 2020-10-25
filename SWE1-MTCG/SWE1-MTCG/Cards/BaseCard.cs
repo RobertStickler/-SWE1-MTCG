@@ -14,18 +14,22 @@ namespace Cards
 
 		protected int card_damage;
 		protected string card_name;
+		public BaseCards(int damage, string name)
+		{
+			this.card_damage = damage;
+			this.card_name = name;
+		}
 
-		/*public BaseCards(int damage, string name)
+		public BaseCards(int damage, string name, elementTypes element)
         {
 			this.card_damage = damage;
 			this.card_name = name;
+			this.element_type = element; 
+		}
 
-			this.card_type = cardTypes.Monster;
-			this.element_type = elementTypes.Water;
-			this.card_property = cardProperty.Dragon;
-		}*/
 
-		
+
+
 
 		public int getCardDamage()
 		{
@@ -35,6 +39,14 @@ namespace Cards
 		{
 			return card_name;
 		}
+		public cardTypes getCardType()
+        {			
+			return card_type;
+        }
+		public elementTypes getElementTypes()
+        {
+			return element_type;
+        }
 	}
 }
 

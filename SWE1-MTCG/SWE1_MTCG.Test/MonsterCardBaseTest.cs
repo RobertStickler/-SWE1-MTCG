@@ -1,6 +1,7 @@
 using Bogus.Extensions;
 using NUnit.Framework;
 using SWE1_MTCG.Cards.Monster;
+using Enum;
 
 namespace SWE1_MTCG.Test
 {
@@ -12,7 +13,7 @@ namespace SWE1_MTCG.Test
         [SetUp]
         public void Setup()
         {
-            _dragon = new Dragon(25, "Ancalagon");
+            _dragon = new Dragon(25, "Ancalagon", elementTypes.Water);
         }
 
         [Test]
@@ -47,7 +48,7 @@ namespace SWE1_MTCG.Test
         [SetUp]
         public void Setup()
         {
-            _knight = new Knight(25, "Arthur");
+            _knight = new Knight(25, "Arthur", elementTypes.Water);
         }
 
         [Test]
@@ -68,7 +69,7 @@ namespace SWE1_MTCG.Test
         [SetUp]
         public void Setup()
         {
-            _goblin = new Goblin(25, "Gnorsig");
+            _goblin = new Goblin(25, "Gnorsig", elementTypes.Water);
         }
 
         [Test]
@@ -89,7 +90,7 @@ namespace SWE1_MTCG.Test
         [SetUp]
         public void Setup()
         {
-            _kraken = new Kraken(25, "Davy Jones");
+            _kraken = new Kraken(25, "Davy Jones", elementTypes.Water);
         }
 
         [Test]
@@ -110,7 +111,7 @@ namespace SWE1_MTCG.Test
         [SetUp]
         public void Setup()
         {
-            _org = new Org(25, "Duke");
+            _org = new Org(25, "Duke", elementTypes.Water);
         }
 
         [Test]
@@ -131,7 +132,7 @@ namespace SWE1_MTCG.Test
         [SetUp]
         public void Setup()
         {
-            _wizard = new Wizard(25, "Merlin");
+            _wizard = new Wizard(25, "Merlin", elementTypes.Water);
         }
 
         [Test]
