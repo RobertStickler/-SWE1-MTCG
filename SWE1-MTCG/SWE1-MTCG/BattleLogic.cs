@@ -125,16 +125,16 @@ namespace SWE1_MTCG
             return 0;
         }
 
-        public List<BaseCards> StartBattle(List<BaseCards> Cards4Battle1, List<BaseCards> Cards4Battle2)
+        public int StartBattle(List<BaseCards> Cards4Battle1, List<BaseCards> Cards4Battle2)
         {
             Random rnd = new Random();
             int counterLoop = 0;
             int a = 0, b = 0;
 
+            List<BaseCards> Dummy = new List<BaseCards>();
 
             while ((Test4Winner(Cards4Battle1.Count, Cards4Battle2.Count) == false) && (counterLoop < 100))
             {
-
                 a = Cards4Battle1.Count;
                 b = Cards4Battle2.Count;
 
@@ -146,7 +146,7 @@ namespace SWE1_MTCG
 
                 BaseCards Player1;
                 BaseCards Player2;
-                BaseCards winner;
+                BaseCards winner = null;
 
                 Player1 = Cards4Battle1[cardPlayer1];
                 Player2 = Cards4Battle2[cardPlayer2];
@@ -181,11 +181,19 @@ namespace SWE1_MTCG
             }
 
             if (a == 1)
+            {
                 Console.WriteLine("The winner is Player 2");
+                return 2;
+            }
+                
             if (b == 1)
+            {
                 Console.WriteLine("The winner is Player 1");
+                return 1;
+            }
+                
 
-            return Cards4Battle1;
+            return 0;
         }
 
         public bool Test4Winner(int a, int b)
