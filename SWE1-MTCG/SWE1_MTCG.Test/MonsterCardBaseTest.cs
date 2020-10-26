@@ -146,4 +146,26 @@ namespace SWE1_MTCG.Test
             Assert.NotNull(_wizard.getCardName());
         }
     }
+
+    public class CardTestElf
+    {
+        private Elf _elf;
+
+        [SetUp]
+        public void Setup()
+        {
+            _elf = new Elf(25, "Ganandorf", elementTypes.Water);
+        }
+
+        [Test]
+        public void Test1()
+        {
+            //arrange
+            //act
+            //assert
+            Assert.NotNull(_elf);
+            Assert.NotNull(_elf.getCardDamage());
+            Assert.NotNull(_elf.getCardName());
+        }
+    }
 }

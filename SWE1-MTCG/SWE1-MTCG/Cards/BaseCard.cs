@@ -47,6 +47,10 @@ namespace Cards
         {
 			return element_type;
         }
+		public cardProperty getCardProperty()
+        {
+			return card_property;
+        }
 	}
 }
 

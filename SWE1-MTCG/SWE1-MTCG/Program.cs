@@ -20,7 +20,7 @@ namespace SWE1_MTCG
 
             //Zwei Decks für das Battle erstellen
             List<BaseCards> Cards4Battle1 = new List<BaseCards>();
-            Cards4Battle1.Add(new Dragon(26, "Acnologia", elementTypes.Water));
+            Cards4Battle1.Add(new Goblin(26, "Acnologia", elementTypes.Water));
             Cards4Battle1.Add(new WaterSpell(10, "Magic Storm"));
             Cards4Battle1.Add(new Kraken(5, "Der Kraken", elementTypes.Water));
             Cards4Battle1.Add(new FireSpell(8, "Sunny Day"));
