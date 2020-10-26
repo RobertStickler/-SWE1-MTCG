@@ -17,7 +17,8 @@ namespace Enum
 		Org,
 		Wizard,
 		Goblin,
-		Kraken
+		Kraken,
+		Elf
 	}
 
 	public enum cardTypes
