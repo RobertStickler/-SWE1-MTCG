@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Http;
-using.Threading.Task;
+using System.Threading;
 
 namespace SWE1_MTCG
 {
-    static async Task Main(string[] args)
+    /*static async Task Client(string[] args)
     {
         string adress = "127.0.0.1";
         string port = ":6543/*";
@@ -18,5 +18,5 @@ namespace SWE1_MTCG
         var content = await client.PostAsync(uri, data);
         var send = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, uri));
         Console.WriteLine("irgwas");
-    }
+    }*/
 }

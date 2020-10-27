@@ -124,7 +124,8 @@ namespace SWE1_MTCG
         {
             try
             {
-                Liste[number].unique_id = "0";
+                //Liste[number].unique_id = "0";
+                Liste.RemoveAt(number);
                 Console.WriteLine("message deleted");
             }
             catch (ArgumentOutOfRangeException outOfRange)

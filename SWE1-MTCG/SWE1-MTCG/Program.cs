@@ -92,7 +92,7 @@ class MyTcpListener
                         }
                         else
                         {
-                            Console.WriteLine("/messages as path expected");
+                            Console.WriteLine("Error: /messages as path expected");
                         }
                     }
                     else if (request.method == "PUT")
@@ -105,7 +105,7 @@ class MyTcpListener
                         }
                         else
                         {
-                            Console.WriteLine("/messages/ + number expected");
+                            Console.WriteLine("Error: /messages/ + number expected");
                         }
 
                     }
@@ -119,7 +119,7 @@ class MyTcpListener
                         }
                         else
                         {
-                            Console.WriteLine("/messages/ + number expected");
+                            Console.WriteLine("Error: /messages/ + number expected");
                         }
                     }
                     else
