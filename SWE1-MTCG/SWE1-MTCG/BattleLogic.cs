@@ -25,13 +25,13 @@ namespace SWE1_MTCG
                             //monster attacks monster pure strenght
                             //is ledgit DAVOR testen
 
-                            if (attacker.getCardDamage() > defender.getCardDamage())                            
+                            if (attacker.getCardDamage() > defender.getCardDamage())
                                 return attacker;
-                            
+
                             else
                                 return defender;
 
-                            
+
                         }
                         else if (defender.getCardType() == cardTypes.Spell)
                         {
@@ -89,7 +89,7 @@ namespace SWE1_MTCG
                         Console.WriteLine("Error occured!");
                         return attacker;
                     }
-                    
+
             }
             return attacker;
 
@@ -97,7 +97,7 @@ namespace SWE1_MTCG
 
         public int GetEffektivDemage(BaseCards first, BaseCards second)
         {
-            switch(first.getElementTypes())
+            switch (first.getElementTypes())
             {
                 case elementTypes.Fire:
                     {
@@ -125,16 +125,16 @@ namespace SWE1_MTCG
             return 0;
         }
 
-        public List<BaseCards> StartBattle(List<BaseCards> Cards4Battle1, List<BaseCards> Cards4Battle2)
+        public int StartBattle(List<BaseCards> Cards4Battle1, List<BaseCards> Cards4Battle2)
         {
             Random rnd = new Random();
             int counterLoop = 0;
             int a = 0, b = 0;
 
+            List<BaseCards> Dummy = new List<BaseCards>();
 
             while ((Test4Winner(Cards4Battle1.Count, Cards4Battle2.Count) == false) && (counterLoop < 100))
             {
-
                 a = Cards4Battle1.Count;
                 b = Cards4Battle2.Count;
 
@@ -146,11 +146,20 @@ namespace SWE1_MTCG
 
                 BaseCards Player1;
                 BaseCards Player2;
+                BaseCards winner = null;
 
                 Player1 = Cards4Battle1[cardPlayer1];
                 Player2 = Cards4Battle2[cardPlayer2];
 
-                BaseCards winner = Attack(Player1, Player2);
+                //validate
+                if (ValidateAttack(Player1, Player2) == false)
+                {
+                    winner = Player2;
+                }
+                else
+                {
+                    winner = Attack(Player1, Player2);
+                }                 
 
 
                 if (winner == Player1)
@@ -167,16 +176,24 @@ namespace SWE1_MTCG
 
                 Console.WriteLine("Player one ammount {0}", Cards4Battle1.Count);
                 Console.WriteLine("Player two ammount {0}", Cards4Battle2.Count);
-                counterLoop ++ ;
-                
+                counterLoop++;
+
             }
 
             if (a == 1)
+            {
                 Console.WriteLine("The winner is Player 2");
+                return 2;
+            }
+                
             if (b == 1)
+            {
                 Console.WriteLine("The winner is Player 1");
+                return 1;
+            }
+                
 
-            return Cards4Battle1;
+            return 0;
         }
 
         public bool Test4Winner(int a, int b)
@@ -187,6 +204,38 @@ namespace SWE1_MTCG
                 return true;
 
             return temp;
+        }
+
+        public bool ValidateAttack(BaseCards Player1, BaseCards Player2)
+        {
+            if ((Player1.getCardProperty() == cardProperty.Goblin) && (Player2.getCardProperty() == cardProperty.Dragon))
+            {
+                Console.WriteLine("Goblin cannot attack Dragon");
+                return false;
+            }
+            else if((Player1.getCardProperty() == cardProperty.Org) && (Player2.getCardProperty() == cardProperty.Wizard))
+            {
+                Console.WriteLine("Org cannot attack Wizard");
+                return false;
+            }
+            else if ((Player1.getCardProperty() == cardProperty.Knight) && (Player2.getCardType() == cardTypes.Spell) && (Player2.getElementTypes() == elementTypes.Water))
+            {
+                Console.WriteLine("Knight cannot attack WaterSpell");
+                return false;
+            }
+            else if ((Player1.getCardProperty() == cardProperty.Kraken) && (Player2.getCardType() == cardTypes.Spell))
+            {
+                Console.WriteLine("Kraken is immune to Spells");
+                return false;
+            }
+            else if ((Player1.getCardProperty() == cardProperty.Dragon) && (Player2.getCardProperty() == cardProperty.Elf) && (Player2.getElementTypes() == elementTypes.Fire))
+            {
+                Console.WriteLine("Dragon cannot attack FireElves");
+                return false;
+            }
+
+
+            return true;
         }
 
     }
