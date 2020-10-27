@@ -12,59 +12,45 @@ namespace Client
     {
         // HttpClient is intended to be instantiated once per application, rather than per-use. See Remarks.
         static readonly HttpClient client = new HttpClient();
-        
-        static async Task Main()
+
+        static void Main(string[] args)
         {
-            string port = "6543";
-            string ipAdress = "127.0.0.1";
-            string advice = "/messages";
-            string messageNumber = "/1";
-
-            string uri = "http://" + ipAdress + ":" + port + advice; //das von insomnia hald
-
-            Console.WriteLine("1...GET");
-            Console.WriteLine("2...POST");
-            Console.WriteLine("3...PUT");
-            Console.WriteLine("4...DELETE");
-
-            ClientFunctions clientFunc = new ClientFunctions();
-
-            // Call asynchronous network methods in a try/catch block to handle exceptions.
             try
             {
-                int choice = Convert.ToInt32(Console.ReadLine());
-                if (choice >= 5)
+                Int32 port = 8000;
+                TcpClient client = new TcpClient("127.0.0.1", port);
+                NetworkStream stream = client.GetStream();
+                while (true)
                 {
-                    Console.WriteLine("error");
+                    string message = Console.ReadLine();
+                    if (message == "0")
+                    {
+                        stream.Close();
+                        client.Close();
+                        break;
+                    }
+                    // Translate the Message into ASCII.
+                    Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+                    // Send the message to the connected TcpServer. 
+                    stream.Write(data, 0, data.Length);
+                    Console.WriteLine("Sent: {0}", message);
+                    // Bytes Array to receive Server Response.
+                    data = new Byte[256];
+                    String response = String.Empty;
+                    // Read the Tcp Server Response Bytes.
+                    Int32 bytes = stream.Read(data, 0, data.Length);
+                    response = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    Console.WriteLine("Received: {0}", response);
+                    //Thread.Sleep(2);
                 }
-                else if(choice < 1)
-                {
-                    Console.WriteLine("error");
-                }
-
-                switch(choice)
-                {
-                    case 1: //Get
-                        {
-                            clientFunc.GetRequest(uri);
-                            break;
-                        }
-                    case 2: //Post
-                        {
-                            clientFunc.PostRequest(uri);
-                            break;
-                        }
-                }
-                
-
             }
-            catch (HttpRequestException e)
+            catch (Exception e)
             {
-                Console.WriteLine("\nException Caught!");
-                Console.WriteLine("Message :{0} ", e.Message);
+                Console.WriteLine("Exception: {0}", e);
             }
-            Console.Read();
+            //Console.Read();
         }
     }
 }
+
 
