@@ -5,7 +5,11 @@ VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SWE1_MTCG", "SWE1-MTCG\SWE1_MTCG.csproj", "{36E58A75-94EA-48E2-9DD7-3FC4F66F62F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SWE1_MTCG.Test", "SWE1_MTCG.Test\SWE1_MTCG.Test.csproj", "{C2117365-4E42-47E2-9C5A-6B11ED60E623}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SWE1_MTCG.Test", "SWE1_MTCG.Test\SWE1_MTCG.Test.csproj", "{C2117365-4E42-47E2-9C5A-6B11ED60E623}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{3CEF39C6-7281-4FAE-A996-1C65DF938061}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{9B47E267-42FD-4CF0-8E09-D485CA018355}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{C2117365-4E42-47E2-9C5A-6B11ED60E623}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2117365-4E42-47E2-9C5A-6B11ED60E623}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2117365-4E42-47E2-9C5A-6B11ED60E623}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CEF39C6-7281-4FAE-A996-1C65DF938061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CEF39C6-7281-4FAE-A996-1C65DF938061}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CEF39C6-7281-4FAE-A996-1C65DF938061}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CEF39C6-7281-4FAE-A996-1C65DF938061}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B47E267-42FD-4CF0-8E09-D485CA018355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B47E267-42FD-4CF0-8E09-D485CA018355}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B47E267-42FD-4CF0-8E09-D485CA018355}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B47E267-42FD-4CF0-8E09-D485CA018355}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
