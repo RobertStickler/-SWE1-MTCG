@@ -47,16 +47,16 @@ class MyTcpListener
                 {
                     // Translate data bytes to a ASCII string.
                     data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                    Console.WriteLine("Received: {0}", data);
+                    Console.WriteLine("Received:\n{0}", data);
 
                     // Process the data sent by the client.
-                    data = data.ToUpper();
+                    data = "message ok\n"; //nur wenn die message oke is hald
 
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
 
                     // Send back a response.
                     stream.Write(msg, 0, msg.Length);
-                    Console.WriteLine("Sent: {0}", data);
+                    Console.WriteLine("Sent:\n{0}", data);
                 }
 
                 // Shutdown and end connection
@@ -66,6 +66,10 @@ class MyTcpListener
         catch (SocketException e)
         {
             Console.WriteLine("SocketException: {0}", e);
+        }
+        catch(System.IO.IOException e)
+        {
+            Console.WriteLine("Error, emty message!");
         }
         finally
         {
