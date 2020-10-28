@@ -8,9 +8,9 @@ namespace Client
 {
     public class Message
     {
-        string content_type = "text/plain; charset=utf-8\n";
-        string path = "/messages";
-        string http_version = " HTTP/1.1\n";
+        readonly string content_type = "text/plain; charset=utf-8\n";
+        readonly string path = "/messages";
+        readonly string http_version = " HTTP/1.1\n";
 
 
 

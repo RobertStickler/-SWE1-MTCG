@@ -8,37 +8,55 @@ using System.Threading.Tasks;
 
 namespace Client
 {
-    class ClientFunctions
+    public class ClientFunctions
     {
-        static readonly HttpClient client = new HttpClient();
-        public void GetRequest(string ur)
-        {
 
-        }
-
-        public async Task PostRequest(string uri)
+        public void SocketConnection()
         {
+            int port = 6543;
+            string ipAdress = "127.0.0.1";
+            string message_number = "/1";
+
+            TcpClient client = new TcpClient(ipAdress, port);
+            NetworkStream stream = client.GetStream();
+            Message msg = new Message();
+
+            Console.WriteLine("1...GET");
+            Console.WriteLine("2...POST");
+            Console.WriteLine("3...PUT");
+            Console.WriteLine("4...DELETE");
+
             try
             {
-                Console.WriteLine("enter your message");
-                string message = Console.ReadLine();
-                HttpContent data = new StringContent(message, Encoding.UTF8, "text/plain");
+                string message = msg.GetMessage(client, ipAdress, port.ToString(), "POST", message_number);
+                Console.WriteLine("message \n\n");
+                Console.WriteLine();
 
-                HttpResponseMessage postReturn = await client.PostAsync(uri, data);
-                string result = postReturn.Content.ReadAsStringAsync().Result;
-                var send = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, uri));
+                // Translate the Message into ASCII.
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+                // Send the message to the connected TcpServer. 
+                stream.Write(data, 0, data.Length);
+                Console.Write("Sent:\n{0}", message);
+                // Bytes Array to receive Server Response.
+                data = new Byte[256];
+                String response = String.Empty;
+                // Read the Tcp Server Response Bytes.
+                Int32 bytes = stream.Read(data, 0, data.Length);
+                response = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                Console.Write("Received:\n{0}", response);
 
-                Console.WriteLine(postReturn);
-                Console.WriteLine(result);
+
             }
-            catch
+            catch (Exception e)
             {
-                throw new HttpRequestException();
+                Console.WriteLine("Exception: {0}", e);
             }
-            
+            finally
+            {
+                stream.Close();
+                client.Close();
+            }
+            Console.Read();
         }
-
-
-
     }
 }
