@@ -4,7 +4,7 @@ using Moq;
 
 namespace NUnitTest
 {
-    public class MoqTests
+    public class MoqSetup
     {
         public interface Iclient
         {
@@ -27,4 +27,5 @@ namespace NUnitTest
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(client, mock.Object.GetClientMsg(1));
         }
     }
+    
 }
