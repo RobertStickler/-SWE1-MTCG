@@ -16,6 +16,7 @@ namespace SWE1_MTCG
 //###################################################################################
         public static RequestContext GetRequest(string data)
         {
+            //Console.WriteLine(data);
             RequestContext request = new RequestContext();
 
             //die daten aus dem HTTP-Request extrahieren
@@ -38,6 +39,7 @@ namespace SWE1_MTCG
             request.method = tempfirstline[0];
             request.path = tempfirstline[1];
             request.version = tempfirstline[2];
+            //Console.WriteLine(request.message);
             return request;
         }
 
@@ -46,12 +48,10 @@ namespace SWE1_MTCG
         {
             int number = 0;
             foreach (RequestContext aPart in Liste)
-            {
-                if (aPart.unique_id == "0") //ist index 0, wird übersprungen
-                    continue;
+            {             
                 Console.WriteLine("\n{0} uid: {1} \nmessage: {2}", number, aPart.unique_id, aPart.message);               
                 number++; ;
-            }
+            }            
         }
 //###################################################################################
         public static void GetOneMessages(List<RequestContext> Liste, int number)
