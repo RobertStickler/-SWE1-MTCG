@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace SWE1_MTCG
 {
-    class TCPClass
+    public class TCPClass
     {
         public void PrintUsage()
         {

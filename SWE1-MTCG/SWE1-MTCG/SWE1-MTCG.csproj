@@ -6,4 +6,8 @@
     <RootNamespace>SWE1_MTCG</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="4.14.7" />
+  </ItemGroup>
+
 </Project>
