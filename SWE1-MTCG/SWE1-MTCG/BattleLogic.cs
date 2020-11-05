@@ -7,13 +7,13 @@ using MyEnum;
 
 namespace SWE1_MTCG
 {
-    public class BattleLogic
+    public static class BattleLogic
     {
-        public void PrintHelp()
+        public static void PrintHelp()
         {
             Console.WriteLine("Hello World!");
         }
-        public BaseCards Attack(BaseCards attacker, BaseCards defender)
+        public static BaseCards Attack(BaseCards attacker, BaseCards defender)
         {
 
             switch (attacker.getCardType())
@@ -95,7 +95,7 @@ namespace SWE1_MTCG
 
         }
 
-        public int GetEffektivDemage(BaseCards first, BaseCards second)
+        public static int GetEffektivDemage(BaseCards first, BaseCards second)
         {
             switch (first.getElementTypes())
             {
@@ -125,7 +125,7 @@ namespace SWE1_MTCG
             return 0;
         }
 
-        public int StartBattle(List<BaseCards> Cards4Battle1, List<BaseCards> Cards4Battle2)
+        public static int StartBattle(List<BaseCards> Cards4Battle1, List<BaseCards> Cards4Battle2)
         {
             Random rnd = new Random();
             int counterLoop = 0;
@@ -196,7 +196,7 @@ namespace SWE1_MTCG
             return 0;
         }
 
-        public bool Test4Winner(int a, int b)
+        public static bool Test4Winner(int a, int b)
         {
             bool temp = false;
 
@@ -206,7 +206,7 @@ namespace SWE1_MTCG
             return temp;
         }
 
-        public bool ValidateAttack(BaseCards Player1, BaseCards Player2)
+        public static bool ValidateAttack(BaseCards Player1, BaseCards Player2)
         {
             if ((Player1.getCardProperty() == cardProperty.Goblin) && (Player2.getCardProperty() == cardProperty.Dragon))
             {

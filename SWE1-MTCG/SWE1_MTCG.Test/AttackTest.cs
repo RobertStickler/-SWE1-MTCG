@@ -16,7 +16,6 @@ namespace SWE1_MTCG.Test
     [TestFixture]
     public class AttackTest
     {
-        BattleLogic battleLogic = new BattleLogic();
         private Dragon _dragon;
         private FireSpell _fireSpell;
 
@@ -32,14 +31,13 @@ namespace SWE1_MTCG.Test
         {
             //arrange
             //act
-            BaseCards winner = battleLogic.Attack(_dragon, _fireSpell);
+            BaseCards winner = BattleLogic.Attack(_dragon, _fireSpell);
             //assert
             Assert.AreEqual(_dragon.getCardDamage(), winner.getCardDamage());
         }
     }
     public class DemageTest
     {
-        BattleLogic battleLogic = new BattleLogic();
         private Dragon _dragon;
         private FireSpell _fireSpell;
 
@@ -55,8 +53,8 @@ namespace SWE1_MTCG.Test
         {
             //arrange
             //act
-            int a = battleLogic.GetEffektivDemage(_dragon, _fireSpell);
-            int b = battleLogic.GetEffektivDemage(_fireSpell, _dragon);
+            int a = BattleLogic.GetEffektivDemage(_dragon, _fireSpell);
+            int b = BattleLogic.GetEffektivDemage(_fireSpell, _dragon);
             //assert
             Assert.IsTrue(a > b);
         }

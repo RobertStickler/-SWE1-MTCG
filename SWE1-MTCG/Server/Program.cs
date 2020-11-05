@@ -57,7 +57,7 @@ namespace Server
                                 return; //noch int hinzu oderso
                             }
 
-                            messageHandler.ManageMessages(request);
+                            //messageHandler.ManageMessages(request);
                         }).Start();
                     }
                 }

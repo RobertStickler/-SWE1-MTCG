@@ -7,6 +7,7 @@ namespace Server
 {
     class MessageHandler
     {
+        /*
         public void ManageMessages(RequestContext request)
         {
             
@@ -80,7 +81,7 @@ namespace Server
 
 
 
-
+        */
 
     }
 }

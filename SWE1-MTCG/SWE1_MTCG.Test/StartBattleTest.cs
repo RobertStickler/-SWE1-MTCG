@@ -15,8 +15,7 @@ namespace SWE1_MTCG.Test
 {
     [TestFixture]
     public class StartBattleTest
-    {
-        BattleLogic battleLogic = new BattleLogic();
+    { 
 
         [Test]
         public void TestMethod()
@@ -35,7 +34,7 @@ namespace SWE1_MTCG.Test
             Cards4Battle2.Add(new FireSpell(8, "Sunny Day"));
 
             //act
-            int sieger = battleLogic.StartBattle(Cards4Battle1, Cards4Battle2);
+            int sieger = BattleLogic.StartBattle(Cards4Battle1, Cards4Battle2);
             //assert
             Assert.AreNotEqual(sieger, 0);
         }

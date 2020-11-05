@@ -27,26 +27,26 @@ namespace Cards
 			this.element_type = element; 
 		}
 
-
-
-
-
 		public int getCardDamage()
 		{
 			return card_damage;
 		}
+
 		public string getCardName()
 		{
 			return card_name;
 		}
+
 		public cardTypes getCardType()
         {			
 			return card_type;
         }
+
 		public elementTypes getElementTypes()
         {
 			return element_type;
         }
+
 		public cardProperty getCardProperty()
         {
 			return card_property;
