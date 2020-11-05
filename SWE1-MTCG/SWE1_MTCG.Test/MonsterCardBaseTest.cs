@@ -1,7 +1,7 @@
 using Bogus.Extensions;
 using NUnit.Framework;
 using SWE1_MTCG.Cards.Monster;
-using Enum;
+using MyEnum;
 
 namespace SWE1_MTCG.Test
 {

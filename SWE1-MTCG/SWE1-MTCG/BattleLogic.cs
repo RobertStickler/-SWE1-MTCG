@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Bogus.DataSets;
 using Cards;
-using Enum;
+using MyEnum;
 
 namespace SWE1_MTCG
 {

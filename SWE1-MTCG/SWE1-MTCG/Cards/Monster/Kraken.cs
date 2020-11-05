@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Cards;
-using Enum;
+using MyEnum;
 
 namespace SWE1_MTCG.Cards.Monster
 {

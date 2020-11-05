@@ -1,6 +1,6 @@
 ﻿using Bogus.DataSets;
 using Cards;
-using Enum;
+using MyEnum;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;

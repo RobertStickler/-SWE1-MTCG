@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Enum
+namespace MyEnum
 {
 	public enum elementTypes
 	{

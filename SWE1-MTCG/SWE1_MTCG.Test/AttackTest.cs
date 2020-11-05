@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Enum;
+using MyEnum;
 using SWE1_MTCG.Cards.Monster;
 using SWE1_MTCG.Cards.Zauber;
 using SWE1_MTCG;

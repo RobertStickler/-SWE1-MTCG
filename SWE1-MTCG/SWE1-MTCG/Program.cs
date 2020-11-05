@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Cards;
-using Enum;
+using MyEnum;
 using SWE1_MTCG.Cards.Monster;
 using SWE1_MTCG.Cards.Zauber;
 
@@ -11,6 +12,7 @@ namespace SWE1_MTCG
     {
         public static void Main(string[] args)
         {
+            /*
             BattleLogic battleLogic = new BattleLogic();
 
             //Dragon _dragon = new Dragon(25, "Acnologia", elementTypes.Water);
@@ -40,6 +42,14 @@ namespace SWE1_MTCG
             //Console.WriteLine(Cards4Battle1[0].getCardName()); //Output: Acnologia
 
             int Sieger = battleLogic.StartBattle(Cards4Battle1, Cards4Battle2);
+            */
+            
+            BaseCards firstCard = CardShop.GetRandCard();
+            //Console.WriteLine(firstCard.getCardName());
+            Console.WriteLine(firstCard.getCardProperty());
+            Console.WriteLine(firstCard.getElementTypes());
+            Console.WriteLine(firstCard.getCardType());
+            
 
         }
     }
