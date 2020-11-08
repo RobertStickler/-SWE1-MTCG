@@ -14,4 +14,11 @@ namespace SWE1_MTCG
         public string message;
 
     }
+    public class ResponseContext
+    {
+        public string version;
+        public string status_code;
+        public string status_message;
+        public string header;
+    }
 }

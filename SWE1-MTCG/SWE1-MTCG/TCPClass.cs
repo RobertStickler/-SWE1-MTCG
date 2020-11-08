@@ -133,5 +133,41 @@ namespace SWE1_MTCG
                 Console.WriteLine("Error: {0}", outOfRange.Message);
             }            
         }
+        //###################################################################################
+        
+        public static string GetResponse(RequestContext message)
+        {
+            ResponseContext response = new ResponseContext();
+
+            response.version = message.version;
+
+            if(message.unique_id != "0")
+            {       
+                response.status_message = "OK";
+                response.status_code = "200";
+            }
+            else
+            {
+                response.status_message = "FAIL";
+                response.status_code = "111";
+            }
+
+            response.header = MakeHeader(message);
+
+            return response.version + " " + response.status_code + " " + response.status_message + response.header;
+;        } 
+        public static string MakeHeader(RequestContext message)
+        {
+            string localDate = DateTime.Now.ToString();
+            string temp ="\nDate" + localDate
+                        + "\nServer Apache"
+                        + "\nLast-Modified: " + localDate
+                        + "\nERag: " + message.unique_id
+                        + "\nAccept.Ranges: bytes"
+                        + "\nContent-Length: " + (message.header.Length + message.message.Length).ToString()
+                        + "\nContent-Length: text/html\n";
+
+            return temp;
+        }
     }
 }

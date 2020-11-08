@@ -121,11 +121,16 @@ class MyTcpListener
                         {
                             Console.WriteLine("Error: /messages/ + number expected");
                         }
+                        
                     }
                     else
                     {
                         tcpClass.PrintUsage();
                     }
+                    //prepare answer
+                    string answer = TCPClass.GetResponse(request);
+                    byte[] anser_byte = System.Text.Encoding.ASCII.GetBytes(answer);
+                    stream.Write(anser_byte, 0, anser_byte.Length);
                     //Console.WriteLine(request.message);
                 }
                 // Shutdown and end connection
