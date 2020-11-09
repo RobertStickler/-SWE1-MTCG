@@ -12,7 +12,6 @@ namespace SWE1_MTCG
         public string version;
         public string path;
         public string message;
-
     }
     public class ResponseContext
     {

@@ -29,6 +29,15 @@ namespace NUnitTest
             //assert
             Assert.NotNull(tcpClass);
         }
+        [Test]
+        public void RequestContextTest()
+        {
+            var A = new RequestContext();
+            var B = new ResponseContext();
+
+            Assert.AreEqual("0", A.unique_id);
+            Assert.NotNull(B);
+        }
     }
         
 }
