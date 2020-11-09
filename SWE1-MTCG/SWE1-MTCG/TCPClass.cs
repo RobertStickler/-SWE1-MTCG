@@ -23,22 +23,23 @@ namespace SWE1_MTCG
             string[] line = data.Split("\n"); //Bei einem Enter trennen
             string[] tempfirstline = line[0].Split(" "); //die erste Zeile an den Leerzeichen trennen
             //die Zeilen für den Header zusammenfassen
-            for (int j = 1; j <= 4; j++)
+            for (int j = 1; j <= 5; j++)
             {
-                request.header += line[j];
+                request.header += line[j];                
                 request.header += "\n";
             }
             //die Zeilen der message zusammenfassen
-            for (int k = 5; k < line.Length; k++)
+            for (int k = 6; k < line.Length; k++)
             {
                 request.message += line[k];
+                request.message = request.message.Trim(new char[] {'\r', '\n' });
                 request.message += "\n";
             }
             //Console.WriteLine(header);        
             //die separierten Daten in unserem Objekt speichern
             request.method = tempfirstline[0];
             request.path = tempfirstline[1];
-            request.version = tempfirstline[2];
+            request.version = tempfirstline[2].Trim(new char[] { ' ', '\r', '\n' });
             //Console.WriteLine(request.message);
             return request;
         }
@@ -49,7 +50,8 @@ namespace SWE1_MTCG
             int number = 0;
             foreach (RequestContext aPart in Liste)
             {             
-                Console.WriteLine("\n{0} uid: {1} \nmessage: {2}", number, aPart.unique_id, aPart.message);               
+                Console.WriteLine("\n{0} uid: {1} \nmessage: {2}", number, aPart.unique_id, aPart.message);
+                Console.WriteLine(aPart.header);
                 number++; ;
             }            
         }
@@ -139,8 +141,6 @@ namespace SWE1_MTCG
         {
             ResponseContext response = new ResponseContext();
 
-            response.version = message.version;
-
             if(message.unique_id != "0")
             {       
                 response.status_message = "OK";
@@ -153,19 +153,31 @@ namespace SWE1_MTCG
             }
 
             response.header = MakeHeader(message);
+            response.message = MakeMessage(message);
 
-            return response.version + " " + response.status_code + " " + response.status_message + response.header;
+            return message.version + " " 
+                    + response.status_code + " " 
+                    + response.status_message 
+                    + response.header + "\n" 
+                    + response.message;
 ;        } 
         public static string MakeHeader(RequestContext message)
         {
+            string tempMessage = message.message.Trim(new char[] { '\r', '\n' });
             string localDate = DateTime.Now.ToString();
-            string temp ="\nDate" + localDate
+            string temp = "\nDate" + localDate
                         + "\nServer Apache"
                         + "\nLast-Modified: " + localDate
                         + "\nERag: " + message.unique_id
                         + "\nAccept.Ranges: bytes"
-                        + "\nContent-Length: " + (message.header.Length + message.message.Length).ToString()
-                        + "\nContent-Length: text/html\n";
+                        + "\nContent-Length: " + (tempMessage.Length).ToString()
+                        + "\nContent-Type: text/html\n";
+            return temp;
+        }
+        public static string MakeMessage(RequestContext message)
+        {
+            string temp ="\n<html><header><title>Test?</title></header>"
+                        + "<body>" + message.message + "</body></html>";
 
             return temp;
         }

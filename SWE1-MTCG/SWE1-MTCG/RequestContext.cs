@@ -20,5 +20,6 @@ namespace SWE1_MTCG
         public string status_code;
         public string status_message;
         public string header;
+        public string message;
     }
 }

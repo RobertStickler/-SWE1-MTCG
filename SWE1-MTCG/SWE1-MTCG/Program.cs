@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Collections.Generic;
 using SWE1_MTCG;
+using System.Net.Http;
 
 class MyTcpListener
 {
@@ -131,6 +132,7 @@ class MyTcpListener
                     string answer = TCPClass.GetResponse(request);
                     byte[] anser_byte = System.Text.Encoding.ASCII.GetBytes(answer);
                     stream.Write(anser_byte, 0, anser_byte.Length);
+
                     //Console.WriteLine(request.message);
                 }
                 // Shutdown and end connection
