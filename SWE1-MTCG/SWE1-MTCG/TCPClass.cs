@@ -51,7 +51,7 @@ namespace SWE1_MTCG
             foreach (RequestContext aPart in Liste)
             {             
                 Console.WriteLine("\n{0} uid: {1} \nmessage: {2}", number, aPart.unique_id, aPart.message);
-                Console.WriteLine(aPart.header);
+                //Console.WriteLine(aPart.header);
                 number++; ;
             }            
         }

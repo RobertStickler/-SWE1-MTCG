@@ -17,7 +17,7 @@ namespace NUnitTest
             RequestContext request = TCPClass.GetRequest(data);
 
             Assert.IsNotNull(request);
-            Assert.AreEqual(request.message , "\nich bin ein Test\n");
+            Assert.AreEqual(request.message , "ich bin ein Test\n");
         }
 
         [Test]
