@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+
 
 namespace SWE1_MTCG
 {
@@ -193,12 +192,6 @@ namespace SWE1_MTCG
                         + "\nContent-Length: " + (newMesasge.message.Length).ToString()
                         + "\nContent-Type: text/html\n";
             return temp;
-        }
-        public static string MakeMessage(RequestContext message)
-        {
-            string temp ="<html><header><title>" + "Test" + "?</title></header>"          + "<body>" + message.message + "</body></html>";
-
-            return "Empty";
         }
     }
 }
