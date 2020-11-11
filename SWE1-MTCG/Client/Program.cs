@@ -14,9 +14,13 @@ namespace Client
     {
         public static void Main()
         {
+            Console.Write("Username: ");
+            string userName = Console.ReadLine();
+            Console.WriteLine("Password: ");
+            string password = Console.ReadLine();
             ClientFunctions conetction = new ClientFunctions();
 
-            conetction.SocketConnection();
+            conetction.SocketConnection(userName, password);
         }
         
     }
