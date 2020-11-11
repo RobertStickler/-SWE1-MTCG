@@ -14,18 +14,18 @@
       <FileName>RequestContext.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SWE1_MTCG.ResponseContext">
-    <Position X="7.75" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAACQAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAACA=</HashCode>
-      <FileName>RequestContext.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="SWE1_MTCG.TCPClass">
     <Position X="6" Y="1.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEBAAAAAIBAAAAAAAAAAASgAAAOAgAAAAAAAACQAAA=</HashCode>
       <FileName>TCPClass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE1_MTCG.ResponseContext">
+    <Position X="7.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACQAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAACA=</HashCode>
+      <FileName>RequestContext.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

@@ -16,6 +16,7 @@ class MyTcpListener
         TCPClass tcpClass = new TCPClass();
         TcpListener server = null;
         List<RequestContext> Liste = new List<RequestContext>();
+        string allMessages = "";
 
         try
         {
@@ -63,7 +64,8 @@ class MyTcpListener
                     if ((TCPClass.GetPath ( request.path) != "messages"))
                     {
                         Console.WriteLine("Wrong Path");
-                        break;
+                        client.Close();
+                        continue;
                     }
 
                     //if um die einzelnen Bedingungen abzufragen
@@ -72,7 +74,7 @@ class MyTcpListener
                         if (request.path == "/messages")
                         {
                             //lists all messages
-                            TCPClass.GetAllMessages(Liste);
+                            allMessages = TCPClass.GetAllMessages(Liste);
                         }
                         else
                         {
@@ -129,7 +131,7 @@ class MyTcpListener
                         tcpClass.PrintUsage();
                     }
                     //prepare answer
-                    string answer = TCPClass.GetResponse(request);
+                    string answer = TCPClass.GetResponse(request, allMessages);
                     byte[] anser_byte = System.Text.Encoding.ASCII.GetBytes(answer);
                     stream.Write(anser_byte, 0, anser_byte.Length);
 
