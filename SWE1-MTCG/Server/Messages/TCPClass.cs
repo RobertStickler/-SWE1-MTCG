@@ -52,7 +52,9 @@ namespace SWE1_MTCG
                     request.message += oneLine;
                     request.message += "\n";
                 }
+                
             }
+            request.message = request.message.Trim('\n', '\0');
 
             //to output the dict 
             foreach ( KeyValuePair<string, string> kvp in request.KeyValues)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cards;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,6 +10,23 @@ namespace SWE1_MTCG
         public string message;
 
         public Dictionary<string, string> KeyValues = new Dictionary<string, string>();
+   
+        public List<BaseCards> cardDeck = new List<BaseCards>();
+
+
+
+
+
+
+        public string GetUsernameFromDict()
+        {
+            foreach (KeyValuePair<string, string> entry in KeyValues)
+            {
+                if (entry.Key == "UserName")
+                    return entry.Value;
+            }
+            return "not Found";
+        }
     }
     /*
         POST /messages HTTP/1.1

@@ -20,25 +20,31 @@ namespace Server
 
             return Cards4Battle1;
         }
-        public static void AddToBattleQueue(RequestContext request)
+        public static string AddToBattleQueue(List<RequestContext> Liste)
         {
-            //warten
-            List<RequestContext> battleQueue = new List<RequestContext>();
-            battleQueue.Add(request);
 
-            while(true)
+            if((Liste.Count >=  2))
             {
-                if(battleQueue.Count == 2)
+                //start battle
+                string username = "";
+                int sieger = BattleLogic.StartBattle(Liste[0].cardDeck, Liste[1].cardDeck);
+                
+                if(sieger == 1)
                 {
-                    //start battle
+                    username = Liste[0].GetUsernameFromDict();
+                    return username;
                 }
-
-
+                if (sieger == 2)
+                {
+                    username = Liste[1].GetUsernameFromDict();
+                    return username;
+                }
+                return "noOne";
             }
             //start the battel
-                    Console.WriteLine("two players found!");
+            //Console.WriteLine("two players found!");
 
-
+            return "noOne";
         }
 
     }

@@ -48,18 +48,22 @@ namespace Server
                         Console.WriteLine("SERVER RECEIVED:\n" + data);
 
                         //data verwalten und in ein Objekt speichern
-                        clientList.Add(TCPClass.GetRequest(data));
-                        int lastIndex = clientList.Count;
+                        RequestContext request = TCPClass.GetRequest(data);  
+                        string sieger = "noOne";
+            
 
-                        string temp_msg = clientList[lastIndex -1].message;
-                        
-                        
-
-                        if (temp_msg.Trim('\n','\0') == "StartTheBattle")
+                        if (request.message == "StartTheBattle")
                         {
-                            Console.WriteLine("the battle can start");
-                            var Cards4Battle1 = BattleMaker.GetRandCards();
-                            BattleMaker.AddToBattleQueue(clientList[lastIndex - 1]);
+                            request.cardDeck = BattleMaker.GetRandCards();
+                            clientList.Add(request);
+
+                            while (sieger == "noOne")
+                            { 
+                                sieger = BattleMaker.AddToBattleQueue(clientList);                                
+                            }
+                            Console.WriteLine("And the winner is: {0}", sieger);
+                            clientList.RemoveAt(0);
+
                         }
                     }).Start();
                 }
