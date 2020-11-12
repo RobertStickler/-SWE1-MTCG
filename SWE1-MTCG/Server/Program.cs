@@ -1,4 +1,5 @@
-﻿using SWE1_MTCG;
+﻿using Cards;
+using SWE1_MTCG;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,16 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            ConnectionEstablishment.startServer();
+
+            MySqlDataClass mysql = new MySqlDataClass();
+            //mysql.runQuery("Select * from cardcollection;");
+            List<BaseCards> liste =  mysql.getCardsFromDB();
+
+            foreach(BaseCards element in liste)
+            {
+                Console.WriteLine("{0} {1} {2} {3}",element.getCardName(), element.getCardType(), element.getElementTypes(), element.getCardProperty());
+            }
+            //ConnectionEstablishment.startServer();
         }
         
 

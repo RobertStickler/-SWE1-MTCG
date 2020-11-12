@@ -122,7 +122,7 @@ namespace SWE1_MTCG
                     }
                 case 2:
                     {
-                        tempCard = new Org(damage, name, tempElement);
+                        tempCard = new Ork(damage, name, tempElement);
                         break;
                     }
                 case 3:

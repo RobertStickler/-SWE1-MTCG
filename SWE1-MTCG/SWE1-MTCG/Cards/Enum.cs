@@ -14,7 +14,7 @@ namespace MyEnum
 	{
 		Dragon,
 		Knight,
-		Org,
+		Ork,
 		Wizard,
 		Goblin,
 		Kraken,

@@ -212,7 +212,7 @@ namespace SWE1_MTCG
                 Console.WriteLine("Goblin cannot attack Dragon");
                 return false;
             }
-            else if((Player1.getCardProperty() == cardProperty.Org) && (Player2.getCardProperty() == cardProperty.Wizard))
+            else if((Player1.getCardProperty() == cardProperty.Ork) && (Player2.getCardProperty() == cardProperty.Wizard))
             {
                 Console.WriteLine("Org cannot attack Wizard");
                 return false;

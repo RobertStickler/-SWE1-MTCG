@@ -30,7 +30,7 @@ namespace Server
             Console.Write("Waiting for a connection... ");
             TcpListener listener = new TcpListener(IPAddress.Any, port);
             MessageHandler messageHandler = new MessageHandler();
-            listener.Start();
+            listener.Start();            
 
 
             while (true)
