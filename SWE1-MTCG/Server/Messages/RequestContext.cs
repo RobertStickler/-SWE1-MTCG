@@ -15,9 +15,6 @@ namespace SWE1_MTCG
 
 
 
-
-
-
         public string GetUsernameFromDict()
         {
             foreach (KeyValuePair<string, string> entry in KeyValues)

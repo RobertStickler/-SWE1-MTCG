@@ -31,9 +31,11 @@ namespace Server
             databaseConnection = new MySqlConnection(mySQLConnectionString);
         }
 
-        public void runQuery(string queryToRun)
+        public RequestContext GetUser()
         {
-            MySqlCommand commandDatabase = new MySqlCommand(queryToRun, databaseConnection);
+            string query = "SELECT * FROM userdata;";
+            RequestContext request = null;
+            MySqlCommand commandDatabase = new MySqlCommand(query, databaseConnection);
             commandDatabase.CommandTimeout = 60;
             try
             {
@@ -47,9 +49,13 @@ namespace Server
                     while (myReader.Read())
                     {
 
-                        Console.WriteLine(myReader.GetValue(0).GetType() + " - " + myReader.GetString(1).GetType() + " - " + myReader.GetString(2).GetType() + " - " + myReader.GetValue(3).GetType());
-                        //id                        //firstname                         //givename                          //cardid
-                        Console.WriteLine(myReader.GetValue(0) + " - " + myReader.GetString(1) + " - " + myReader.GetString(2) + " - " + myReader.GetValue(3));
+                        string username = (string)myReader.GetValue(0);
+                        string uid = (string)myReader.GetValue(1);
+                        string email = (string)myReader.GetValue(2);
+                        string pwd = (string)myReader.GetValue(3);
+                        int coins = (int)myReader.GetValue(4);
+                        string userCardsStrin = (string)myReader.GetValue(5);
+                        Console.WriteLine(myReader.GetValue(0) + " - " + myReader.GetString(1) + " - " + myReader.GetString(2) + " - " + myReader.GetValue(3) + " - " + myReader.GetValue(4) + " - " + myReader.GetValue(5));
                     }
                 }
                 else
@@ -62,6 +68,7 @@ namespace Server
             {
                 Console.WriteLine("Query Error: " + e.Message);
             }
+            return request;
         }
         public List<BaseCards> getCardsFromDB()
         {
@@ -90,8 +97,6 @@ namespace Server
                         string name = myReader.GetString(4);
                         int damage = Int32.Parse(myReader.GetString(5));
 
-
-
                         if (temp_cardTypes == cardTypes.Monster)
                         {
                             temp = new MonsterCard(damage, name, temp_elementTypes, temp_cardProperty);
@@ -100,15 +105,12 @@ namespace Server
                         {
                             temp = new SpellCard(damage, name, temp_elementTypes);                            
                         }
-
-
-                        //new BaseCards(damage, name, elementTypes);
                         cards.Add(temp);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Query Successfully executed!");
+                    Console.WriteLine("Query Error!");
                 }
             }
             catch (Exception e)

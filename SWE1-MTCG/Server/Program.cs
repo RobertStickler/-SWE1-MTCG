@@ -18,12 +18,14 @@ namespace Server
 
             MySqlDataClass mysql = new MySqlDataClass();
             //mysql.runQuery("Select * from cardcollection;");
-            List<BaseCards> liste =  mysql.getCardsFromDB();
+            /*List<BaseCards> liste =  mysql.getCardsFromDB();
+            
 
-            foreach(BaseCards element in liste)
+            foreach (BaseCards element in liste)
             {
                 Console.WriteLine("{0} {1} {2} {3}",element.getCardName(), element.getCardType(), element.getElementTypes(), element.getCardProperty());
-            }
+            } */
+            var request = mysql.GetUser();
             //ConnectionEstablishment.startServer();
         }
         
