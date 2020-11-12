@@ -12,6 +12,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters;
 using SWE1_MTCG.Cards.Monster;
+using SWE1_MTCG.Cards.Zauber;
 
 namespace Server
 {
@@ -81,7 +82,7 @@ namespace Server
                     {
                         BaseCards temp = null;
 
-                        Console.WriteLine(myReader.GetValue(0) + " - " + myReader.GetString(1) + " - " + myReader.GetString(2) + " - " + myReader.GetValue(3) + " - " + myReader.GetValue(4) + " - " + myReader.GetValue(5));                        
+                        Console.WriteLine(myReader.GetValue(0) + " - " + myReader.GetString(1) + " - " + myReader.GetString(2) + " - " + myReader.GetValue(3) + " - " + myReader.GetValue(4) + " - " + myReader.GetValue(5));
                         //nur zur übersicht
                         elementTypes temp_elementTypes = (elementTypes)Enum.Parse(typeof(elementTypes), myReader.GetString(1));
                         cardTypes temp_cardTypes = (cardTypes)Enum.Parse(typeof(cardTypes), myReader.GetString(2));
@@ -89,47 +90,15 @@ namespace Server
                         string name = myReader.GetString(4);
                         int damage = Int32.Parse(myReader.GetString(5));
 
-                        switch(temp_cardProperty)
+
+
+                        if (temp_cardTypes == cardTypes.Monster)
                         {
-                            case cardProperty.Dragon:
-                                {
-                                    temp = new Dragon(damage, name, temp_elementTypes);
-                                        break;
-                                }
-                            case cardProperty.Knight:
-                                {
-                                    temp = new Knight(damage, name, temp_elementTypes);
-                                    break;
-                                }
-                            case cardProperty.Ork:
-                                {
-                                    temp = new Ork(damage, name, temp_elementTypes);
-                                    break;
-                                }
-                            case cardProperty.Wizard:
-                                {
-                                    temp = new Wizard(damage, name, temp_elementTypes);
-                                    break;
-                                }
-                            case cardProperty.Goblin:
-                                {
-                                    temp = new Goblin(damage, name, temp_elementTypes);
-                                    break;
-                                }
-                            case cardProperty.Kraken:
-                                {
-                                    temp = new Kraken(damage, name, temp_elementTypes);
-                                    break;
-                                }
-                            case cardProperty.Elf:
-                                {
-                                    temp = new Elf(damage, name, temp_elementTypes);
-                                    break;
-                                }
-                            default:
-                                {
-                                    break;
-                                }
+                            temp = new MonsterCard(damage, name, temp_elementTypes, temp_cardProperty);
+                        }
+                        else if (temp_cardTypes == cardTypes.Spell)
+                        {
+                            temp = new SpellCard(damage, name, temp_elementTypes);                            
                         }
 
 

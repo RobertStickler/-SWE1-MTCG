@@ -17,13 +17,13 @@ namespace SWE1_MTCG.Test
     public class AttackTest
     {
         private Dragon _dragon;
-        private FireSpell _fireSpell;
+        private SpellCard _fireSpell;
 
         [SetUp]
         public void Setup()
         {
             _dragon = new Dragon(25, "Ancalagon", elementTypes.Water);
-            _fireSpell = new FireSpell(25, "Gnorsig");
+            _fireSpell = new SpellCard(25, "Gnorsig");
         }
 
         [Test]
@@ -39,13 +39,13 @@ namespace SWE1_MTCG.Test
     public class DemageTest
     {
         private Dragon _dragon;
-        private FireSpell _fireSpell;
+        private SpellCard _fireSpell;
 
         [SetUp]
         public void Setup()
         {
             _dragon = new Dragon(25, "Ancalagon", elementTypes.Water);
-            _fireSpell = new FireSpell(25, "Gnorsig");
+            _fireSpell = new SpellCard(25, "Gnorsig");
         }
 
         [Test]

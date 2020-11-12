@@ -6,12 +6,12 @@ using MyEnum;
 
 namespace SWE1_MTCG.Cards.Zauber
 {
-    public class FireSpell : BaseCards
+    public class SpellCard : BaseCards
     {
-        public FireSpell(int damage, string name) : base(damage, name)
+        public SpellCard(int damage, string name, elementTypes element_types) : base(damage, name)
         {
             this.card_type = cardTypes.Spell;
-            this.element_type = elementTypes.Fire;
+            this.element_type = element_types;
         }
 
     }

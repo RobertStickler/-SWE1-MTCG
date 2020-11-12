@@ -7,6 +7,7 @@ using MyEnum;
 using SWE1_MTCG.Cards.Monster;
 using SWE1_MTCG.Cards.Zauber;
 using NamesCollection;
+using Microsoft.VisualBasic.FileIO;
 
 namespace SWE1_MTCG
 {
@@ -52,24 +53,11 @@ namespace SWE1_MTCG
             //irgwie da mit nem namen machen
             string name = CreateNameSpell();
 
-            switch (randElement)
-            {
-                case 0:
-                    {
-                        tempCard = new FireSpell(damage, name);
-                        break;
-                    }
-                case 1:
-                    {
-                        tempCard = new WaterSpell(damage, name);
-                        break;
-                    }
-                case 2:
-                    {
-                        tempCard = new NormalSpell(damage, name);
-                        break;
-                    }
-            }      
+            //set the cardProperty
+            string card_Element = Enum.GetName(typeof(elementTypes), randElement);
+            elementTypes tempElement = ((elementTypes)Enum.Parse(typeof(elementTypes), card_Element));
+
+            tempCard = new SpellCard(damage, name, tempElement);
            return tempCard;
         }
 
@@ -105,49 +93,18 @@ namespace SWE1_MTCG
             string name = CreateNameMonster();
 
             //set the cardProperty
-            string card_property = Enum.GetName(typeof(elementTypes), randElement);
-            elementTypes tempElement = ((elementTypes)Enum.Parse(typeof(elementTypes), card_property));
+            string card_Element = Enum.GetName(typeof(elementTypes), randElement);
+            elementTypes tempElement = ((elementTypes)Enum.Parse(typeof(elementTypes), card_Element));
 
-            switch (randType)
-            {
-                case 0:
-                    {                        
-                        tempCard = new Dragon(damage, name, tempElement);
-                        break;
-                    }
-                case 1:
-                    {
-                        tempCard = new Knight(damage, name, tempElement);
-                        break;
-                    }
-                case 2:
-                    {
-                        tempCard = new Ork(damage, name, tempElement);
-                        break;
-                    }
-                case 3:
-                    {
-                        tempCard = new Wizard(damage, name, tempElement);
-                        break;
-                    }
-                case 4:
-                    {
-                        tempCard = new Goblin(damage, name, tempElement);
-                        break; ;
-                    }
-                case 5:
-                    {
-                        tempCard = new Kraken(damage, name, tempElement);
-                        break; ;
-                    }
-                case 6:
-                    {
-                        tempCard = new Elf(damage, name, tempElement);
-                        break; ;
-                    }
-            }
+            string card_property = Enum.GetName(typeof(cardProperty), randType);
+            cardProperty tempProperty = ((cardProperty)Enum.Parse(typeof(cardProperty), card_property));
+
+
+            tempCard = new MonsterCard(damage, name, tempElement, tempProperty);
+
             return tempCard;
-        }
+                    
+            }
         static int ChooseMainName()
         {
             int temp = Enum.GetNames(typeof(cardMainNamesMonster)).Length; //beginnt bei 1 zu zählen also 7
