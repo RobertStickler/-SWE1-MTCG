@@ -60,8 +60,6 @@ namespace SWE1_MTCG
             int Sieger = BattleLogic.StartBattle(Cards4Battle1, Cards4Battle2);
             Console.WriteLine(Sieger);
         }
-    }
-
-    
+    }  
     
 }

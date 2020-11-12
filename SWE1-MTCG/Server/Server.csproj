@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.22" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Client\Client.csproj" />
     <ProjectReference Include="..\SWE1-MTCG\SWE1_MTCG.csproj" />
   </ItemGroup>

@@ -22,12 +22,18 @@ namespace Server
         }
         public static string AddToBattleQueue(List<RequestContext> Liste)
         {
+            
 
             if((Liste.Count >=  2))
             {
                 //start battle
+                var playerOne = Liste[0];
+                var playerTwo = Liste[1];
+                Liste.RemoveAt(0);
+                Liste.RemoveAt(1);
                 string username = "";
-                int sieger = BattleLogic.StartBattle(Liste[0].cardDeck, Liste[1].cardDeck);
+                
+                int sieger = BattleLogic.StartBattle(playerOne.cardDeck, playerTwo.cardDeck);
                 
                 if(sieger == 1)
                 {

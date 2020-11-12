@@ -135,11 +135,10 @@ namespace SWE1_MTCG
 
             while ((Test4Winner(Cards4Battle1.Count, Cards4Battle2.Count) == false) && (counterLoop < 100))
             {
-                a = Cards4Battle1.Count;
-                b = Cards4Battle2.Count;
+  
 
-                int cardPlayer1 = rnd.Next(a);  // creates a number from 0 to 3
-                int cardPlayer2 = rnd.Next(b);
+                int cardPlayer1 = rnd.Next(Cards4Battle1.Count);  // creates a number from 0 to 3
+                int cardPlayer2 = rnd.Next(Cards4Battle2.Count);
 
                 Console.WriteLine("Player one card {0}", cardPlayer1);
                 Console.WriteLine("Player two card {0}", cardPlayer2);
@@ -180,13 +179,13 @@ namespace SWE1_MTCG
 
             }
 
-            if (a == 1)
+            if (a == 0)
             {
                 Console.WriteLine("The winner is Player 2");
                 return 2;
             }
                 
-            if (b == 1)
+            if (b == 0)
             {
                 Console.WriteLine("The winner is Player 1");
                 return 1;

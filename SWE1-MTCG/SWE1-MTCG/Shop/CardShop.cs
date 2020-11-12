@@ -6,6 +6,7 @@ using System.Text;
 using MyEnum;
 using SWE1_MTCG.Cards.Monster;
 using SWE1_MTCG.Cards.Zauber;
+using NamesCollection;
 
 namespace SWE1_MTCG
 {
@@ -49,7 +50,7 @@ namespace SWE1_MTCG
             int damage = rand.Next(51);
 
             //irgwie da mit nem namen machen
-            string name = "tempname";
+            string name = CreateNameSpell();
 
             switch (randElement)
             {
@@ -101,7 +102,7 @@ namespace SWE1_MTCG
             int damage = rand.Next(51);
 
             //irgwie da mit nem namen machen
-            string name = "tempname";
+            string name = CreateNameMonster();
 
             //set the cardProperty
             string card_property = Enum.GetName(typeof(elementTypes), randElement);
@@ -146,6 +147,47 @@ namespace SWE1_MTCG
                     }
             }
             return tempCard;
+        }
+        static int ChooseMainName()
+        {
+            int temp = Enum.GetNames(typeof(cardMainNamesMonster)).Length; //beginnt bei 1 zu zählen also 7
+            int randElement = rand.Next(temp); //generiert dann zahlen von 0 bis 6, also auch 7  insgesamt
+            return randElement;
+        }
+        static int ChooseMainNameSpell()
+        {
+            int temp = Enum.GetNames(typeof(cardMainNamesSpell)).Length; //beginnt bei 1 zu zählen also 7
+            int randElement = rand.Next(temp); //generiert dann zahlen von 0 bis 6, also auch 7  insgesamt
+            return randElement;
+        }
+        static int ChooseAttribute()
+        {
+            int temp = Enum.GetNames(typeof(cardAttributeInNameMonster)).Length; //beginnt bei 1 zu zählen also 7
+            int randElement = rand.Next(temp); //generiert dann zahlen von 0 bis 6, also auch 7  insgesamt
+            return randElement;
+        }
+        static int ChooseType()
+        {
+            int temp = Enum.GetNames(typeof(cardTypeForNameMonster)).Length; //beginnt bei 1 zu zählen also 7
+            int randElement = rand.Next(temp); //generiert dann zahlen von 0 bis 6, also auch 7  insgesamt
+            return randElement;
+        }
+        public static string CreateNameMonster()
+        {
+            string mainName = Enum.GetName(typeof(cardMainNamesMonster), ChooseMainName());
+            string attribute = Enum.GetName(typeof(cardAttributeInNameMonster), ChooseAttribute());
+            string type = Enum.GetName(typeof(cardTypeForNameMonster), ChooseType());
+
+            string temp = mainName + " the " + attribute + " " + type;
+            return temp;
+        }
+        public static string CreateNameSpell()
+        {
+            string mainName = Enum.GetName(typeof(cardMainNamesSpell), ChooseMainNameSpell());
+            string attribute = Enum.GetName(typeof(elementTypes), ChooseElement());
+
+            string temp = attribute + " " + mainName  ;
+            return temp;
         }
     }
 }

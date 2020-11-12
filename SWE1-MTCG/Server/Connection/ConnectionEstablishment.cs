@@ -57,12 +57,14 @@ namespace Server
                             request.cardDeck = BattleMaker.GetRandCards();
                             clientList.Add(request);
 
+                            //noch lock hinzufügen
                             while (sieger == "noOne")
                             { 
-                                sieger = BattleMaker.AddToBattleQueue(clientList);                                
+                                sieger = BattleMaker.AddToBattleQueue(clientList);
+                                Thread.Sleep(1000);
                             }
                             Console.WriteLine("And the winner is: {0}", sieger);
-                            clientList.RemoveAt(0);
+                            
 
                         }
                     }).Start();
