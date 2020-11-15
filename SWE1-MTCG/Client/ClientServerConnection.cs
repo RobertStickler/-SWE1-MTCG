@@ -11,26 +11,19 @@ namespace Client
     public class ClientFunctions
     {
 
-        public void SocketConnection(string userName, string password)
+        public void SocketConnection(int choice)
         {
             var request = new RequestContextClient();
             request.port = 6543;
             request.ip = "127.0.0.1";
-            request.username = userName;
-            request.pwd = password;
+            request.message_number = choice.ToString();
                         
             var client = new TcpClient(request.ip, request.port);
             var stream = client.GetStream();
             var msg = new Message();
-            
 
-            Console.WriteLine("1...Start Battle");
-            Console.WriteLine("2...GET");
-            Console.WriteLine("3...POST");
-            Console.WriteLine("4...PUT");
-            Console.WriteLine("5...DELETE");
 
-            request.message_number = Console.ReadLine().Trim('\n');
+         
 
             try
             {                

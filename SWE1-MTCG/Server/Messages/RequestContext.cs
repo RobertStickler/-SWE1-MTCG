@@ -24,6 +24,15 @@ namespace SWE1_MTCG
             }
             return "not Found";
         }
+        public string GetPWDFromDict()
+        {
+            foreach (KeyValuePair<string, string> entry in KeyValues)
+            {
+                if (entry.Key == "Password")
+                    return entry.Value;
+            }
+            return "not Found";
+        }
     }
     /*
         POST /messages HTTP/1.1

@@ -14,13 +14,19 @@ namespace Client
     {
         public static void Main()
         {
-            Console.Write("Username: ");
-            string userName = Console.ReadLine();
-            Console.WriteLine("Password: ");
-            string password = Console.ReadLine();
+
+            //Console.WriteLine("1...Start Battle");
+            Console.WriteLine("choose your action");
+            Console.WriteLine("1...login");
+            Console.WriteLine("2...register");
+            Console.WriteLine("0...quit");
+
+            int choice = Int32.Parse(Console.ReadLine().Trim('\n'));
+            //inut error handling
+
             ClientFunctions conetction = new ClientFunctions();
 
-            conetction.SocketConnection(userName, password);
+            conetction.SocketConnection(choice);
         }
         
     }

@@ -16,6 +16,8 @@ using SWE1_MTCG.Cards.Zauber;
 
 namespace Server
 {
+    //eine funktioin um die karten vom user herauszufinden
+    //eine funktion um die besten 4 karten herauszufinden
     public class MySqlDataClass
     {
         public MySqlConnection databaseConnection;
@@ -31,10 +33,13 @@ namespace Server
             databaseConnection = new MySqlConnection(mySQLConnectionString);
         }
 
-        public RequestContext GetUser()
+        public DbUser GetOneUser(string userName)
         {
-            string query = "SELECT * FROM userdata;";
-            RequestContext request = null;
+            string query = "SELECT * FROM userdata WHERE UserName = '" + userName + "';";
+            //string query = "SELECT * FROM userdata;";
+
+
+            DbUser userObjekt = new DbUser();
             MySqlCommand commandDatabase = new MySqlCommand(query, databaseConnection);
             commandDatabase.CommandTimeout = 60;
             try
@@ -48,14 +53,12 @@ namespace Server
 
                     while (myReader.Read())
                     {
-
-                        string username = (string)myReader.GetValue(0);
-                        string uid = (string)myReader.GetValue(1);
-                        string email = (string)myReader.GetValue(2);
-                        string pwd = (string)myReader.GetValue(3);
-                        int coins = (int)myReader.GetValue(4);
-                        string userCardsStrin = (string)myReader.GetValue(5);
-                        Console.WriteLine(myReader.GetValue(0) + " - " + myReader.GetString(1) + " - " + myReader.GetString(2) + " - " + myReader.GetValue(3) + " - " + myReader.GetValue(4) + " - " + myReader.GetValue(5));
+                        Console.WriteLine(myReader.GetValue(0) + " - " + myReader.GetString(1) + " - " + myReader.GetString(2) + " - " + myReader.GetString(3) + " - " + myReader.GetValue(4));
+                        userObjekt.userName = (string)myReader.GetValue(0);
+                        userObjekt.uid = myReader.GetString(1);
+                        userObjekt.email = myReader.GetString(2);
+                        userObjekt.pwd = myReader.GetString(3);
+                        userObjekt.coins = (int)myReader.GetValue(4);
                     }
                 }
                 else
@@ -68,7 +71,7 @@ namespace Server
             {
                 Console.WriteLine("Query Error: " + e.Message);
             }
-            return request;
+            return userObjekt;
         }
         public List<BaseCards> getCardsFromDB()
         {
