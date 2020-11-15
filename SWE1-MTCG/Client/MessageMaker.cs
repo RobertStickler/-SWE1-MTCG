@@ -14,10 +14,10 @@ namespace Client
         readonly string advice = "POST ";
 
 
-
         public string GetMessage(RequestContextClient request)
         {         
             string temp_msg = null;
+            string message = "";
 
             /*
             while ((temp = Console.ReadLine()) != ".")
@@ -25,9 +25,6 @@ namespace Client
                 temp_msg += temp + "\n";
             }
             */
-            request.username = "empty";
-            request.pwd = "empty";
-            request.message = "empty";
 
             if (request.message_number == "1")
             {
@@ -37,24 +34,51 @@ namespace Client
                 Console.WriteLine("Password: ");
                 request.pwd = Console.ReadLine();
                 temp_msg = "Login";
+                message = MakeRequest(request, temp_msg);
+
             }
             else if (request.message_number == "2")
             {
                 //prepare for register
                 temp_msg = "Register";
+                Console.Write("Username: ");
+                request.username = Console.ReadLine();
+                Console.WriteLine("Password: ");
+                request.pwd = Console.ReadLine();
+                Console.WriteLine("email: ");
+                request.email = Console.ReadLine();
+                message = MakeRegisterRequest(request, temp_msg);
             }
             else if (request.message_number == "3")
             {
                 //kommt erst, wenn eingeloggt
                 temp_msg = "StartTheBattle";
-            }
+                message = MakeRequest(request, temp_msg);
+            }            
 
+            return message;
+        }
+        public string MakeRequest(RequestContextClient request, string temp_msg)
+        {
             string message = advice + path + http_version;
             message += "Content-Type: " + content_type;
             message += "Content-Lenght: " + (temp_msg.Length).ToString() + "\n";
             message += "Host: " + request.ip + ":" + request.port.ToString();
             message += "\nUserName: " + request.username;
             message += "\nPassword: " + request.pwd; ;
+            message += "\n\n" + temp_msg + "\n";
+
+            return message;
+        }
+        public string MakeRegisterRequest(RequestContextClient request, string temp_msg)
+        {
+            string message = advice + path + http_version;
+            message += "Content-Type: " + content_type;
+            message += "Content-Lenght: " + (temp_msg.Length).ToString() + "\n";
+            message += "Host: " + request.ip + ":" + request.port.ToString();
+            message += "\nUserName: " + request.username;
+            message += "\nPassword: " + request.pwd; ;
+            message += "\nEmail: " + request.email; ;
             message += "\n\n" + temp_msg + "\n";
 
             return message;

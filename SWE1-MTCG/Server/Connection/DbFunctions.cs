@@ -21,12 +21,23 @@ namespace Server
             Console.WriteLine(user.userName);
             if (request.GetPWDFromDict() == user.pwd)
             {
-                string message = "You are now logged in";
+                string message = "Succsessful";
                 ServerClientConnection.sendData(stream, message);
                 return true;
             }
             Console.WriteLine("Wrong user or Pwd!");
             return false;
+        }
+        public static RequestContext makeAnotherRequest(TcpClient client, NetworkStream stream)
+        {
+            var request = new RequestContext();
+            string message = "please try again";
+            // Translate the Message into ASCII.
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+            // Send the message to the connected TcpServer. 
+            stream.Write(data, 0, data.Length);
+
+            return request;
         }
 
     }

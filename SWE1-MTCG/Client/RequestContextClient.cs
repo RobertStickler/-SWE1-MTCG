@@ -16,6 +16,7 @@ namespace Client
         public string pwd;
         public string ip;
         public string message_number;
+        public string email;
         public int port;
     }
     

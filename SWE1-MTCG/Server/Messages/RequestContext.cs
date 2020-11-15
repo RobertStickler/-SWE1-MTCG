@@ -1,6 +1,7 @@
 ﻿using Cards;
 using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Text;
 
 namespace SWE1_MTCG
@@ -13,7 +14,7 @@ namespace SWE1_MTCG
    
         public List<BaseCards> cardDeck = new List<BaseCards>();
 
-
+        public NetworkStream stream = null;
 
         public string GetUsernameFromDict()
         {

@@ -28,21 +28,21 @@ namespace Server
             {
                 //start battle
                 var playerOne = Liste[0];
-                var playerTwo = Liste[1];
-                Liste.RemoveAt(0);
+                var playerTwo = Liste[1];                
                 Liste.RemoveAt(1);
+                Liste.RemoveAt(0);
                 string username = "";
                 
                 int sieger = BattleLogic.StartBattle(playerOne.cardDeck, playerTwo.cardDeck);
                 
                 if(sieger == 1)
                 {
-                    username = Liste[0].GetUsernameFromDict();
+                    username = playerOne.GetUsernameFromDict();
                     return username;
                 }
                 if (sieger == 2)
                 {
-                    username = Liste[1].GetUsernameFromDict();
+                    username = playerTwo.GetUsernameFromDict();
                     return username;
                 }
                 return "noOne";

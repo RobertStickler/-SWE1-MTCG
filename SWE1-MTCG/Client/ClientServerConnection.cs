@@ -21,6 +21,8 @@ namespace Client
             var client = new TcpClient(request.ip, request.port);
             var stream = client.GetStream();
             var msg = new Message();
+            string choiceWhenLoggedIn = "-1";
+            bool loggedIn = false;
 
 
          
@@ -29,7 +31,7 @@ namespace Client
             {                
                 string message = msg.GetMessage(request);
 
-                Console.WriteLine("message \n\n");
+                //Console.WriteLine("message \n\n");
                 Console.WriteLine();
 
                 // Translate the Message into ASCII.
@@ -43,7 +45,23 @@ namespace Client
                 // Read the Tcp Server Response Bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 response = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
                 Console.Write("Received:\n{0}", response);
+                Console.WriteLine("\ndu bist bis hier gekommen!");
+                if(response == "Succsessful")
+                {
+                    loggedIn = true;
+
+                    Program.PrintMenueTwo();
+                    choiceWhenLoggedIn = Console.ReadLine(); //noch verifizieren
+                    request.message_number = choiceWhenLoggedIn;
+                    message = msg.GetMessage(request);
+                    data = System.Text.Encoding.ASCII.GetBytes(message);
+                    // Send the message to the connected TcpServer. 
+                    stream.Write(data, 0, data.Length);
+                    Console.Write("Sent:\n{0}", message);
+                    
+                }
 
 
             }
