@@ -13,6 +13,7 @@ namespace SWE1_MTCG
         public Dictionary<string, string> KeyValues = new Dictionary<string, string>();
    
         public List<BaseCards> cardDeck = new List<BaseCards>();
+        public List<BaseCards> cardCollection = new List<BaseCards>();
 
         public NetworkStream stream = null;
 

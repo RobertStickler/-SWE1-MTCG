@@ -100,29 +100,10 @@ namespace Server
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public List<BaseCards> getCardsFromDB()
+        public List<BaseCards> GetCardsFromDB(string username)
         {
             List<BaseCards> cards = new List<BaseCards>();
-            string query = "SELECT * FROM cardcollection;";
+            string query = DbFunctions.MakeQueryGetCards(username);
             Console.WriteLine(query);
             MySqlCommand commandDatabase = new MySqlCommand(query, databaseConnection);
             commandDatabase.CommandTimeout = 60;

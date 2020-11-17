@@ -14,19 +14,19 @@ namespace Server
 {
     public class DbFunctions
     {
-        public static bool VerifyLogin(RequestContext request, NetworkStream stream)
+        public static DbUser VerifyLogin(RequestContext request, NetworkStream stream)
         {            
             MySqlDataClass mysql = new MySqlDataClass();
-            var user = mysql.GetOneUser(request.GetUsernameFromDict()); //erstellt ein DB User objekt
+            DbUser user = mysql.GetOneUser(request.GetUsernameFromDict()); //erstellt ein DB User objekt
             Console.WriteLine(user.userName);
             if (request.GetPWDFromDict() == user.pwd)
             {
                 string message = "Succsessful";
                 ServerClientConnection.sendData(stream, message);
-                return true;
+                return user;
             }
             Console.WriteLine("Wrong user or Pwd!");
-            return false;
+            return null;
         }
         //following is still in progress lol
         public static RequestContext makeAnotherRequest(TcpClient client, NetworkStream stream)
@@ -111,6 +111,16 @@ namespace Server
                            "('" + uid + "', '" + username + "', '" + email + "', '" + password + "', '" + 100 + "')";
             return temp;
         }
+        public static string MakeQueryGetCards(string username)
+        {
+            string temp = "SELECT * From cardcollection\n" +
+                           "JOIN userdata_cardcollection\n" +
+                           "ON cardcollection.card_uid = userdata_cardcollection.fk_card_uid\n" +
+                           "JOIN userdata\n" +
+                           "on userdata.user_uid = userdata_cardcollection.fk_user_uid\n" +
+                           "where username = '" + username + "'";
+            return temp;
+        } 
 
     }
 }

@@ -39,8 +39,10 @@ namespace Server
                             Console.WriteLine("\n Client Connected!");
                             string sieger = "noOne";
                             bool loggedIn = false;
+                            DbUser userFromDb = new DbUser();
                             NetworkStream stream = null;
                             RequestContext request = new RequestContext();
+                            MySqlDataClass mySqlDataClass = new MySqlDataClass();
 
                             while (loggedIn == false)
                             {
@@ -57,8 +59,8 @@ namespace Server
                                     int attempt = 3; //muss ich noch hinzufügen
                                     do
                                     {
-                                        loggedIn = DbFunctions.VerifyLogin(request, stream);                                        
-                                        if (loggedIn == false)
+                                        userFromDb = DbFunctions.VerifyLogin(request, stream);                                        
+                                        if (userFromDb == null)
                                         {
                                             attempt--;
                                             //client antworten und pw und user neu eingeben
@@ -68,9 +70,13 @@ namespace Server
                                             // Send the message to the connected TcpServer. 
                                             stream.Write(response, 0, response.Length);
                                         }
+                                        else
+                                        {
+                                            loggedIn = true;
+                                        }
 
                                     }
-                                    while ((attempt > 0 && loggedIn == false));                                    
+                                    while ((attempt > 0) && (loggedIn == false));                                    
                                     if (attempt == 0)
                                     {
                                         throw new ArgumentException("Password entered incorrectly too often");
@@ -96,7 +102,11 @@ namespace Server
                             if (request.message == "StartTheBattle")
                             {
                                 Console.WriteLine("Das battle beginnt in kürze");
-                                request.cardDeck = BattleMaker.GetRandCards();
+                                //statt den rand card muss ich jz die von einem user abfragen
+                                //request.cardDeck = BattleMaker.GetRandCards();
+
+                                request.cardDeck = mySqlDataClass.GetCardsFromDB(request.GetUsernameFromDict());
+
                                 clientList.Add(request);
 
                                 //noch lock hinzufügen

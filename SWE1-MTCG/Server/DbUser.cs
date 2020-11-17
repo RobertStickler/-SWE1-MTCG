@@ -14,9 +14,8 @@ namespace Server
         public string email;
         public string pwd;
         public int coins;
-        public string userCardsString;
 
-        List<BaseCards> cardCollection = new List<BaseCards>();
-        List<BaseCards> cardDeck = new List<BaseCards>();
+        public List<BaseCards> cardCollection = new List<BaseCards>();
+        public List<BaseCards> cardDeck = new List<BaseCards>();
     }
 }
