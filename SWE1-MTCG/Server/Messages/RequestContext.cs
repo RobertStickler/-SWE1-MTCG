@@ -34,6 +34,15 @@ namespace SWE1_MTCG
             }
             return "not Found";
         }
+        public string GetEmailFromDict()
+        {
+            foreach (KeyValuePair<string, string> entry in KeyValues)
+            {
+                if (entry.Key == "Email")
+                    return entry.Value;
+            }
+            return "not Found";
+        }
     }
     /*
         POST /messages HTTP/1.1

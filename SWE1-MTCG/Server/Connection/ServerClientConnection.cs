@@ -82,6 +82,7 @@ namespace Server
                                 else if (request.message == "Register")
                                 {
                                     //setup for register
+                                    DbFunctions.RegisterAtDB(request, stream);
                                 }
                             }
 

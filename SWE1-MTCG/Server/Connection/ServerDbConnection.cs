@@ -31,6 +31,8 @@ namespace Server
         {
             string mySQLConnectionString = "datasource=127.0.0.1;port=3306; username=root;password=;database=swe_mtcg;";
             databaseConnection = new MySqlConnection(mySQLConnectionString);
+
+
         }
 
         public DbUser GetOneUser(string userName)
@@ -71,8 +73,52 @@ namespace Server
             {
                 Console.WriteLine("Query Error: " + e.Message);
             }
+            databaseConnection.Close();
             return userObjekt;
         }
+
+
+
+        public bool VerifyRegister(string query)
+        { 
+            DbUser userObjekt = new DbUser();
+            MySqlCommand commandDatabase = new MySqlCommand(query, databaseConnection);
+            commandDatabase.CommandTimeout = 60;
+            try
+            {
+                databaseConnection.Open();
+                MySqlDataReader myReader = commandDatabase.ExecuteReader();
+                Console.WriteLine("VerifyRegister executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Query Error: " + e.Message);
+                return false;
+            }
+            databaseConnection.Close();
+            return true;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public List<BaseCards> getCardsFromDB()
         {
             List<BaseCards> cards = new List<BaseCards>();
