@@ -12,7 +12,7 @@ namespace Server
         public static List<BaseCards> GetRandCards()
         {
             List<BaseCards> Cards4Battle1 = new List<BaseCards>();
-            
+
             Cards4Battle1.Add(CardShop.GetRandCard());
             Cards4Battle1.Add(CardShop.GetRandCard());
             Cards4Battle1.Add(CardShop.GetRandCard());
@@ -22,20 +22,20 @@ namespace Server
         }
         public static string AddToBattleQueue(List<RequestContext> Liste)
         {
-            
 
-            if((Liste.Count >=  2))
+
+            if ((Liste.Count >= 2))
             {
                 //start battle
                 var playerOne = Liste[0];
-                var playerTwo = Liste[1];                
+                var playerTwo = Liste[1];
                 Liste.RemoveAt(1);
                 Liste.RemoveAt(0);
                 string username = "";
-                
+
                 int sieger = BattleLogic.StartBattle(playerOne.cardDeck, playerTwo.cardDeck);
-                
-                if(sieger == 1)
+
+                if (sieger == 1)
                 {
                     username = playerOne.GetUsernameFromDict();
                     return username;
@@ -52,6 +52,51 @@ namespace Server
 
             return "noOne";
         }
+        public static List<BaseCards> The4BestCards(List<BaseCards> cardCollection)
+        {
+            List<BaseCards> cardDeck = new List<BaseCards>();
+            BaseCards tempCard = null;
+
+            while (cardDeck.Count < 4)//solange weniger als 4 karten in der liste sind
+            {
+                int temp = 0;
+                for (int i = 0; i < cardCollection.Count; i++)
+                {
+                    if (cardCollection[i].getCardDamage() >= temp) //der damager höher
+                    {
+                        //noch prüfen, ob noch nicht in der liste
+                        bool isInList = CheckList(cardCollection[i], cardDeck);
+
+                        if(isInList == false)
+                        {
+                            temp = cardCollection[i].getCardDamage();
+                            tempCard = cardCollection[i];
+                        }
+                    }
+                }
+                cardDeck.Add(tempCard);
+            }
+
+
+
+            return cardDeck;
+        }
+        public static bool CheckList(BaseCards cardToAdd, List<BaseCards> cardDeck)
+        {
+
+            for(int i = 0; i < cardDeck.Count; i++)
+            {
+                if(cardDeck[i] == cardToAdd)
+                {
+                    return true;
+                }
+            }
+            return false;
+
+
+        }   
+
+
 
     }
 }

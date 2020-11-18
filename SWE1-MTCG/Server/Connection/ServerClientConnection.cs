@@ -105,8 +105,8 @@ namespace Server
                                 //statt den rand card muss ich jz die von einem user abfragen
                                 //request.cardDeck = BattleMaker.GetRandCards();
 
-                                request.cardDeck = mySqlDataClass.GetCardsFromDB(request.GetUsernameFromDict());
-
+                                request.cardCollection = mySqlDataClass.GetCardsFromDB(request.GetUsernameFromDict());
+                                request.cardDeck = BattleMaker.The4BestCards(request.cardCollection);
                                 clientList.Add(request);
 
                                 //noch lock hinzufügen
