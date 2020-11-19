@@ -121,6 +121,31 @@ namespace Server
                            "where username = '" + username + "'";
             return temp;
         } 
+        public static void OptainNewCards(DbUser userFromDb)
+        {
+            BaseCards baseCard = null;
+            int cost = 25;
+            if(userFromDb.coins >= cost)
+            {
+                userFromDb.coins -= cost;
+                for(int i = 0; i < 4; i++ )
+                {
+                    //baseCard = CardShop.GetRandCard(Server.rand);
+                    //check if card already exists in DB CardCollection
+
+                }
+            }
+
+        }
+        public static string MakeQueryForNewCard(BaseCards baseCard)
+        {
+            string temp = "Insert into cardcollection\n" +
+                          "(card_uid, element_type, card_property, card_type, card_name, card_damage)\n" +
+                          "VALUES\n" +
+                          "('" + CreateUid(9) + "', '" + baseCard.getElementTypes() + "', '" + baseCard.getCardProperty() + "', '" + baseCard.getCardType() + "', '" + baseCard.getCardName() + "', '" + baseCard.getCardDamage() + "');";
+
+            return temp;
+        }
 
     }
 }

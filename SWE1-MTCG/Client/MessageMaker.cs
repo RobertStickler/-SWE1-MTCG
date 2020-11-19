@@ -54,7 +54,13 @@ namespace Client
                 //kommt erst, wenn eingeloggt
                 temp_msg = "StartTheBattle";
                 message = MakeRequest(request, temp_msg);
-            }            
+            }
+            else if (request.message_number == "4")
+            {
+                //kommt erst, wenn eingeloggt
+                temp_msg = "OptainNewCards";
+                message = MakeRequest(request, temp_msg);
+            }
 
             return message;
         }

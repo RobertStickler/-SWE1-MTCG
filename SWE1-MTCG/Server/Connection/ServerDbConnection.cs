@@ -13,6 +13,8 @@ using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters;
 using SWE1_MTCG.Cards.Monster;
 using SWE1_MTCG.Cards.Zauber;
+using System.Threading;
+
 
 namespace Server
 {
@@ -81,7 +83,6 @@ namespace Server
 
         public bool VerifyRegister(string query)
         { 
-            DbUser userObjekt = new DbUser();
             MySqlCommand commandDatabase = new MySqlCommand(query, databaseConnection);
             commandDatabase.CommandTimeout = 60;
             try
@@ -148,6 +149,50 @@ namespace Server
                 Console.WriteLine("Query Error: " + e.Message);
             }
             return cards;
+        }
+        public void GenerateNewCards(Random rand)
+        {
+            int HowManyCards = 100;
+
+            while(HowManyCards > 0)
+            {
+                BaseCards baseCard = CardShop.GetRandCard(rand);
+
+                Console.WriteLine(baseCard.getCardName());
+
+                string query = DbFunctions.MakeQueryForNewCard(baseCard);
+
+                if(ExecuteQuery(query) == false)
+                {
+                    //error weiterreichen
+                    Console.WriteLine("error bei execute");
+                }
+                Thread.Sleep(Server.rand.Next(1, 17));
+
+
+                HowManyCards--;
+            }
+
+
+
+        }
+        public bool ExecuteQuery (string query)
+        {
+            MySqlCommand commandDatabase = new MySqlCommand(query, databaseConnection);
+            commandDatabase.CommandTimeout = 60;
+            try
+            {
+                databaseConnection.Open();
+                MySqlDataReader myReader = commandDatabase.ExecuteReader();
+                //Console.WriteLine("Query Success");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Query Error: " + e.Message);
+                return false;
+            }
+            databaseConnection.Close();
+            return true;
         }
     }
 }

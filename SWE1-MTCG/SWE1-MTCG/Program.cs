@@ -43,19 +43,20 @@ namespace SWE1_MTCG
 
             int Sieger = battleLogic.StartBattle(Cards4Battle1, Cards4Battle2);
             */
+            Random rand = new Random();
 
             List<BaseCards> Cards4Battle1 = new List<BaseCards>();
             List<BaseCards> Cards4Battle2 = new List<BaseCards>();
 
-            Cards4Battle1.Add(CardShop.GetRandCard());
-            Cards4Battle1.Add(CardShop.GetRandCard());
-            Cards4Battle1.Add(CardShop.GetRandCard());
-            Cards4Battle1.Add(CardShop.GetRandCard());
+            Cards4Battle1.Add(CardShop.GetRandCard(rand));
+            Cards4Battle1.Add(CardShop.GetRandCard(rand));
+            Cards4Battle1.Add(CardShop.GetRandCard(rand));
+            Cards4Battle1.Add(CardShop.GetRandCard(rand));
 
-            Cards4Battle2.Add(CardShop.GetRandCard());
-            Cards4Battle2.Add(CardShop.GetRandCard());
-            Cards4Battle2.Add(CardShop.GetRandCard());
-            Cards4Battle2.Add(CardShop.GetRandCard());
+            Cards4Battle2.Add(CardShop.GetRandCard(rand));
+            Cards4Battle2.Add(CardShop.GetRandCard(rand));
+            Cards4Battle2.Add(CardShop.GetRandCard(rand));
+            Cards4Battle2.Add(CardShop.GetRandCard(rand));
 
             int Sieger = BattleLogic.StartBattle(Cards4Battle1, Cards4Battle2);
             Console.WriteLine(Sieger);

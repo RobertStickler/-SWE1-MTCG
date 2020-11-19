@@ -11,19 +11,29 @@ using System.Threading;
 
 namespace Server
 {
-    class Server
+    public class Server
     {
+        public static Random rand = new Random();
+
         static void Main(string[] args)
         {
 
             MySqlDataClass mysql = new MySqlDataClass();
-            //mysql.runQuery("Select * from cardcollection;");
-            
-           
-            //var request = mysql.GetOneUser("Robert");
+
             ServerClientConnection.startServer(); 
+
+
+            //GenerateNewCards();
+
         }
-        
+        static void GenerateNewCards()
+        {
+            Console.WriteLine("if you are ready, press something");
+            Console.ReadLine();
+            MySqlDataClass DbClass = new MySqlDataClass();
+            DbClass.GenerateNewCards(rand);
+            Console.ReadLine();
+        }
 
         
     }

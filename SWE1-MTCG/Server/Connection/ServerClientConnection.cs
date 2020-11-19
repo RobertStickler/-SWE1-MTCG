@@ -121,6 +121,18 @@ namespace Server
 
 
                             }
+                            else if(request.message == "OptainNewCards")
+                            {
+                                Console.WriteLine("Welcome to the Shop!");
+                                Console.WriteLine("0...quit");
+                                Console.WriteLine("1...4 cards cost 25 Coins"!);
+                                string choiceCardShop = Console.ReadLine().Trim(' ', '\n');
+
+                                if (choiceCardShop == "1") ;
+                                {
+                                    DbFunctions.OptainNewCards(userFromDb);
+                                }
+                            }
                         }).Start();
                     }
                 }
