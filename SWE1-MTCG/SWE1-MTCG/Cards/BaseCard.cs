@@ -7,6 +7,7 @@ namespace Cards
 {
 	public abstract class BaseCards
 	{
+		protected string uid;
 
 		protected elementTypes element_type;
 		protected cardTypes card_type;
@@ -51,6 +52,10 @@ namespace Cards
         {
 			return card_property;
         }
+		public string getUID()
+		{
+			return uid;
+		}
 	}
 }
 

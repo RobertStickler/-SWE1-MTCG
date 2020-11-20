@@ -64,7 +64,7 @@ namespace Server
             string query = MakeRegisterQuery(request);
 
             var temp = new MySqlDataClass();
-            bool succsess = temp.VerifyRegister(query);
+            bool succsess = temp.ExecuteQuery(query);
 
             if(succsess == true)
             {
@@ -124,28 +124,44 @@ namespace Server
         public static void OptainNewCards(DbUser userFromDb)
         {
             BaseCards baseCard = null;
+            MySqlDataClass dbConn = new MySqlDataClass();
             int cost = 25;
-            if(userFromDb.coins >= cost)
+            string query = "SELECT * From cardcollection;";
+
+            if (userFromDb.coins >= cost)
             {
-                userFromDb.coins -= cost;
+                userFromDb.coins -= cost; //coins abziehen
                 for(int i = 0; i < 4; i++ )
                 {
-                    //baseCard = CardShop.GetRandCard(Server.rand);
-                    //check if card already exists in DB CardCollection
-
+                    //welche karte bekommt man
+                    int cardsNumber = dbConn.GetCardsCountFromDb();
+                    baseCard = dbConn.GetOneCardFromDb(query, cardsNumber);
+                    Console.WriteLine(baseCard.getCardName());
+                    //karte in datenbank einfügen
+                    dbConn.GetCardToUser(baseCard, userFromDb);
                 }
             }
 
         }
-        public static string MakeQueryForNewCard(BaseCards baseCard)
+        public static string MakeQueryForCreateNewCard(BaseCards baseCard)
         {
             string temp = "Insert into cardcollection\n" +
                           "(card_uid, element_type, card_property, card_type, card_name, card_damage)\n" +
                           "VALUES\n" +
-                          "('" + CreateUid(9) + "', '" + baseCard.getElementTypes() + "', '" + baseCard.getCardProperty() + "', '" + baseCard.getCardType() + "', '" + baseCard.getCardName() + "', '" + baseCard.getCardDamage() + "');";
+                          "('" + baseCard.getUID() + "', '" + baseCard.getElementTypes() + "', '" + baseCard.getCardProperty() + "', '" + baseCard.getCardType() + "', '" + baseCard.getCardName() + "', '" + baseCard.getCardDamage() + "');";
 
             return temp;
         }
+        public static string MakeQueryForInsertCard(BaseCards baseCard, DbUser user)
+        {
+            string temp = "Insert Into UserData_CardCollection\n" +
+                          "(fk_user_uid, fk_card_uid)\n" +
+                          "VALUES\n" +
+                          "('" + user.uid + "', '" + baseCard.getUID() + "');";
+
+            return temp;
+        }
+
 
     }
 }

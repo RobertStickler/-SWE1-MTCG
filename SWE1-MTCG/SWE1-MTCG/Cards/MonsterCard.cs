@@ -10,10 +10,11 @@ namespace SWE1_MTCG.Cards.Monster
 {
     public class MonsterCard : BaseCards
     {
-        public MonsterCard(int damage, string name, elementTypes element, cardProperty property) : base(damage, name, element)
+        public MonsterCard(string uid, int damage, string name, elementTypes element, cardProperty property) : base(damage, name, element)
         {
             this.card_type = cardTypes.Monster;
             this.card_property = property;
+            this.uid = uid;
         }
     }
 }

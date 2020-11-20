@@ -16,13 +16,11 @@ namespace Client
         {
 
             //Console.WriteLine("1...Start Battle");
-            PrintMenueOne();
-            int choice = Int32.Parse(Console.ReadLine().Trim('\n'));
-            //inut error handling
+            
 
             ClientFunctions conetction = new ClientFunctions();
 
-            conetction.SocketConnection(choice);
+            conetction.SocketConnection();
         }
         public static void PrintMenueOne()
         {
@@ -36,8 +34,8 @@ namespace Client
         {
             Console.WriteLine("choose your action");
             Console.WriteLine("3...Start a Battle");
-            Console.WriteLine("4...Look your Deck");
-            Console.WriteLine("5...Go to the Shop");
+            Console.WriteLine("4...Buy new Cards");
+            Console.WriteLine("5...Look your Deck");
             Console.WriteLine("0...quit");
 
         }

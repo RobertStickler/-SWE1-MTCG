@@ -46,6 +46,10 @@ namespace SWE1_MTCG
         {
             BaseCards tempCard = null;
 
+            //uid erstellen
+            string teststring = string.Format("{0:N}", Guid.NewGuid()); //erstellt eine unique Id 
+            string uid = teststring.Substring(0, 9); //kürzt die ID auf 9 stellen
+
             //entscheiden welche Eigenschaft also elementTypes
             int randElement = ChooseElement(rand);
 
@@ -59,7 +63,7 @@ namespace SWE1_MTCG
             string card_Element = Enum.GetName(typeof(elementTypes), randElement);
             elementTypes tempElement = ((elementTypes)Enum.Parse(typeof(elementTypes), card_Element));
 
-            tempCard = new SpellCard(damage, name, tempElement);
+            tempCard = new SpellCard(uid, damage, name, tempElement);
            return tempCard;
         }
 
@@ -82,6 +86,10 @@ namespace SWE1_MTCG
         {
             BaseCards tempCard = null;
 
+            //uid erstellen
+            string teststring = string.Format("{0:N}", Guid.NewGuid()); //erstellt eine unique Id 
+            string uid = teststring.Substring(0, 9); //kürzt die ID auf 9 stellen
+
             //entscheiden welchen typ also cardProperty            
             int randType = ChooseProperty(rand);
 
@@ -102,7 +110,7 @@ namespace SWE1_MTCG
             cardProperty tempProperty = ((cardProperty)Enum.Parse(typeof(cardProperty), card_property));
 
 
-            tempCard = new MonsterCard(damage, name, tempElement, tempProperty);
+            tempCard = new MonsterCard(uid, damage, name, tempElement, tempProperty);
 
             return tempCard;
                     
