@@ -171,12 +171,8 @@ namespace Server
                 }
                 Thread.Sleep(Server.rand.Next(1, 17));
 
-
                 HowManyCards--;
             }
-
-
-
         }
         public bool ExecuteQuery (string query)
         {

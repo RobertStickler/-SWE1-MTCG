@@ -140,8 +140,17 @@ namespace Server
                     //karte in datenbank einfügen
                     dbConn.GetCardToUser(baseCard, userFromDb);
                 }
+                //update coin number
+                query = MakeQueryForUpdateCoins(userFromDb);
+                dbConn.ExecuteQuery(query);
             }
-
+        }
+        public static string MakeQueryForUpdateCoins(DbUser userFromDb)
+        {
+            string temp = "update userdata " +
+                          "set coins = " + userFromDb.coins + " " +
+                          "where userName = '" + userFromDb.userName + "';";
+            return temp;                          
         }
         public static string MakeQueryForCreateNewCard(BaseCards baseCard)
         {
@@ -158,7 +167,6 @@ namespace Server
                           "(fk_user_uid, fk_card_uid)\n" +
                           "VALUES\n" +
                           "('" + user.uid + "', '" + baseCard.getUID() + "');";
-
             return temp;
         }
 
