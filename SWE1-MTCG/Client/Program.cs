@@ -21,6 +21,7 @@ namespace Client
             ClientFunctions conetction = new ClientFunctions();
 
             conetction.SocketConnection();
+            return;
         }
         public static void PrintMenueOne()
         {

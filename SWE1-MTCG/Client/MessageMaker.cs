@@ -61,6 +61,7 @@ namespace Client
                 temp_msg = "OptainNewCards";
                 message = MakeRequest(request, temp_msg);
             }
+            //5 is comming soon
 
             return message;
         }

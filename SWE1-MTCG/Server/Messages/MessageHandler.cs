@@ -22,42 +22,53 @@ namespace SWE1_MTCG
             //die daten aus dem HTTP-Request extrahieren
             string[] line = data.Split("\n"); //Bei einem Enter trennen
             int tempcount = 1;
+            /*
+            try
+            { */
+                //zuerst die erste zeile einlesen
+                string[] tempfirstline = line[0].Split(" "); //die erste Zeile an den Leerzeichen trennen
+                request.KeyValues.Add("method", tempfirstline[0]);
+                request.KeyValues.Add("path", tempfirstline[1]);
+                request.KeyValues.Add("version", tempfirstline[2]);
 
-            //zuerst die erste zeile einlesen
-            string[] tempfirstline = line[0].Split(" "); //die erste Zeile an den Leerzeichen trennen
-            request.KeyValues.Add("method", tempfirstline[0]);
-            request.KeyValues.Add("path", tempfirstline[1]);
-            request.KeyValues.Add("version", tempfirstline[2]);
+                foreach (string oneLine in line)
+                {
+                    if (tempcount == 1)
+                    {
+                        tempcount = 2;
+                        continue;
+                    }
+                    if (oneLine == "")
+                    {
+                        tempcount = 3;
+                        continue;
+                    }
 
-            foreach (string oneLine in line)
-            {
-                if(tempcount == 1)
-                {
-                    tempcount = 2;
-                    continue;
-                }
-                if (oneLine == "")
-                {
-                    tempcount = 3;
-                    continue;
-                }
+                    if (tempcount == 2)
+                    {
+                        string[] temp = oneLine.Split(":");
+                        request.KeyValues.Add(temp[0], temp[1].Trim(' '));
+                    }
+                    if (tempcount == 3)
+                    {
+                        request.message += oneLine;
+                        request.message += "\n";
+                    }
 
-                if(tempcount == 2)
-                {
-                    string[] temp = oneLine.Split(":");
-                    request.KeyValues.Add(temp[0], temp[1].Trim(' '));
                 }
-                if(tempcount == 3)
-                {
-                    request.message += oneLine;
-                    request.message += "\n";
-                }
-                
-            }
-            request.message = request.message.Trim('\n', '\0');
+                request.message = request.message.Trim('\n', '\0');
+            /*
+        }
 
-            //to output the dict 
-            foreach ( KeyValuePair<string, string> kvp in request.KeyValues)
+        catch(System.IndexOutOfRangeException e)
+        {
+            Console.WriteLine("client died");
+        }
+        */
+
+            //to output the dict
+            Console.WriteLine("that is in  thedict!");
+                foreach ( KeyValuePair<string, string> kvp in request.KeyValues)
             {
                 Console.WriteLine("{0}: {1}",kvp.Key, kvp.Value);
             }

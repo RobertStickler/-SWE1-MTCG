@@ -15,9 +15,15 @@ namespace Client
         {
 
             Program.PrintMenueOne();
-            string choiceWhenLoggedOut = Console.ReadLine().Trim('\n');
+            string choiceWhenLoggedOut = "-1";
             //inut error handling
-
+            while ((choiceWhenLoggedOut != "1") && (choiceWhenLoggedOut != "2") && (choiceWhenLoggedOut != "0"))
+            {
+                choiceWhenLoggedOut = Console.ReadLine().Trim('\n');
+            }
+            //0 beendet das Programm
+            if (choiceWhenLoggedOut == "0")
+                return;
 
             var request = new RequestContextClient();
             request.port = 6543;
@@ -33,10 +39,13 @@ namespace Client
 
 
 
-                try
-                {
-                    string message = msg.GetMessage(request);
+            try
+            {
+                string message = "empty";
 
+                while (loggedIn == false)
+                {
+                    message = msg.GetMessage(request);
                     //Console.WriteLine("message \n\n");
                     Console.WriteLine();
 
@@ -54,7 +63,7 @@ namespace Client
 
                     Console.Write("Received:\n{0}", response);
                     //Console.WriteLine("\ndu bist bis hier gekommen!");
-                    if (response == "Succsessful")
+                    if (response == "Succsessful") //you are logged in
                     {
                         loggedIn = true;
 
@@ -68,19 +77,23 @@ namespace Client
                         Console.Write("Sent:\n{0}", message);
 
                     }
+                    else if(response == "AccessDenied")
+                    {
+                        Console.WriteLine("no more Attempts left!");
+                        break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: {0}", e);
+            }
+            finally
+            {
+                stream.Close();
+                client.Close();
+            }
 
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Exception: {0}", e);
-                }
-                finally
-                {
-                    stream.Close();
-                    client.Close();
-                }
-            
             Console.Read();
         }
     }
