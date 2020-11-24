@@ -40,7 +40,7 @@ namespace Server
 
             return request;
         }
-        public static void RegisterAtDB(RequestContext request, NetworkStream stream)        
+        public static bool RegisterAtDB(RequestContext request, NetworkStream stream)        
         {
             MySqlDataClass mysql = new MySqlDataClass();            
             //check if username already taken            
@@ -48,7 +48,7 @@ namespace Server
             {
                 //wenns den user bereits gibt
                 Console.WriteLine("Username does already exist!");
-                return;
+                return false;
             }
 
             //chek if email already taken
@@ -57,7 +57,7 @@ namespace Server
             {
                 //wenns die email ned okay ist
                 Console.WriteLine("Email does already exist!");
-                return;
+                return false;
             }
 
             //Query statement bilden
@@ -72,8 +72,10 @@ namespace Server
             }
             else
             {
-                Console.WriteLine("Error by Databas Conn");
+                Console.WriteLine("Error by executing Databas Conn");
+                return false;
             }
+            return true;
         }
 
         public static string CreateUid(int size)

@@ -36,14 +36,14 @@ namespace Server
 
                         new Thread(() =>
                         {
-                            Console.WriteLine("\n Client Connected!");
+                            Console.WriteLine("\nClient Connected!");
                             string sieger = "noOne";
                             bool loggedIn = false;
                             DbUser userFromDb = new DbUser();
                             NetworkStream stream = null;
                             RequestContext request = new RequestContext();
                             MySqlDataClass mySqlDataClass = new MySqlDataClass();
-                            int attempt = 1; //muss ich noch hinzufügen
+                            int attempt = 3; //muss ich noch hinzufügen
 
                             while (loggedIn == false)
                             {
@@ -54,7 +54,7 @@ namespace Server
                                 //data verwalten und in ein Objekt speichern
                                 request = MessageHandler.GetRequest(data);
 
-                                if (request.message == "Login")
+                                if (request.message.Trim('\n') == "Login")
                                 {
                                     //check if login   
                                     if (attempt == 0)
@@ -90,10 +90,22 @@ namespace Server
                                     //wieder auf nachricht warten
                                     //er ist nun eingeloggt
                                 }
-                                else if (request.message == "Register")
+                                else if (request.message.Trim('\n') == "Register")
                                 {
+                                    if (attempt == 0)
+                                    {
+                                        string tempMessage = "AccessDenied";
+                                        ServerClientConnection.sendData(stream, tempMessage);                                        
+                                        break;
+                                    }
                                     //setup for register
-                                    DbFunctions.RegisterAtDB(request, stream);
+                                    bool registered = DbFunctions.RegisterAtDB(request, stream);
+                                    if(registered == false)
+                                    {
+                                        attempt--;
+                                        string tempMessage = "TryAgain\n";
+                                        ServerClientConnection.sendData(stream, tempMessage);
+                                    }
                                 }
                             }
 
@@ -105,10 +117,9 @@ namespace Server
                                 request = MessageHandler.GetRequest(data);
                             }
 
-
                             //also nach dem einloggen, kann ein client man hier her
                             //brauch ich dann auch für später
-                            if (request.message == "StartTheBattle")
+                            if (request.message.Trim('\n') == "StartTheBattle")
                             {
                                 Console.WriteLine("Das battle beginnt in kürze");
                                 //statt den rand card muss ich jz die von einem user abfragen
@@ -119,7 +130,7 @@ namespace Server
                                 clientList.Add(request);
 
                                 //noch lock hinzufügen
-                                while (sieger == "noOne")
+                                while (sieger.Trim('\n') == "noOne")
                                 {
                                     mut.WaitOne();
                                     sieger = BattleMaker.AddToBattleQueue(clientList);
@@ -127,16 +138,26 @@ namespace Server
                                     mut.ReleaseMutex();
                                 }
                                 Console.WriteLine("And the winner is: {0}", sieger);
-
-
                             }
-                            else if (request.message == "OptainNewCards")
+                            else if (request.message.Trim('\n') == "OptainNewCards")
                             {
                                 Console.WriteLine("4 cards cost 25 Coins"!);
                                 //string choiceCardShop = Console.ReadLine().Trim(' ', '\n');
 
                                 DbFunctions.OptainNewCards(userFromDb);
 
+                            }
+                            else if (request.message.Trim('\n') == "ShowDeck")
+                            {
+                                //coming soon
+                                //will alle karten anzeigen
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("S0me unknown error!");
+                                Console.ReadLine();
+                                return;
                             }
                         }).Start();
                     }
@@ -148,11 +169,7 @@ namespace Server
             }
             catch(Exception e)
             {
-                Console.WriteLine("unknown error!");
-            }
-            catch
-            {
-                Console.WriteLine("unknown error!");
+                Console.WriteLine("Error {0}!", e);
             }
         }
        

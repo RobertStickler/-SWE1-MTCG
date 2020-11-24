@@ -52,11 +52,12 @@ namespace SWE1_MTCG
                     if (tempcount == 3)
                     {
                         request.message += oneLine;
+                        request.message = request.message.Trim('\n', '\0');
                         request.message += "\n";
-                    }
+                    }    
+            }
+            
 
-                }
-                request.message = request.message.Trim('\n', '\0');
             /*
         }
 
@@ -67,11 +68,13 @@ namespace SWE1_MTCG
         */
 
             //to output the dict
-            Console.WriteLine("that is in  thedict!");
-                foreach ( KeyValuePair<string, string> kvp in request.KeyValues)
+            Console.WriteLine("that is in the dict!");
+            Console.WriteLine("___________________!");
+            foreach ( KeyValuePair<string, string> kvp in request.KeyValues)
             {
                 Console.WriteLine("{0}: {1}",kvp.Key, kvp.Value);
             }
+            Console.WriteLine("___________________!");
             return request;
         }       
     }

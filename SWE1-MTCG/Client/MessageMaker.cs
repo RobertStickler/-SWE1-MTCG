@@ -14,7 +14,7 @@ namespace Client
         readonly string advice = "POST ";
 
 
-        public string GetMessage(RequestContextClient request)
+        public string CreateMessageForSend(RequestContextClient request)
         {         
             string temp_msg = null;
             string message = "";
@@ -29,7 +29,7 @@ namespace Client
             if (request.message_number == "1")
             {
 
-                Console.Write("Username: ");
+                Console.WriteLine("Username: ");
                 request.username = Console.ReadLine();
                 Console.WriteLine("Password: ");
                 request.pwd = Console.ReadLine();
@@ -41,7 +41,7 @@ namespace Client
             {
                 //prepare for register
                 temp_msg = "Register";
-                Console.Write("Username: ");
+                Console.WriteLine("Username: ");
                 request.username = Console.ReadLine();
                 Console.WriteLine("Password: ");
                 request.pwd = Console.ReadLine();
@@ -61,7 +61,17 @@ namespace Client
                 temp_msg = "OptainNewCards";
                 message = MakeRequest(request, temp_msg);
             }
-            //5 is comming soon
+            else if (request.message_number == "5")
+            {
+                //kommt erst, wenn eingeloggt
+                temp_msg = "ShowDeck";
+                message = MakeRequest(request, temp_msg);
+            }
+            else
+            {
+                temp_msg = "Error";
+                message = MakeRequest(request, temp_msg);
+            }
 
             return message;
         }

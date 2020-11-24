@@ -19,6 +19,7 @@ namespace Client
             //inut error handling
             while ((choiceWhenLoggedOut != "1") && (choiceWhenLoggedOut != "2") && (choiceWhenLoggedOut != "0"))
             {
+                Console.Write("Enter your choice: ");
                 choiceWhenLoggedOut = Console.ReadLine().Trim('\n');
             }
             //0 beendet das Programm
@@ -45,8 +46,7 @@ namespace Client
 
                 while (loggedIn == false)
                 {
-                    message = msg.GetMessage(request);
-                    //Console.WriteLine("message \n\n");
+                    message = msg.CreateMessageForSend(request); //da wird die message erstellt
                     Console.WriteLine();
 
                     // Translate the Message into ASCII.
@@ -68,9 +68,19 @@ namespace Client
                         loggedIn = true;
 
                         Program.PrintMenueTwo();
-                        choiceWhenLoggedIn = Console.ReadLine(); //noch verifizieren
+                        choiceWhenLoggedIn = Console.ReadLine(); 
+                        //nur richtige eingabe zulassen
+                        while ((choiceWhenLoggedIn != "3") && (choiceWhenLoggedIn != "4") && (choiceWhenLoggedIn != "5") && (choiceWhenLoggedIn != "0"))
+                        {
+                            Console.Write("Enter your choice: ");
+                            choiceWhenLoggedIn = Console.ReadLine().Trim('\n');
+                        }
+                        //0 beendet das Programm
+                        if (choiceWhenLoggedIn == "0")
+                            return;
+
                         request.message_number = choiceWhenLoggedIn;
-                        message = msg.GetMessage(request);
+                        message = msg.CreateMessageForSend(request); //verwaltet wieder die nachricht
                         data = System.Text.Encoding.ASCII.GetBytes(message);
                         // Send the message to the connected TcpServer. 
                         stream.Write(data, 0, data.Length);
@@ -81,6 +91,10 @@ namespace Client
                     {
                         Console.WriteLine("no more Attempts left!");
                         break;
+                    }
+                    else if(response == "TryAgain")
+                    {
+                        continue;
                     }
                 }
             }
