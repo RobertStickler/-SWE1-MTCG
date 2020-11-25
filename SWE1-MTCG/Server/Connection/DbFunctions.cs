@@ -123,8 +123,9 @@ namespace Server
                            "where username = '" + username + "'";
             return temp;
         } 
-        public static void OptainNewCards(DbUser userFromDb)
+        public static List<BaseCards> OptainNewCards(DbUser userFromDb)
         {
+            List<BaseCards> tempList = new List<BaseCards>();
             BaseCards baseCard = null;
             MySqlDataClass dbConn = new MySqlDataClass();
             int cost = 25;
@@ -141,11 +142,13 @@ namespace Server
                     Console.WriteLine(baseCard.getCardName());
                     //karte in datenbank einfügen
                     dbConn.GetCardToUser(baseCard, userFromDb);
+                    tempList.Add(baseCard);
                 }
                 //update coin number
                 query = MakeQueryForUpdateCoins(userFromDb);
                 dbConn.ExecuteQuery(query);
             }
+            return tempList;
         }
         public static string MakeQueryForUpdateCoins(DbUser userFromDb)
         {

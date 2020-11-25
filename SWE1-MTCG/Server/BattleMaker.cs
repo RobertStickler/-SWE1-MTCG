@@ -27,22 +27,32 @@ namespace Server
             if ((Liste.Count >= 2))
             {
                 //start battle
+                /*
                 var playerOne = Liste[0];
                 var playerTwo = Liste[1];
                 Liste.RemoveAt(1);
                 Liste.RemoveAt(0);
+                */
                 string username = "";
 
-                int sieger = BattleLogic.StartBattle(playerOne.cardDeck, playerTwo.cardDeck);
+                //int sieger = BattleLogic.StartBattle(playerOne.cardDeck, playerTwo.cardDeck);
+                int sieger = BattleLogic.StartBattle(Liste[0].cardDeck, Liste[1].cardDeck);
+                //noch das deck umbauen
 
                 if (sieger == 1)
                 {
-                    username = playerOne.GetUsernameFromDict();
+                    username = Liste[0].GetUsernameFromDict();
+                    SendWinnerToClient(1, Liste);
+                    Liste.RemoveAt(1);
+                    Liste.RemoveAt(0);
                     return username;
                 }
                 if (sieger == 2)
                 {
-                    username = playerTwo.GetUsernameFromDict();
+                    username = Liste[1].GetUsernameFromDict();
+                    SendWinnerToClient(2, Liste);
+                    Liste.RemoveAt(1);
+                    Liste.RemoveAt(0);
                     return username;
                 }
                 return "noOne";
@@ -92,9 +102,27 @@ namespace Server
                 }
             }
             return false;
+        }
 
+        public static void SendWinnerToClient(int winner, List<RequestContext> Liste)
+        {
+            string messageWinner = "you have won the Battle\n";
+            string messageLooser = "you have lost the Battle\n";
+            
 
-        }   
+            if(winner == 1)
+            {
+                //player1 hat gewonnen
+                ServerClientConnection.sendData(Liste[0].stream, messageWinner);
+                ServerClientConnection.sendData(Liste[1].stream, messageLooser);
+            }
+            else if(winner == 2)
+            {
+                //player2 hat gewonnen
+                ServerClientConnection.sendData(Liste[1].stream, messageWinner);
+                ServerClientConnection.sendData(Liste[0].stream, messageLooser);
+            }
+        }
 
 
 

@@ -35,8 +35,9 @@ namespace Client
             var client = new TcpClient(request.ip, request.port);
             var stream = client.GetStream();
             var msg = new Message();
-            string choiceWhenLoggedIn = "-1";
+            
             bool loggedIn = false;
+            Byte[] data = null;
 
 
 
@@ -50,7 +51,7 @@ namespace Client
                     Console.WriteLine();
 
                     // Translate the Message into ASCII.
-                    Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+                    data = System.Text.Encoding.ASCII.GetBytes(message);
                     // Send the message to the connected TcpServer. 
                     stream.Write(data, 0, data.Length);
                     Console.Write("Sent:\n{0}", message);
@@ -66,25 +67,7 @@ namespace Client
                     if (response == "Succsessful") //you are logged in
                     {
                         loggedIn = true;
-
-                        Program.PrintMenueTwo();
-                        choiceWhenLoggedIn = Console.ReadLine(); 
-                        //nur richtige eingabe zulassen
-                        while ((choiceWhenLoggedIn != "3") && (choiceWhenLoggedIn != "4") && (choiceWhenLoggedIn != "5") && (choiceWhenLoggedIn != "0"))
-                        {
-                            Console.Write("Enter your choice: ");
-                            choiceWhenLoggedIn = Console.ReadLine().Trim('\n');
-                        }
-                        //0 beendet das Programm
-                        if (choiceWhenLoggedIn == "0")
-                            return;
-
-                        request.message_number = choiceWhenLoggedIn;
-                        message = msg.CreateMessageForSend(request); //verwaltet wieder die nachricht
-                        data = System.Text.Encoding.ASCII.GetBytes(message);
-                        // Send the message to the connected TcpServer. 
-                        stream.Write(data, 0, data.Length);
-                        Console.Write("Sent:\n{0}", message);
+                        break;                       
 
                     }
                     else if(response == "AccessDenied")
@@ -97,6 +80,36 @@ namespace Client
                         continue;
                     }
                 }
+                while(true) //wenn eingeloggt
+                {
+                    Program.PrintMenueTwo();
+                    string choiceWhenLoggedIn = "-1";
+                    //nur richtige eingabe zulassen
+                    while ((choiceWhenLoggedIn != "3") && (choiceWhenLoggedIn != "4") && (choiceWhenLoggedIn != "5") && (choiceWhenLoggedIn != "0"))
+                    {
+                        Console.Write("Enter your choice: ");
+                        choiceWhenLoggedIn = Console.ReadLine().Trim('\n');
+                    }
+                    //0 beendet das Programm
+                    if (choiceWhenLoggedIn == "0")
+                        return;
+
+                    request.message_number = choiceWhenLoggedIn;
+                    message = msg.CreateMessageForSend(request); //verwaltet wieder die nachricht
+                    data = System.Text.Encoding.ASCII.GetBytes(message);
+                    // Send the message to the connected TcpServer. 
+                    stream.Write(data, 0, data.Length);
+                    Console.Write("Sent:\n{0}", message);
+
+                    data = new Byte[256];
+                    String response = String.Empty;
+                    // Read the Tcp Server Response Bytes.
+                    Int32 bytes = stream.Read(data, 0, data.Length);
+                    response = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+                    Console.Write("Received:\n{0}", response);
+                }
+
             }
             catch (Exception e)
             {
