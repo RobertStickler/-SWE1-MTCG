@@ -67,15 +67,19 @@ namespace Client
                     if (response == "Succsessful") //you are logged in
                     {
                         loggedIn = true;
-                        break;                       
+                        break;
 
                     }
-                    else if(response == "AccessDenied")
+                    else if (response == "AccessDenied")
                     {
                         Console.WriteLine("no more Attempts left!");
                         break;
                     }
-                    else if(response == "TryAgain")
+                    else if (response == "TryAgain")
+                    {
+                        continue;
+                    }
+                    else if (response == "YouAreRegistred")
                     {
                         continue;
                     }

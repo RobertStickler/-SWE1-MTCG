@@ -97,7 +97,9 @@ namespace Server
                                     }
                                     else
                                     {
+                                        string tempMessage = "YouAreRegistred\n";
                                         registered = DbFunctions.RegisterAtDB(request, stream);
+                                        ServerClientConnection.sendData(stream, tempMessage);
                                     }
                                     //setup for register
                                     
@@ -148,7 +150,16 @@ namespace Server
                                         Thread.Sleep(1000);
                                         mut.ReleaseMutex();
                                     }
-                                    Console.WriteLine("And the winner is: {0}", sieger);
+                                    if(sieger == request.GetUsernameFromDict())
+                                    {
+                                        Console.WriteLine(sieger);
+                                        //getcards from
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine(request.GetUsernameFromDict());
+
+                                    }
                                     //clientList.RemoveAt(0);
                                     clientList.Remove(request);
                                     //string message = "And the winner is: " + sieger + "\n";

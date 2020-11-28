@@ -43,6 +43,7 @@ namespace Server
                 {
                     username = Liste[0].GetUsernameFromDict();
                     SendWinnerToClient(1, Liste);
+                    //defck umbauen oder???
                     Liste.RemoveAt(1);
                     Liste.RemoveAt(0);
                     return username;
