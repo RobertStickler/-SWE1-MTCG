@@ -37,6 +37,7 @@ namespace Client
             Console.WriteLine("3...Start a Battle");
             Console.WriteLine("4...Buy new Cards");
             Console.WriteLine("5...Look your Deck");
+            Console.WriteLine("6...Show your Card Collection");
             Console.WriteLine("0...quit");
 
         }

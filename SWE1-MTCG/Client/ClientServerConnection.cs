@@ -44,23 +44,17 @@ namespace Client
             try
             {
                 string message = "empty";
+                string response = "empty";
 
                 while (loggedIn == false)
                 {
                     message = msg.CreateMessageForSend(request); //da wird die message erstellt
                     Console.WriteLine();
 
-                    // Translate the Message into ASCII.
-                    data = System.Text.Encoding.ASCII.GetBytes(message);
-                    // Send the message to the connected TcpServer. 
-                    stream.Write(data, 0, data.Length);
+                    sendData(stream, message);
                     Console.Write("Sent:\n{0}", message);
-                    // Bytes Array to receive Server Response.
-                    data = new Byte[256];
-                    String response = String.Empty;
-                    // Read the Tcp Server Response Bytes.
-                    Int32 bytes = stream.Read(data, 0, data.Length);
-                    response = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+                    response = receiveData(client, stream);
 
                     Console.Write("Received:\n{0}", response);
                     //Console.WriteLine("\ndu bist bis hier gekommen!");
@@ -89,7 +83,7 @@ namespace Client
                     Program.PrintMenueTwo();
                     string choiceWhenLoggedIn = "-1";
                     //nur richtige eingabe zulassen
-                    while ((choiceWhenLoggedIn != "3") && (choiceWhenLoggedIn != "4") && (choiceWhenLoggedIn != "5") && (choiceWhenLoggedIn != "0"))
+                    while ((choiceWhenLoggedIn != "3") && (choiceWhenLoggedIn != "4") && (choiceWhenLoggedIn != "5") && (choiceWhenLoggedIn != "6") && (choiceWhenLoggedIn != "0"))
                     {
                         Console.Write("Enter your choice: ");
                         choiceWhenLoggedIn = Console.ReadLine().Trim('\n');
@@ -100,16 +94,10 @@ namespace Client
 
                     request.message_number = choiceWhenLoggedIn;
                     message = msg.CreateMessageForSend(request); //verwaltet wieder die nachricht
-                    data = System.Text.Encoding.ASCII.GetBytes(message);
-                    // Send the message to the connected TcpServer. 
-                    stream.Write(data, 0, data.Length);
+                    sendData(stream, message);
                     Console.Write("Sent:\n{0}", message);
 
-                    data = new Byte[256];
-                    String response = String.Empty;
-                    // Read the Tcp Server Response Bytes.
-                    Int32 bytes = stream.Read(data, 0, data.Length);
-                    response = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    response = receiveData(client, stream);
 
                     Console.Write("Received:\n{0}", response);
                 }
@@ -127,5 +115,20 @@ namespace Client
 
             Console.Read();
         }
+        public static string receiveData(TcpClient client, NetworkStream stream)
+        {
+            byte[] bytes = new byte[client.ReceiveBufferSize];
+            stream.Read(bytes, 0, (int)client.ReceiveBufferSize);
+            string returndata = Encoding.UTF8.GetString(bytes);
+            return returndata.Trim('\0');
+        }
+        public static void sendData(NetworkStream stream, string message)
+        {
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+            stream.Write(data, 0, data.Length);
+            Console.Write("Sent:\n{0}", message);
+            Console.WriteLine("\n");
+        }
     }
+
 }

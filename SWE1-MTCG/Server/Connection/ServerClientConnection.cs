@@ -176,11 +176,27 @@ namespace Server
                                     sendData(stream, tempStringForAnswerToClient);
 
                                 }
-                                else if (request.message.Trim('\n') == "ShowDeck")
+                                else 
+                                if (request.message.Trim('\n') == "ShowDeck")
                                 {
                                     //coming soon
                                     //will alle karten anzeigen
+                                    userFromDb.cardCollection = mySqlDataClass.GetCardsFromDB(userFromDb.userName);
+                                    userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
 
+                                    string answer = getAllNames(userFromDb.cardDeck);
+                                    sendData(stream, answer);
+
+                                }
+                                else if (request.message.Trim('\n') == "ShowCardCollection")
+                                {
+                                    //coming soon
+                                    //will alle karten anzeigen
+                                    userFromDb.cardCollection = mySqlDataClass.GetCardsFromDB(userFromDb.userName);
+                                    userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
+
+                                    string answer = getAllNames(userFromDb.cardCollection);
+                                    sendData(stream, answer);
                                 }
                                 else
                                 {
@@ -221,14 +237,19 @@ namespace Server
         public static string getAllNames(List<BaseCards> tempListForAnswerToClient)
         {
             string temp = "";
+            int counter = 0;
             foreach(var part in tempListForAnswerToClient)
             {
+                temp += counter.ToString() + ". ";
                 temp += part.getCardName() +", "+ part.getCardType() + ", " + part.getElementTypes() + ", ";
                     if(part.getCardType() == MyEnum.cardTypes.Monster)
                         temp += part.getCardProperty() + ", ";
                 temp += part.getCardDamage();
                 temp += "\n";
+
+                counter++;
             }
+            temp += "\n";
             return temp;
         }
     }

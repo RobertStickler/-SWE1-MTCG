@@ -67,6 +67,12 @@ namespace Client
                 temp_msg = "ShowDeck";
                 message = MakeRequest(request, temp_msg);
             }
+            else if (request.message_number == "6")
+            {
+                //kommt erst, wenn eingeloggt
+                temp_msg = "ShowCardCollection";
+                message = MakeRequest(request, temp_msg);
+            }
             else
             {
                 temp_msg = "Error";
