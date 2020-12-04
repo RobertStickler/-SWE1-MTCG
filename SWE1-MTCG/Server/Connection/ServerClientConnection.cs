@@ -80,9 +80,7 @@ namespace Server
                                     else
                                     {
                                         loggedIn = true;
-                                    }
-
-                                   
+                                    }                                   
 
                                     //wieder auf nachricht warten
                                     //er ist nun eingeloggt
@@ -190,13 +188,83 @@ namespace Server
                                 }
                                 else if (request.message.Trim('\n') == "ShowCardCollection")
                                 {
-                                    //coming soon
-                                    //will alle karten anzeigen
                                     userFromDb.cardCollection = mySqlDataClass.GetCardsFromDB(userFromDb.userName);
                                     userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
 
                                     string answer = getAllNames(userFromDb.cardCollection);
                                     sendData(stream, answer);
+                                }
+                                else if (request.message.Trim('\n') == "Trade4Coins")
+                                {
+                                    while(true)
+                                    {
+                                        //Console.WriteLine("ready to trade");
+                                        userFromDb.cardCollection = mySqlDataClass.GetCardsFromDB(userFromDb.userName);
+                                        string answer = getAllNames(userFromDb.cardCollection);
+                                        sendData(stream, answer);
+
+                                        data = receiveData(client, stream);
+                                        request = MessageHandler.GetRequest(data);
+
+                                        if (request.message.Trim('\n') == "END")
+                                        {
+                                            sendData(stream, "END");
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            //die karte an der stelle löschen, coins hochzählen, aus der datenbank löschen
+                                            //1. aus der datenbank löschen, dann kann man nur die karten neu laden
+
+
+                                            int cardToTrade = Int32.Parse(request.message);
+                                            //Console.WriteLine(userFromDb.cardCollection[cardToTrade - 1].getCardName()); //eins abziehen, weil die client eingabe bei 1 startet
+                                            //Console.WriteLine(" ");
+                                            //noch die coins anzeigen
+                                            if(cardToTrade > userFromDb.cardCollection.Count)
+                                            {
+                                                sendData(stream, "Wrong input\n do you want to continue?");
+                                                data = receiveData(client, stream);
+                                                request = MessageHandler.GetRequest(data);
+                                                if (request.message.Trim('\n') == "YES")
+                                                {
+                                                    continue;
+                                                }
+                                                break;
+                                            }
+
+                                            int preis = CalcPreis(userFromDb.cardCollection[cardToTrade - 1]);
+                                            //answer ob to sell
+                                            string message = MakeMessageToSellCoinsAsk(preis);
+                                            sendData(stream, message);
+
+                                            data = receiveData(client, stream);
+                                            request = MessageHandler.GetRequest(data);
+
+                                            if(request.message.Trim('\n') =="YES")
+                                            {
+                                                message = MakeMessageTradCoinsDelete(userFromDb, userFromDb.cardCollection[cardToTrade - 1]);
+                                                bool successQueryExecute = DbFunctions.PassQuery(message);
+
+                                                //coins hochzählen
+                                                userFromDb.coins += preis;
+                                                string MakeQuery4UpdateCoins = DbFunctions.MakeQueryForUpdateCoins(userFromDb);
+                                                successQueryExecute = DbFunctions.PassQuery(MakeQuery4UpdateCoins);
+                                            }
+
+
+                                        }
+                                    }
+
+                                }
+                                else if (request.message.Trim('\n') == "TradeWithPlayer")
+                                {
+                                    //ähnlich wie battle logic
+                                    //eine karte auswählen, in queue hinzufügen
+                                    //zweiten spieler hinzufügen, queue is nicht leer
+                                    //zweiter spieler wählt eine karte aus, die er tauschen will
+                                    //datenbank wird aktualisiert
+                                    //beide werden aus der queue gelöscht
                                 }
                                 else
                                 {
@@ -237,7 +305,7 @@ namespace Server
         public static string getAllNames(List<BaseCards> tempListForAnswerToClient)
         {
             string temp = "";
-            int counter = 0;
+            int counter = 1;
             foreach(var part in tempListForAnswerToClient)
             {
                 temp += counter.ToString() + ". ";
@@ -250,6 +318,29 @@ namespace Server
                 counter++;
             }
             temp += "\n";
+            return temp;
+        }
+        public static string MakeMessageTradCoinsDelete(DbUser userFromDb, BaseCards card)
+        {
+            string temp = "DELETE FROM userdata_cardcollection WHERE ";
+
+            temp += "fk_user_uid = '" + userFromDb.uid + "' AND fk_card_uid = '" + card.getUID() + "';" ;
+
+            return temp;
+        }
+        public static int CalcPreis(BaseCards card)
+        {
+            float temp = 0;
+
+            temp = card.getCardDamage() * 0.5f * 0.25f; //weil man in einem Pack 4 Karten bekommt, ein pack 25 coins kostet und der damage von 0 bis 50 sein kann
+
+            return Convert.ToInt32(temp);
+        }
+        public static string MakeMessageToSellCoinsAsk(int preis)
+        {
+            string temp = "";
+            temp += "Du bekommst für deine Karte " + preis.ToString() +  " coins";      
+
             return temp;
         }
     }

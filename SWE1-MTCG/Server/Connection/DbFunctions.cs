@@ -174,6 +174,15 @@ namespace Server
                           "('" + user.uid + "', '" + baseCard.getUID() + "');";
             return temp;
         }
+        public static bool PassQuery (string message)
+        {
+            bool temp = false;
+            MySqlDataClass dbConn = new MySqlDataClass();
+
+            temp = dbConn.ExecuteQuery(message);
+
+            return temp;
+        }
 
 
     }

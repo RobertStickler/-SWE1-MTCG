@@ -73,6 +73,18 @@ namespace Client
                 temp_msg = "ShowCardCollection";
                 message = MakeRequest(request, temp_msg);
             }
+            else if (request.message_number == "7")
+            {
+                //kommt erst, wenn eingeloggt
+                temp_msg = "Trade4Coins";
+                message = MakeRequest(request, temp_msg);
+            }
+            else if (request.message_number == "8")
+            {
+                //kommt erst, wenn eingeloggt
+                temp_msg = "TradeWithPlayer";
+                message = MakeRequest(request, temp_msg);
+            }
             else
             {
                 temp_msg = "Error";

@@ -38,10 +38,15 @@ namespace Client
             Console.WriteLine("4...Buy new Cards");
             Console.WriteLine("5...Look your Deck");
             Console.WriteLine("6...Show your Card Collection");
+            Console.WriteLine("7...Trade for Coins");
+            Console.WriteLine("8...Trade with other Player");
             Console.WriteLine("0...quit");
 
         }
-
+        public static void PrintMenueThree()
+        {
+            Console.WriteLine("choose a card to traid");
+        }
     }
 }
 

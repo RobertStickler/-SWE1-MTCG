@@ -83,7 +83,8 @@ namespace Client
                     Program.PrintMenueTwo();
                     string choiceWhenLoggedIn = "-1";
                     //nur richtige eingabe zulassen
-                    while ((choiceWhenLoggedIn != "3") && (choiceWhenLoggedIn != "4") && (choiceWhenLoggedIn != "5") && (choiceWhenLoggedIn != "6") && (choiceWhenLoggedIn != "0"))
+                    while ((choiceWhenLoggedIn != "3") && (choiceWhenLoggedIn != "4") && (choiceWhenLoggedIn != "5") && (choiceWhenLoggedIn != "6") 
+                        && (choiceWhenLoggedIn != "0") && (choiceWhenLoggedIn != "7") && (choiceWhenLoggedIn != "8"))
                     {
                         Console.Write("Enter your choice: ");
                         choiceWhenLoggedIn = Console.ReadLine().Trim('\n');
@@ -98,6 +99,64 @@ namespace Client
                     Console.Write("Sent:\n{0}", message);
 
                     response = receiveData(client, stream);
+
+                    if(choiceWhenLoggedIn == "7")
+                    {
+                        while(true)
+                        {  
+                            Console.WriteLine(response);    
+                            string cardToTrade = "";
+                            int parsedNumber;
+
+                            while (true)
+                            {
+                                Console.Write("choose a card to trade: ");
+                                cardToTrade = Console.ReadLine();
+                                if (Int32.TryParse(cardToTrade, out parsedNumber) == true)
+                                {
+                                    break;
+                                }
+                            }                           
+
+
+                            if(cardToTrade == "0")
+                            {
+                                message = msg.MakeRequest(request, "END");
+                                sendData(stream, message);
+                                break;
+                            }
+                            message = msg.MakeRequest(request, cardToTrade);
+                            sendData(stream, message);
+
+                            response = receiveData(client, stream);
+                            Console.WriteLine(response);
+                            Console.WriteLine("y/n ?");
+                            Console.Write(": ");
+                            string choice = Console.ReadLine();
+
+                            if(choice.Trim('\n') == "y")
+                            {
+                                message = msg.MakeRequest(request, "YES");
+                                sendData(stream, message);
+                            }
+                            else
+                            {
+                                message = msg.MakeRequest(request, "NO");
+                                sendData(stream, message);
+                            }
+
+
+                            //neue liste empfangen
+                            response = receiveData(client, stream);
+                        }
+                        
+                    }
+
+
+                    if(response == "TradeWithPlayer")
+                    {
+                        Console.WriteLine("coming soon");
+                    }
 
                     Console.Write("Received:\n{0}", response);
                 }

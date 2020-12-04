@@ -68,6 +68,7 @@ namespace SWE1_MTCG
         */
 
             //to output the dict
+            /*
             Console.WriteLine("that is in the dict!");
             Console.WriteLine("___________________!");
             foreach ( KeyValuePair<string, string> kvp in request.KeyValues)
@@ -75,6 +76,7 @@ namespace SWE1_MTCG
                 Console.WriteLine("{0}: {1}",kvp.Key, kvp.Value);
             }
             Console.WriteLine("___________________!");
+            */
             return request;
         }       
     }
