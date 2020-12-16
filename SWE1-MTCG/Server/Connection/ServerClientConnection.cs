@@ -308,9 +308,10 @@ namespace Server
             int counter = 1;
             foreach(var part in tempListForAnswerToClient)
             {
-                temp += counter.ToString() + ". ";
-                temp += part.getCardName() +", "+ part.getCardType() + ", " + part.getElementTypes() + ", ";
-                    if(part.getCardType() == MyEnum.cardTypes.Monster)
+                temp += $"{counter}. {part.getCardName()}, {part.getCardType()}, {part.getElementTypes()}, ";
+                //temp += counter.ToString() + ". ";
+                //temp += part.getCardName() +", "+ part.getCardType() + ", " + part.getElementTypes() + ", ";
+                    if (part.getCardType() == MyEnum.cardTypes.Monster)
                         temp += part.getCardProperty() + ", ";
                 temp += part.getCardDamage();
                 temp += "\n";

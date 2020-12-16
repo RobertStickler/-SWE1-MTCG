@@ -117,40 +117,40 @@ namespace SWE1_MTCG
             }
         static int ChooseMainName(Random rand)
         {
-            int temp = Enum.GetNames(typeof(cardMainNamesMonster)).Length; //beginnt bei 1 zu zählen also 7
+            int temp = Enum.GetNames(typeof(CardMainNamesMonster)).Length; //beginnt bei 1 zu zählen also 7
             int randElement = rand.Next(temp); //generiert dann zahlen von 0 bis 6, also auch 7  insgesamt
             return randElement;
         }
         static int ChooseMainNameSpell(Random rand)
         {
-            int temp = Enum.GetNames(typeof(cardMainNamesSpell)).Length; //beginnt bei 1 zu zählen also 7
+            int temp = Enum.GetNames(typeof(CardMainNamesSpell)).Length; //beginnt bei 1 zu zählen also 7
             int randElement = rand.Next(temp); //generiert dann zahlen von 0 bis 6, also auch 7  insgesamt
             return randElement;
         }
         static int ChooseAttribute(Random rand)
         {
-            int temp = Enum.GetNames(typeof(cardAttributeInNameMonster)).Length; //beginnt bei 1 zu zählen also 7
+            int temp = Enum.GetNames(typeof(CardAttributeInNameMonster)).Length; //beginnt bei 1 zu zählen also 7
             int randElement = rand.Next(temp); //generiert dann zahlen von 0 bis 6, also auch 7  insgesamt
             return randElement;
         }
         static int ChooseType(Random rand)
         {
-            int temp = Enum.GetNames(typeof(cardTypeForNameMonster)).Length; //beginnt bei 1 zu zählen also 7
+            int temp = Enum.GetNames(typeof(CardTypeForNameMonster)).Length; //beginnt bei 1 zu zählen also 7
             int randElement = rand.Next(temp); //generiert dann zahlen von 0 bis 6, also auch 7  insgesamt
             return randElement;
         }
         public static string CreateNameMonster(Random rand)
         {
-            string mainName = Enum.GetName(typeof(cardMainNamesMonster), ChooseMainName(rand));
-            string attribute = Enum.GetName(typeof(cardAttributeInNameMonster), ChooseAttribute(rand));
-            string type = Enum.GetName(typeof(cardTypeForNameMonster), ChooseType(rand));
+            string mainName = Enum.GetName(typeof(CardMainNamesMonster), ChooseMainName(rand));
+            string attribute = Enum.GetName(typeof(CardAttributeInNameMonster), ChooseAttribute(rand));
+            string type = Enum.GetName(typeof(CardTypeForNameMonster), ChooseType(rand));
 
             string temp = mainName + " the " + attribute + " " + type;
             return temp;
         }
         public static string CreateNameSpell(Random rand)
         {
-            string mainName = Enum.GetName(typeof(cardMainNamesSpell), ChooseMainNameSpell(rand));
+            string mainName = Enum.GetName(typeof(CardMainNamesSpell), ChooseMainNameSpell(rand));
             string attribute = Enum.GetName(typeof(elementTypes), ChooseElement(rand));
 
             string temp = attribute + " " + mainName  ;

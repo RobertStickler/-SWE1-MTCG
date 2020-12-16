@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NamesCollection
 {
-    public enum cardMainNamesMonster
+    public enum CardMainNamesMonster
     {
         Elfriede, 
         Raphael,
@@ -15,7 +15,7 @@ namespace NamesCollection
         Cyrus
     }
 
-    public enum cardAttributeInNameMonster
+    public enum CardAttributeInNameMonster
     {
         dark,
         bright,
@@ -28,7 +28,7 @@ namespace NamesCollection
         carismatic
     }
 
-    public enum cardTypeForNameMonster
+    public enum CardTypeForNameMonster
     {
         Fighter,
         Monster,
@@ -39,7 +39,7 @@ namespace NamesCollection
         Nobleman,
         Shadow
     }
-    public enum cardMainNamesSpell
+    public enum CardMainNamesSpell
     {
         Blast,
         Bomb,

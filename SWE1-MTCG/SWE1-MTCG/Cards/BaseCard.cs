@@ -21,10 +21,8 @@ namespace Cards
 			this.card_name = name;
 		}
 
-		public BaseCards(int damage, string name, elementTypes element)
+		public BaseCards(int damage, string name, elementTypes element) :this( damage,  name)
         {
-			this.card_damage = damage;
-			this.card_name = name;
 			this.element_type = element; 
 		}
 
