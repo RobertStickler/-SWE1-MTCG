@@ -3,99 +3,73 @@ using System.Collections.Generic;
 using System.Text;
 using Bogus.DataSets;
 using Cards;
-using Enum;
+using MyEnum;
 
 namespace SWE1_MTCG
 {
-    public class BattleLogic
+    public static class BattleLogic
     {
-        public void PrintHelp()
+        public static void PrintHelp()
         {
             Console.WriteLine("Hello World!");
         }
-        public BaseCards Attack(BaseCards attacker, BaseCards defender)
+        public static BaseCards Attack(BaseCards attacker, BaseCards defender)
         {
+            int damageAttacker;
+            int damageDefender;
 
             switch (attacker.getCardType())
             {
-                case cardTypes.Monster:
-                    {
-                        if (defender.getCardType() == cardTypes.Monster)
-                        {
-                            //monster attacks monster pure strenght
-                            //is ledgit DAVOR testen
-
-                            if (attacker.getCardDamage() > defender.getCardDamage())
-                                return attacker;
-
-                            else
-                                return defender;
-
-
-                        }
-                        else if (defender.getCardType() == cardTypes.Spell)
-                        {
-                            //monster attacks Spell
-                            //nur wenn nicht beide NORMAL sind
-                            int damageAttacker = GetEffektivDemage(attacker, defender);
-                            int damageDefender = GetEffektivDemage(defender, attacker);
-
-                            if (damageAttacker > damageDefender)
-                                return attacker;
-
-                            else
-                                return defender;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Error by attacking!");
-                        }
-                        break;
-                    }
-                case cardTypes.Spell:
-                    {
-                        if (defender.getCardType() == cardTypes.Monster)
-                        {
-                            //nur wenn nicht beide NORMAL sind
-                            int damageAttacker = GetEffektivDemage(attacker, defender);
-                            int damageDefender = GetEffektivDemage(defender, attacker);
-
-                            if (damageAttacker > damageDefender)
-                                return attacker;
-
-                            else
-                                return defender;
-                        }
-                        else if (defender.getCardType() == cardTypes.Spell)
-                        {
-                            //Spell attacks Spell
-                            int damageAttacker = GetEffektivDemage(attacker, defender);
-                            int damageDefender = GetEffektivDemage(defender, attacker);
-
-                            if (damageAttacker > damageDefender)
-                                return attacker;
-
-                            else
-                                return defender;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Error by attacking!");
-                        }
-                        break;
-                    }
-                default:
-                    {
-                        Console.WriteLine("Error occured!");
+                case cardTypes.Monster when defender.getCardType() == cardTypes.Monster:
+                    if (attacker.getCardDamage() > defender.getCardDamage())
                         return attacker;
-                    }
+
+                    return defender;
+                case cardTypes.Monster when defender.getCardType() == cardTypes.Spell:
+                    // monster attacks Spell
+                    // nur wenn nicht beide NORMAL sind
+                    damageAttacker = GetEffektivDemage(attacker, defender);
+                    damageDefender = GetEffektivDemage(defender, attacker);
+
+                    if (damageAttacker > damageDefender)
+                        return attacker;
+
+                    return defender;
+
+                case cardTypes.Spell when defender.getCardType() == cardTypes.Monster:
+
+
+                    // nur wenn nicht beide NORMAL sind
+                    damageAttacker = GetEffektivDemage(attacker, defender);
+                    damageDefender = GetEffektivDemage(defender, attacker);
+
+                    if (damageAttacker > damageDefender)
+                        return attacker;
+
+                    else
+                        return defender;
+
+                case cardTypes.Spell when defender.getCardType() == cardTypes.Spell:
+
+                    //Spell attacks Spell
+                    damageAttacker = GetEffektivDemage(attacker, defender);
+                    damageDefender = GetEffektivDemage(defender, attacker);
+
+                    if (damageAttacker > damageDefender)
+                        return attacker;
+
+                    return defender;
+
+                default:
+
+                    // TODO: consider throw new InvalidDataException ?
+                    Console.WriteLine("Error occured!");
+                    return attacker;
 
             }
-            return attacker;
-
         }
 
-        public int GetEffektivDemage(BaseCards first, BaseCards second)
+        public static int GetEffektivDemage(BaseCards first, BaseCards second)
         {
             switch (first.getElementTypes())
             {
@@ -125,7 +99,7 @@ namespace SWE1_MTCG
             return 0;
         }
 
-        public int StartBattle(List<BaseCards> Cards4Battle1, List<BaseCards> Cards4Battle2)
+        public static int StartBattle(List<BaseCards> Cards4Battle1, List<BaseCards> Cards4Battle2)
         {
             Random rnd = new Random();
             int counterLoop = 0;
@@ -135,11 +109,10 @@ namespace SWE1_MTCG
 
             while ((Test4Winner(Cards4Battle1.Count, Cards4Battle2.Count) == false) && (counterLoop < 100))
             {
-                a = Cards4Battle1.Count;
-                b = Cards4Battle2.Count;
 
-                int cardPlayer1 = rnd.Next(a);  // creates a number from 0 to 3
-                int cardPlayer2 = rnd.Next(b);
+
+                int cardPlayer1 = rnd.Next(Cards4Battle1.Count);  // creates a number from 0 to 3
+                int cardPlayer2 = rnd.Next(Cards4Battle2.Count);
 
                 Console.WriteLine("Player one card {0}", cardPlayer1);
                 Console.WriteLine("Player two card {0}", cardPlayer2);
@@ -159,7 +132,7 @@ namespace SWE1_MTCG
                 else
                 {
                     winner = Attack(Player1, Player2);
-                }                 
+                }
 
 
                 if (winner == Player1)
@@ -180,23 +153,23 @@ namespace SWE1_MTCG
 
             }
 
-            if (a == 1)
+            if (a == 0)
             {
                 Console.WriteLine("The winner is Player 2");
                 return 2;
             }
-                
-            if (b == 1)
+
+            if (b == 0)
             {
                 Console.WriteLine("The winner is Player 1");
                 return 1;
             }
-                
+
 
             return 0;
         }
 
-        public bool Test4Winner(int a, int b)
+        public static bool Test4Winner(int a, int b)
         {
             bool temp = false;
 
@@ -206,14 +179,14 @@ namespace SWE1_MTCG
             return temp;
         }
 
-        public bool ValidateAttack(BaseCards Player1, BaseCards Player2)
+        public static bool ValidateAttack(BaseCards Player1, BaseCards Player2)
         {
             if ((Player1.getCardProperty() == cardProperty.Goblin) && (Player2.getCardProperty() == cardProperty.Dragon))
             {
                 Console.WriteLine("Goblin cannot attack Dragon");
                 return false;
             }
-            else if((Player1.getCardProperty() == cardProperty.Org) && (Player2.getCardProperty() == cardProperty.Wizard))
+            else if ((Player1.getCardProperty() == cardProperty.Ork) && (Player2.getCardProperty() == cardProperty.Wizard))
             {
                 Console.WriteLine("Org cannot attack Wizard");
                 return false;

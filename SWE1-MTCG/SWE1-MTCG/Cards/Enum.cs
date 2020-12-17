@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Enum
+namespace MyEnum
 {
 	public enum elementTypes
 	{
@@ -14,7 +14,7 @@ namespace Enum
 	{
 		Dragon,
 		Knight,
-		Org,
+		Ork,
 		Wizard,
 		Goblin,
 		Kraken,
