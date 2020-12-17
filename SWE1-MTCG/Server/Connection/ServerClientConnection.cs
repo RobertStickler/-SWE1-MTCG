@@ -89,7 +89,9 @@ namespace Server
                                         if (attempt == 0)
                                         {
                                             string tempMessage = "AccessDenied";
-                                            ServerClientConnection.sendData(stream, tempMessage);                                        
+                                            ServerClientConnection.sendData(stream, tempMessage);
+                                            Console.WriteLine("Du hast keine Versuche mehr");
+                                            Console.ReadLine();
                                             break;
                                         }
                                         else
@@ -124,13 +126,22 @@ namespace Server
                                     //brauch ich dann auch für später
                                     if (request.message.Trim('\n') == "StartTheBattle")
                                     {
+                                        
+
                                         Console.WriteLine("Das battle beginnt in kürze");
                                         //statt den rand card muss ich jz die von einem user abfragen
                                         //request.cardDeck = BattleMaker.GetRandCards();
                                         request.stream = stream;
                                         request.cardCollection = mypostgresDataClass.GetCardsFromDB(request.GetUsernameFromDict());
+                                        
+
+                                        if (request.cardCollection.Count < 3)
+                                        {
+                                            sendData(stream, "Du musst zuerst karten kaufen");
+                                            continue;
+                                        }
+
                                         request.cardDeck = BattleMaker.The4BestCards(request.cardCollection);
-                                        //die besten 4 karten augeben an client
 
                                         clientList.Add(request);
 
@@ -162,6 +173,8 @@ namespace Server
                                         //string message = "And the winner is: " + sieger + "\n";
                                         //sendData(stream, message);
                                     }
+
+
                                     else if (request.message.Trim('\n') == "OptainNewCards")
                                     {
                                         List<BaseCards> tempList = new List<BaseCards>();
@@ -169,8 +182,16 @@ namespace Server
                                         //string choiceCardShop = Console.ReadLine().Trim(' ', '\n');
 
                                         var tempListForAnswerToClient = DbFunctions.OptainNewCards(userFromDb);
-                                        string tempStringForAnswerToClient = getAllNames(tempListForAnswerToClient);
-                                        sendData(stream, tempStringForAnswerToClient);
+                                        if(tempListForAnswerToClient == null)
+                                        {
+                                            sendData(stream, "ZuWenigeCoins");
+                                        }
+                                        else
+                                        {
+                                            string tempStringForAnswerToClient = getAllNames(tempListForAnswerToClient);
+                                            sendData(stream, tempStringForAnswerToClient);
+                                        }
+                                        
 
                                     }
                                     else 
@@ -347,7 +368,7 @@ namespace Server
         public static string MakeMessageToSellCoinsAsk(int preis)
         {
             string temp = "";
-            temp += "Du bekommst für deine Karte " + preis.ToString() +  " coins";      
+            temp += "Du bekommst für deine Karte " + preis +  " coins";      
 
             return temp;
         }

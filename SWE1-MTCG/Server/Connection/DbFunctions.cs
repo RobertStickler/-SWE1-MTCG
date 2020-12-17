@@ -64,8 +64,8 @@ namespace Server
             //Query statement bilden
             string query = MakeRegisterQuery(request);
 
-            var temp = new ServerDbCOnnection();
-            bool succsess = temp.ExecuteQuery(query);
+            //var temp = new ServerDbCOnnection();
+            bool succsess = mysql.ExecuteQuery(query);
 
             if(succsess == true)
             {
@@ -109,9 +109,9 @@ namespace Server
             string uid = CreateUid(size);
 
             string temp = "Insert Into UserData\n " +
-                           "(user_uid, userName, email, pwd, coins)\n" +
+                           "(user_uid, userName, email, pwd, coins, elo_points)\n" +
                            "VALUES\n" +
-                           "('" + uid + "', '" + username + "', '" + email + "', '" + password + "', '" + 100 + "')";
+                           "('" + uid + "', '" + username + "', '" + email + "', '" + password + "', '" + 100 + "', '" + 100 + "')";
             return temp;
         }
         public static string MakeQueryGetCards(string username)
@@ -149,6 +149,11 @@ namespace Server
                 //update coin number
                 query = MakeQueryForUpdateCoins(userFromDb);
                 dbConn.ExecuteQuery(query);
+            }
+            else
+            {
+                //nicht genug coins
+                return null;
             }
             return tempList;
         }

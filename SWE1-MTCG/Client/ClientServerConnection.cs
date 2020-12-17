@@ -37,9 +37,6 @@ namespace Client
             var msg = new Message();
             
             bool loggedIn = false;
-            Byte[] data = null;
-
-
 
             try
             {
@@ -48,6 +45,7 @@ namespace Client
 
                 while (loggedIn == false)
                 {
+                    
                     message = msg.CreateMessageForSend(request); //da wird die message erstellt
                     Console.WriteLine();
 
@@ -58,25 +56,28 @@ namespace Client
 
                     Console.Write("Received:\n{0}", response);
                     //Console.WriteLine("\ndu bist bis hier gekommen!");
-                    if (response == "Succsessful") //you are logged in
+                    if (response.Trim('\n') == "Succsessful") //you are logged in
                     {
                         loggedIn = true;
                         break;
 
                     }
-                    else if (response == "AccessDenied")
+                    else if (response.Trim('\n') == "AccessDenied")
                     {
                         Console.WriteLine("no more Attempts left!");
+                        return;
+                    }
+                    else if (response.Trim('\n') == "TryAgain")
+                    {
+                        continue;
+                    }
+                    if (response.Trim('\n') == "YouAreRegistred")
+                    {
+                        response = "Succsessful";
+                        loggedIn = true;
                         break;
                     }
-                    else if (response == "TryAgain")
-                    {
-                        continue;
-                    }
-                    else if (response == "YouAreRegistred")
-                    {
-                        continue;
-                    }
+
                 }
                 while(true) //wenn eingeloggt
                 {
@@ -157,8 +158,12 @@ namespace Client
                     {
                         Console.WriteLine("coming soon");
                     }
-
-                    Console.Write("Received:\n{0}", response);
+                    if (response == "ZuWenigeCoins")
+                    {
+                        Console.WriteLine("Bro, kauf dir Münzen");
+                    }
+                    Console.WriteLine("");
+                    Console.Write("Received:\n{0}\n\n", response);
                 }
 
             }
