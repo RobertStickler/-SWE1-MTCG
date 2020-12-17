@@ -9,9 +9,75 @@ namespace SWE1_MTCG
 {
     public static class BattleLogic
     {
-        public static void PrintHelp()
+        public static int StartBattle(List<BaseCards> Cards4Battle1, List<BaseCards> Cards4Battle2)
         {
-            Console.WriteLine("Hello World!");
+            Random rnd = new Random();
+            int counterLoop = 0;
+            int a = 0, b = 0;
+
+            List<BaseCards> Dummy = new List<BaseCards>();
+
+            while ((Test4Winner(Cards4Battle1.Count, Cards4Battle2.Count) == false) && (counterLoop < 100))
+            {
+                Console.WriteLine($"----------------------------- Round {counterLoop +1} ----------------------------------");
+
+                int cardPlayer1 = rnd.Next(Cards4Battle1.Count);  // creates a number from 0 to 3
+                int cardPlayer2 = rnd.Next(Cards4Battle2.Count);
+
+                //Console.WriteLine("Player one card {0}", cardPlayer1);
+                //Console.WriteLine("Player two card {0}", cardPlayer2);
+
+                BaseCards Player1;
+                BaseCards Player2;
+                BaseCards winner = null;
+
+                Player1 = Cards4Battle1[cardPlayer1];
+                Player2 = Cards4Battle2[cardPlayer2];
+
+                PrintInformationFromOneCard(Player1, Player2);
+
+                //validate
+                if (ValidateAttack(Player1, Player2) == false)
+                {
+                    winner = Player2;
+                }
+                else
+                {
+                    winner = Attack(Player1, Player2);
+                }
+
+
+                if (winner == Player1)
+                {
+                    Cards4Battle1.Add(Cards4Battle2[cardPlayer2]);
+                    Cards4Battle2.Remove(Cards4Battle2[cardPlayer2]);
+                }
+                else if (winner == Player2)
+                {
+                    Cards4Battle2.Add(Cards4Battle1[cardPlayer1]);
+                    Cards4Battle1.Remove(Cards4Battle1[cardPlayer1]);
+                }
+                //bei einem unetschieden, passiert nichts
+
+                Console.WriteLine("Player one ammount {0}", Cards4Battle1.Count);
+                Console.WriteLine("Player two ammount {0}", Cards4Battle2.Count);
+                counterLoop++;
+            }
+
+            if (a == 0)
+            {
+                Console.WriteLine("The winner is Player 2");
+                return 2;
+            }
+
+            if (b == 0)
+            {
+                Console.WriteLine("The winner is Player 1");
+                return 1;
+            }
+
+
+            return 0;
         }
         public static BaseCards Attack(BaseCards attacker, BaseCards defender)
         {
@@ -21,6 +87,10 @@ namespace SWE1_MTCG
             switch (attacker.getCardType())
             {
                 case cardTypes.Monster when defender.getCardType() == cardTypes.Monster:
+
+                    Console.WriteLine($"Der effektive Damage ist: {attacker.getCardDamage()} ");
+                    Console.WriteLine($"Der effektive Damage ist: {defender.getCardDamage()} ");
+
                     if (attacker.getCardDamage() > defender.getCardDamage())
                         return attacker;
 
@@ -71,103 +141,49 @@ namespace SWE1_MTCG
 
         public static int GetEffektivDemage(BaseCards first, BaseCards second)
         {
+            double temp = first.getCardDamage();
             switch (first.getElementTypes())
             {
                 case elementTypes.Fire:
                     {
                         if (second.getElementTypes() == elementTypes.Normal)
-                            return first.getCardDamage() * 2;
+                        {
+                            Console.WriteLine("Feuer ist effektiv gegen Normal");
+                            temp = first.getCardDamage() * 1.5;
+                        }                            
                         else
-                            return first.getCardDamage();
+                            temp = first.getCardDamage();
+                        break;
                     }
                 case elementTypes.Water:
                     {
                         if (second.getElementTypes() == elementTypes.Fire)
-                            return first.getCardDamage() * 2;
+                        {
+                            Console.WriteLine("Wasser ist effektiv gegen Feuer");
+                            temp = first.getCardDamage() * 1.5;
+                        }
+                            
                         else
-                            return first.getCardDamage();
+                            temp = first.getCardDamage();
+                        break;
                     }
                 case elementTypes.Normal:
                     {
                         if (second.getElementTypes() == elementTypes.Water)
-                            return first.getCardDamage() * 2;
+                        {
+                            Console.WriteLine("Normal ist effektiv gegen Wasser");
+                            temp = first.getCardDamage() * 1.5;
+                        }                            
                         else
-                            return first.getCardDamage();
+                            temp = first.getCardDamage();
+                        break;
                     }
             }
-
-            return 0;
+            Console.WriteLine($"Der effektive Damage ist: {Convert.ToInt32(temp)} ");
+            return Convert.ToInt32(temp);
         }
 
-        public static int StartBattle(List<BaseCards> Cards4Battle1, List<BaseCards> Cards4Battle2)
-        {
-            Random rnd = new Random();
-            int counterLoop = 0;
-            int a = 0, b = 0;
-
-            List<BaseCards> Dummy = new List<BaseCards>();
-
-            while ((Test4Winner(Cards4Battle1.Count, Cards4Battle2.Count) == false) && (counterLoop < 100))
-            {
-
-
-                int cardPlayer1 = rnd.Next(Cards4Battle1.Count);  // creates a number from 0 to 3
-                int cardPlayer2 = rnd.Next(Cards4Battle2.Count);
-
-                Console.WriteLine("Player one card {0}", cardPlayer1);
-                Console.WriteLine("Player two card {0}", cardPlayer2);
-
-                BaseCards Player1;
-                BaseCards Player2;
-                BaseCards winner = null;
-
-                Player1 = Cards4Battle1[cardPlayer1];
-                Player2 = Cards4Battle2[cardPlayer2];
-
-                //validate
-                if (ValidateAttack(Player1, Player2) == false)
-                {
-                    winner = Player2;
-                }
-                else
-                {
-                    winner = Attack(Player1, Player2);
-                }
-
-
-                if (winner == Player1)
-                {
-                    Cards4Battle1.Add(Cards4Battle2[cardPlayer2]);
-                    Cards4Battle2.Remove(Cards4Battle2[cardPlayer2]);
-                }
-                else if (winner == Player2)
-                {
-                    Cards4Battle2.Add(Cards4Battle1[cardPlayer1]);
-                    Cards4Battle1.Remove(Cards4Battle1[cardPlayer1]);
-                }
-                //bei einem unetschieden, passiert nichts
-
-                Console.WriteLine("Player one ammount {0}", Cards4Battle1.Count);
-                Console.WriteLine("Player two ammount {0}", Cards4Battle2.Count);
-                counterLoop++;
-
-            }
-
-            if (a == 0)
-            {
-                Console.WriteLine("The winner is Player 2");
-                return 2;
-            }
-
-            if (b == 0)
-            {
-                Console.WriteLine("The winner is Player 1");
-                return 1;
-            }
-
-
-            return 0;
-        }
+       
 
         public static bool Test4Winner(int a, int b)
         {
@@ -210,6 +226,21 @@ namespace SWE1_MTCG
 
             return true;
         }
+        static void PrintInformationFromOneCard(BaseCards Player1, BaseCards Player2)
+        {
+            Console.WriteLine($"{Player1.getCardType()}, {Player1.getElementTypes()}, {CheckCardtype(Player1)} {Player1.getCardName()}, | attacks | {Player2.getCardType()}, {Player2.getElementTypes()}, {CheckCardtype(Player2)} {Player2.getCardName()}");
+                       
+
+        }
+        static string CheckCardtype(BaseCards Player)
+        {
+            if (Player.getCardType() == cardTypes.Monster)
+            {
+                return Player.getCardProperty().ToString() + ", ";
+            }
+            return "";
+        }
+
 
     }
 }
