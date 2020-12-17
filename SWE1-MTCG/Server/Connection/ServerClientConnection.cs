@@ -1,14 +1,12 @@
-﻿using System;
+﻿using Cards;
+using SWE1_MTCG;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
-using SWE1_MTCG;
-using Cards;
-using System.Runtime.Serialization.Formatters;
+using Npgsql;
 
 namespace Server
 {
@@ -41,7 +39,7 @@ namespace Server
                             DbUser userFromDb = new DbUser();
                             NetworkStream stream = null;
                             RequestContext request = new RequestContext();
-                            MySqlDataClass mySqlDataClass = new MySqlDataClass();
+                            ServerDbCOnnection mypostgresDataClass = new ServerDbCOnnection();
                             int attempt = 3; //muss ich noch hinzufügen
                             bool registered = false;
 
@@ -129,7 +127,7 @@ namespace Server
                                     //statt den rand card muss ich jz die von einem user abfragen
                                     //request.cardDeck = BattleMaker.GetRandCards();
                                     request.stream = stream;
-                                    request.cardCollection = mySqlDataClass.GetCardsFromDB(request.GetUsernameFromDict());
+                                    request.cardCollection = mypostgresDataClass.GetCardsFromDB(request.GetUsernameFromDict());
                                     request.cardDeck = BattleMaker.The4BestCards(request.cardCollection);
                                     //die besten 4 karten augeben an client
 
@@ -179,7 +177,7 @@ namespace Server
                                 {
                                     //coming soon
                                     //will alle karten anzeigen
-                                    userFromDb.cardCollection = mySqlDataClass.GetCardsFromDB(userFromDb.userName);
+                                    userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDB(userFromDb.userName);
                                     userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
 
                                     string answer = getAllNames(userFromDb.cardDeck);
@@ -188,7 +186,7 @@ namespace Server
                                 }
                                 else if (request.message.Trim('\n') == "ShowCardCollection")
                                 {
-                                    userFromDb.cardCollection = mySqlDataClass.GetCardsFromDB(userFromDb.userName);
+                                    userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDB(userFromDb.userName);
                                     userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
 
                                     string answer = getAllNames(userFromDb.cardCollection);
@@ -199,7 +197,7 @@ namespace Server
                                     while(true)
                                     {
                                         //Console.WriteLine("ready to trade");
-                                        userFromDb.cardCollection = mySqlDataClass.GetCardsFromDB(userFromDb.userName);
+                                        userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDB(userFromDb.userName);
                                         string answer = getAllNames(userFromDb.cardCollection);
                                         sendData(stream, answer);
 
@@ -208,7 +206,7 @@ namespace Server
 
                                         if (request.message.Trim('\n') == "END")
                                         {
-                                            sendData(stream, "END");
+                                            
                                             break;
                                         }
                                         else

@@ -14,9 +14,10 @@ namespace Server
 {
     public class DbFunctions
     {
+        public static ServerDbCOnnection mysql = new ServerDbCOnnection();
         public static DbUser VerifyLogin(RequestContext request, NetworkStream stream)
-        {            
-            MySqlDataClass mysql = new MySqlDataClass();
+        {
+            
             DbUser user = mysql.GetOneUser(request.GetUsernameFromDict()); //erstellt ein DB User objekt
             Console.WriteLine(user.userName);
             if (request.GetPWDFromDict() == user.pwd)
@@ -42,7 +43,7 @@ namespace Server
         }
         public static bool RegisterAtDB(RequestContext request, NetworkStream stream)        
         {
-            MySqlDataClass mysql = new MySqlDataClass();            
+            ServerDbCOnnection mysql = new ServerDbCOnnection();            
             //check if username already taken            
             if (!(mysql.GetOneUser(request.GetUsernameFromDict()).userName == null))
             {
@@ -63,7 +64,7 @@ namespace Server
             //Query statement bilden
             string query = MakeRegisterQuery(request);
 
-            var temp = new MySqlDataClass();
+            var temp = new ServerDbCOnnection();
             bool succsess = temp.ExecuteQuery(query);
 
             if(succsess == true)
@@ -120,14 +121,15 @@ namespace Server
                            "ON cardcollection.card_uid = userdata_cardcollection.fk_card_uid\n" +
                            "JOIN userdata\n" +
                            "on userdata.user_uid = userdata_cardcollection.fk_user_uid\n" +
-                           "where username = '" + username + "'";
+                           "where username = '" + username + "'" +
+                           "order by card_damage desc";
             return temp;
         } 
         public static List<BaseCards> OptainNewCards(DbUser userFromDb)
         {
             List<BaseCards> tempList = new List<BaseCards>();
             BaseCards baseCard = null;
-            MySqlDataClass dbConn = new MySqlDataClass();
+            ServerDbCOnnection dbConn = new ServerDbCOnnection();
             int cost = 25;
             string query = "SELECT * From cardcollection;";
 
@@ -177,10 +179,10 @@ namespace Server
         public static bool PassQuery (string message)
         {
             bool temp = false;
-            MySqlDataClass dbConn = new MySqlDataClass();
 
-            temp = dbConn.ExecuteQuery(message);
+            temp = mysql.ExecuteQuery(message);
 
+            
             return temp;
         }
 
