@@ -70,10 +70,10 @@ namespace Server
         {
             ServerDbCOnnection mysql = new ServerDbCOnnection();            
             //check if username already taken            
-            if (!(mysql.GetOneUser(request.GetUsernameFromDict()).userName == null))
+            if ((mysql.GetOneUser(request.GetUsernameFromDict()).userName != null))
             {
                 //wenns den user bereits gibt
-                Console.WriteLine("Username does already exist!");
+                Console.WriteLine("Wrong username");
                 return false;
             }
 
@@ -82,7 +82,7 @@ namespace Server
             if (!((mysql.GetOneUser(request.GetUsernameFromDict()).email == null) && (isValidEmail == true)))
             {
                 //wenns die email ned okay ist
-                Console.WriteLine("Email does already exist!");
+                Console.WriteLine("Wrong email!");
                 return false;
             }
 
@@ -90,7 +90,7 @@ namespace Server
             string query = MakeRegisterQuery(request);
 
             //var temp = new ServerDbCOnnection();
-            bool succsess = mysql.ExecuteQuery(query);
+            bool succsess = mysql.VerifyRegister(query);
 
             if(succsess == true)
             {

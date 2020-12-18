@@ -85,7 +85,7 @@ namespace Client
                     string choiceWhenLoggedIn = "-1";
                     //nur richtige eingabe zulassen
                     while ((choiceWhenLoggedIn != "3") && (choiceWhenLoggedIn != "4") && (choiceWhenLoggedIn != "5") && (choiceWhenLoggedIn != "6") 
-                        && (choiceWhenLoggedIn != "0") && (choiceWhenLoggedIn != "7") && (choiceWhenLoggedIn != "8"))
+                        && (choiceWhenLoggedIn != "0") && (choiceWhenLoggedIn != "7") && (choiceWhenLoggedIn != "8") && (choiceWhenLoggedIn != "9"))
                     {
                         Console.Write("Enter your choice: ");
                         choiceWhenLoggedIn = Console.ReadLine().Trim('\n');
@@ -153,14 +153,44 @@ namespace Client
                         
                     }
 
+                    if (choiceWhenLoggedIn == "9")
+                    {
+                        //response = receiveData(client, stream);
+                        Console.WriteLine(response);
+                        Console.WriteLine("Enter Cards for Deck (exact 4)");
+                        string number;
 
-                    if(response == "TradeWithPlayer")
+                        for(int i = 0; i < 4; i++)
+                        {
+                            Console.WriteLine(": ");
+                            number = Console.ReadLine();
+
+                            message = msg.MakeRequest(request, number);
+                            sendData(stream, message);
+
+                            Console.WriteLine("Your current Deck");
+                            response = receiveData(client, stream);
+                            Console.WriteLine(response);
+
+                            if (response == "cardAlreadyUsed")
+                            {
+                                i--;
+                            }
+
+                        }
+                    }
+
+                    if (response == "TradeWithPlayer")
                     {
                         Console.WriteLine("coming soon");
                     }
                     if (response == "ZuWenigeCoins")
                     {
                         Console.WriteLine("Bro, kauf dir Münzen");
+                    }
+                    if (response == "NoCards")
+                    {
+                        Console.WriteLine("Du hast keine Karten");
                     }
                     Console.WriteLine("");
                     Console.Write("Received:\n{0}\n\n", response);

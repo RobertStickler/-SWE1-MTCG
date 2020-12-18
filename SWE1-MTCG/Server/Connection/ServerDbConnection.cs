@@ -98,7 +98,7 @@ namespace Server
             commandDatabase.CommandTimeout = 60;
             try
             {
-                //databaseConnection.Open();
+                _databaseConnection.Open();
                 var myReader = commandDatabase.ExecuteReader();
                 Console.WriteLine("VerifyRegister executed");
             }

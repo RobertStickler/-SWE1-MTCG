@@ -86,6 +86,12 @@ namespace Client
                 temp_msg = "TradeWithPlayer";
                 message = MakeRequest(request, temp_msg);
             }
+            else if (request.message_number == "9")
+            {
+                //kommt erst, wenn eingeloggt
+                temp_msg = "ChangeTheDeck";
+                message = MakeRequest(request, temp_msg);
+            }
             else
             {
                 temp_msg = "Error";

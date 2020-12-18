@@ -40,6 +40,8 @@ namespace Client
             Console.WriteLine("6...Show your Card Collection");
             Console.WriteLine("7...Trade for Coins");
             Console.WriteLine("8...Trade with other Player");
+            Console.WriteLine("9...Edit your Deck");
+
             Console.WriteLine("0...quit");
 
         }

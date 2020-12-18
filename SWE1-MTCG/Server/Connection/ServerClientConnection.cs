@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using Npgsql;
+using Org.BouncyCastle.Asn1.Crmf;
 
 namespace Server
 {
@@ -96,12 +97,17 @@ namespace Server
                                         }
                                         else
                                         {
-                                            string tempMessage = "YouAreRegistred\n";
                                             registered = DbFunctions.RegisterAtDb(request, stream);
-                                            ServerClientConnection.SendData(stream, tempMessage);
+
+                                            if (registered == true)
+                                            { 
+                                                string tempMessage = "YouAreRegistred\n";
+                                                ServerClientConnection.SendData(stream, tempMessage);
+                                            }
+                                            
+                                            
                                         }
                                         //setup for register
-                                    
                                         if(registered == false)
                                         {
                                             attempt--;
@@ -134,14 +140,19 @@ namespace Server
                                         request.stream = stream;
                                         request.cardCollection = mypostgresDataClass.GetCardsFromDb(request.GetUsernameFromDict());
                                         
-
+                                        //wenn er zu weinige Karten besitzt
                                         if (request.cardCollection.Count < 3)
                                         {
                                             SendData(stream, "Du musst zuerst karten kaufen");
                                             continue;
                                         }
 
-                                        request.cardDeck = BattleMaker.The4BestCards(request.cardCollection);
+                                        //standardmäßig mal das auswählen
+                                        if (request.cardDeck == null)
+                                        {
+                                            request.cardDeck = BattleMaker.The4BestCards(request.cardCollection);
+                                        }
+
 
                                         clientList.Add(request);
 
@@ -160,11 +171,13 @@ namespace Server
                                         }
                                         if(sieger == request.GetUsernameFromDict())
                                         {
+                                            //elo points erhöhen
                                             Console.WriteLine(sieger);
                                             //getcards from
                                         }
                                         else
                                         {
+                                            //elo points minus
                                             Console.WriteLine(request.GetUsernameFromDict());
 
                                         }
@@ -197,21 +210,32 @@ namespace Server
                                     else 
                                     if (request.message.Trim('\n') == "ShowDeck")
                                     {
-                                        //coming soon
-                                        //will alle karten anzeigen
                                         userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
-                                        userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
-
-                                        string answer = GetAllNames(userFromDb.cardDeck);
+                                        string answer;
+                                        if (userFromDb.cardDeck.Count == 0)
+                                        {
+                                            if (userFromDb.cardCollection == null)
+                                            {
+                                                answer = "NoCards";
+                                            }
+                                            else
+                                            {
+                                                userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
+                                                answer = GetAllNames(userFromDb.cardDeck);
+                                            }
+                                            
+                                        }
+                                        else
+                                        {
+                                            answer = GetAllNames(userFromDb.cardDeck);
+                                        }
                                         SendData(stream, answer);
 
                                     }
                                     else if (request.message.Trim('\n') == "ShowCardCollection")
                                     {
                                         userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
-                                        userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
-
-                                        string answer = GetAllNames(userFromDb.cardCollection);
+                                        string answer = String4ShowCardCollection(userFromDb.cardCollection);
                                         SendData(stream, answer);
                                     }
                                     else if (request.message.Trim('\n') == "Trade4Coins")
@@ -286,6 +310,42 @@ namespace Server
                                         //datenbank wird aktualisiert
                                         //beide werden aus der queue gelöscht
                                     }
+                                    else if (request.message.Trim('\n') == "ChangeTheDeck")
+                                    {
+                                        userFromDb.cardDeck = new List<BaseCards>();
+                                        
+                                        BaseCards tempCard = null;
+                                        //hier kann man die Karten auswählen, die im deck sein sollen
+                                        userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
+                                        string answer = String4ShowCardCollection(userFromDb.cardCollection);
+                                        SendData(stream, answer);
+                                        while (userFromDb.cardDeck.Count < 4)
+                                        {
+                                            data = ReceiveData(client, stream);
+                                            request = MessageHandler.GetRequest(data);
+                                            int number = Int32.Parse(request.message);
+                                            tempCard = userFromDb.cardCollection[number];
+                                            //tscheck if falide
+                                            //eine karte darf z.b nur einmal drinnen sein
+                                            if (CheckIfValide(tempCard, userFromDb))
+                                            {
+                                                userFromDb.cardDeck.Add(tempCard);
+                                                SendData(stream, GetAllNames(userFromDb.cardDeck));
+                                            }
+                                            else
+                                            {
+                                                SendData(stream, "cardAlreadyUsed");
+                                            }
+
+
+                                           
+                                            
+                                            
+                                        }
+
+                                       
+
+                                    }
                                     else
                                     {
                                         Console.WriteLine("Some unknown error!");
@@ -311,8 +371,53 @@ namespace Server
                 Console.WriteLine("Error {0}!", e);
             }
         }
-       
 
+        public static bool CheckIfValide(BaseCards tempCard, DbUser userFromDb)
+        {
+            //nun kann ein benutzer eine karte leider auch mehrmals haben
+            int numbeCardcollection = WieOftHatErDieKarte( userFromDb.cardCollection, tempCard.getUID()); //so oft darf er eine bestimmte karte verwenden
+            int numbeDeck = WieOftHatErDieKarte(userFromDb.cardDeck, tempCard.getUID()); //so oft hat er die karte bereits im deck
+
+            if (numbeCardcollection > numbeDeck)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
+        public static int WieOftHatErDieKarte(List<BaseCards> cardList, string cardId)
+        {
+            int counter = 0;
+            if (cardList == null)
+            {
+                return 0;
+            }
+            foreach (BaseCards part in cardList)
+            {
+                if (part.getUID() == cardId)
+                {
+                    counter++;
+                }
+            }
+
+            return counter;
+        }
+
+        public static string String4ShowCardCollection(List<BaseCards> cardDeck)
+        {
+            string answer = "";
+            if (cardDeck == null)
+            {
+                answer = "NoCards";
+            }
+            else
+            {
+                answer = GetAllNames(cardDeck);
+            }
+            return answer;
+        }
         public static string ReceiveData(TcpClient client, NetworkStream stream)
         {
             byte[] bytes = new byte[client.ReceiveBufferSize];
@@ -333,6 +438,10 @@ namespace Server
             int counter = 1;
             foreach(var part in tempListForAnswerToClient)
             {
+                if (part == null)
+                {
+                    throw  new ArgumentException("Spieler hat keine Karten");
+                }
                 temp += $"{counter}. {part.getCardName()}, {part.getCardType()}, {part.getElementTypes()}, ";
                 //temp += counter.ToString() + ". ";
                 //temp += part.getCardName() +", "+ part.getCardType() + ", " + part.getElementTypes() + ", ";
