@@ -22,23 +22,23 @@ namespace Server
         private static readonly string Password = "admin";
         private static readonly string Port = "5432";
 
-        private static NpgsqlConnection databaseConnection;
-        private static readonly string connString = String.Format("Server={0};Username={1};Database={2};Port={3};Password={4};SSLMode=Prefer", Host, User, DBname, Port, Password);
+        private static NpgsqlConnection _databaseConnection;
+        private static readonly string ConnString = String.Format("Server={0};Username={1};Database={2};Port={3};Password={4};SSLMode=Prefer", Host, User, DBname, Port, Password);
 
 
 
         public ServerDbCOnnection()
         {
-            setConnect();
+            SetConnect();
             return;
         }
 
-        public static void setConnect()
+        public static void SetConnect()
         {
             try
             {
-                databaseConnection = new NpgsqlConnection(connString);
-                databaseConnection.Open();
+                _databaseConnection = new NpgsqlConnection(ConnString);
+                _databaseConnection.Open();
                 Console.WriteLine("Connection established");
             }
             catch (Exception e)
@@ -52,9 +52,9 @@ namespace Server
         {
             string query = "SELECT * FROM userdata WHERE UserName = '" + userName + "';";
             //string query = "SELECT * FROM userdata;";
-            setConnect();
+            SetConnect();
 
-            NpgsqlCommand commandDatabase = new NpgsqlCommand(query, databaseConnection);
+            NpgsqlCommand commandDatabase = new NpgsqlCommand(query, _databaseConnection);
             DbUser userObjekt = new DbUser();
             
             try
@@ -86,7 +86,7 @@ namespace Server
             {
                 Console.WriteLine("Query Error: " + e.Message);
             }
-            databaseConnection.Close();
+            _databaseConnection.Close();
             return userObjekt;
         }
 
@@ -94,7 +94,7 @@ namespace Server
 
         public bool VerifyRegister(string query)
         {
-            NpgsqlCommand commandDatabase = new NpgsqlCommand(query, databaseConnection);
+            NpgsqlCommand commandDatabase = new NpgsqlCommand(query, _databaseConnection);
             commandDatabase.CommandTimeout = 60;
             try
             {
@@ -107,21 +107,21 @@ namespace Server
                 Console.WriteLine("Query Error: " + e.Message);
                 return false;
             }
-            databaseConnection.Close();
+            _databaseConnection.Close();
             return true;
         }
 
 
-        public List<BaseCards> GetCardsFromDB(string username)
+        public List<BaseCards> GetCardsFromDb(string username)
         {
             List<BaseCards> cards = new List<BaseCards>();
             string query = DbFunctions.MakeQueryGetCards(username);
             //Console.WriteLine(query);
-            var commandDatabase = new NpgsqlCommand(query, databaseConnection);
+            var commandDatabase = new NpgsqlCommand(query, _databaseConnection);
             commandDatabase.CommandTimeout = 60;
             try
             {
-                databaseConnection.Open();
+                _databaseConnection.Open();
                 var myReader = commandDatabase.ExecuteReader();
                 //Console.WriteLine(myReader);
                 if (myReader.HasRows)
@@ -134,19 +134,19 @@ namespace Server
                         //Console.WriteLine(myReader.GetValue(0) + " - " + myReader.GetString(1) + " - " + myReader.GetString(2) + " - " + myReader.GetValue(3) + " - " + myReader.GetValue(4) + " - " + myReader.GetValue(5));
                         //nur zur übersicht
                         string uid = myReader.GetString(0);
-                        elementTypes temp_elementTypes = (elementTypes)Enum.Parse(typeof(elementTypes), myReader.GetString(1));
-                        cardTypes temp_cardTypes = (cardTypes)Enum.Parse(typeof(cardTypes), myReader.GetString(2));
-                        cardProperty temp_cardProperty = (cardProperty)Enum.Parse(typeof(cardProperty), myReader.GetString(3));
+                        elementTypes tempElementTypes = (elementTypes)Enum.Parse(typeof(elementTypes), myReader.GetString(1));
+                        cardTypes tempCardTypes = (cardTypes)Enum.Parse(typeof(cardTypes), myReader.GetString(2));
+                        cardProperty tempCardProperty = (cardProperty)Enum.Parse(typeof(cardProperty), myReader.GetString(3));
                         string name = myReader.GetString(4);
                         int damage = myReader.GetInt32(5);
 
-                        if (temp_cardTypes == cardTypes.Monster)
+                        if (tempCardTypes == cardTypes.Monster)
                         {
-                            temp = new MonsterCard(uid, damage, name, temp_elementTypes, temp_cardProperty);
+                            temp = new MonsterCard(uid, damage, name, tempElementTypes, tempCardProperty);
                         }
-                        else if (temp_cardTypes == cardTypes.Spell)
+                        else if (tempCardTypes == cardTypes.Spell)
                         {
-                            temp = new SpellCard(uid, damage, name, temp_elementTypes);                            
+                            temp = new SpellCard(uid, damage, name, tempElementTypes);                            
                         }
                         cards.Add(temp);
                     }
@@ -160,14 +160,14 @@ namespace Server
             {
                 Console.WriteLine("Query Error: " + e.Message);
             }
-            databaseConnection.Close();
+            _databaseConnection.Close();
             return cards;
         }
         public void GenerateNewCards(Random rand)
         {
-            int HowManyCards = 100;
+            int howManyCards = 100;
 
-            while(HowManyCards > 0)
+            while(howManyCards > 0)
             {
                 BaseCards baseCard = CardShop.GetRandCard(rand);
 
@@ -182,16 +182,16 @@ namespace Server
                 }
                 Thread.Sleep(Server.rand.Next(1, 17));
 
-                HowManyCards--;
+                howManyCards--;
             }
         }
         public bool ExecuteQuery (string query)
         {
-            NpgsqlCommand commandDatabase = new NpgsqlCommand(query, databaseConnection);
+            NpgsqlCommand commandDatabase = new NpgsqlCommand(query, _databaseConnection);
             commandDatabase.CommandTimeout = 60;
             try
             {
-                databaseConnection.Open();
+                _databaseConnection.Open();
                 var myReader = commandDatabase.ExecuteReader();
                 //Console.WriteLine("Query Success");
             }
@@ -200,21 +200,21 @@ namespace Server
                 Console.WriteLine("Query Error: " + e.Message);
                 return false;
             }
-            databaseConnection.Close();
+            _databaseConnection.Close();
             return true;
         }
         public BaseCards GetOneCardFromDb(string query, int cardsNumber)
         {
             
             BaseCards temp = null;
-            NpgsqlCommand commandDatabase = new NpgsqlCommand(query, databaseConnection);
+            NpgsqlCommand commandDatabase = new NpgsqlCommand(query, _databaseConnection);
             commandDatabase.CommandTimeout = 60;
 
 
             int counter = 0;
             try
             {
-                databaseConnection.Open();
+                _databaseConnection.Open();
                 var myReader = commandDatabase.ExecuteReader();
                 //Console.WriteLine(myReader);
                 if (myReader.HasRows)
@@ -226,20 +226,20 @@ namespace Server
 
                         //Console.WriteLine(myReader.GetValue(0) + " - " + myReader.GetString(1) + " - " + myReader.GetString(2) + " - " + myReader.GetValue(3) + " - " + myReader.GetValue(4) + " - " + myReader.GetValue(5));
                         //nur zur übersicht
-                        string cardUID = myReader.GetString(0);
-                        elementTypes temp_elementTypes = (elementTypes)Enum.Parse(typeof(elementTypes), myReader.GetString(1));
-                        cardTypes temp_cardTypes = (cardTypes)Enum.Parse(typeof(cardTypes), myReader.GetString(2));
-                        cardProperty temp_cardProperty = (cardProperty)Enum.Parse(typeof(cardProperty), myReader.GetString(3));
+                        string cardUid = myReader.GetString(0);
+                        elementTypes tempElementTypes = (elementTypes)Enum.Parse(typeof(elementTypes), myReader.GetString(1));
+                        cardTypes tempCardTypes = (cardTypes)Enum.Parse(typeof(cardTypes), myReader.GetString(2));
+                        cardProperty tempCardProperty = (cardProperty)Enum.Parse(typeof(cardProperty), myReader.GetString(3));
                         string name = myReader.GetString(4);
                         int damage = myReader.GetInt32(5);
 
-                        if (temp_cardTypes == cardTypes.Monster)
+                        if (tempCardTypes == cardTypes.Monster)
                         {
-                            temp = new MonsterCard(cardUID, damage, name, temp_elementTypes, temp_cardProperty);
+                            temp = new MonsterCard(cardUid, damage, name, tempElementTypes, tempCardProperty);
                         }
-                        else if (temp_cardTypes == cardTypes.Spell)
+                        else if (tempCardTypes == cardTypes.Spell)
                         {
-                            temp = new SpellCard(cardUID, damage, name, temp_elementTypes);
+                            temp = new SpellCard(cardUid, damage, name, tempElementTypes);
                         }
                         counter++;
 
@@ -256,18 +256,18 @@ namespace Server
             {
                 Console.WriteLine("Query Error: " + e.Message);
             }
-            databaseConnection.Close();
+            _databaseConnection.Close();
             return temp;
         }
         public int GetCardsCountFromDb()
         {
             string query = "SELECT * From cardcollection;";
-            NpgsqlCommand commandDatabase = new NpgsqlCommand(query, databaseConnection);
+            NpgsqlCommand commandDatabase = new NpgsqlCommand(query, _databaseConnection);
             commandDatabase.CommandTimeout = 60;
             int counter = 0;
             try
             {
-                databaseConnection.Open();
+                _databaseConnection.Open();
                 var myReader = commandDatabase.ExecuteReader();
                 if (myReader.HasRows)
                 {
@@ -285,7 +285,7 @@ namespace Server
             {
                 Console.WriteLine("Query Error: " + e.Message);
             }
-            databaseConnection.Close();
+            _databaseConnection.Close();
             return counter;
         }
         public void GetCardToUser(BaseCards baseCard, DbUser user)

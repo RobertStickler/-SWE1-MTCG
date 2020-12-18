@@ -27,9 +27,9 @@ namespace SWE1_MTCG
             { */
                 //zuerst die erste zeile einlesen
                 string[] tempfirstline = line[0].Split(" "); //die erste Zeile an den Leerzeichen trennen
-                request.KeyValues.Add("method", tempfirstline[0]);
-                request.KeyValues.Add("path", tempfirstline[1]);
-                request.KeyValues.Add("version", tempfirstline[2]);
+                request.keyValues.Add("method", tempfirstline[0]);
+                request.keyValues.Add("path", tempfirstline[1]);
+                request.keyValues.Add("version", tempfirstline[2]);
 
                 foreach (string oneLine in line)
                 {
@@ -47,7 +47,7 @@ namespace SWE1_MTCG
                     if (tempcount == 2)
                     {
                         string[] temp = oneLine.Split(":");
-                        request.KeyValues.Add(temp[0], temp[1].Trim(' '));
+                        request.keyValues.Add(temp[0], temp[1].Trim(' '));
                     }
                     if (tempcount == 3)
                     {

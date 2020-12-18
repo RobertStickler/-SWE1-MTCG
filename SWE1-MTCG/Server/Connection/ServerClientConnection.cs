@@ -12,8 +12,8 @@ namespace Server
 {
     public class ServerClientConnection
     {
-        private static Mutex mut = new Mutex();
-        public static void startServer()
+        private static Mutex _mut = new Mutex();
+        public static void StartServer()
         {
             List<RequestContext> clientList = new List<RequestContext>();
             int port = 6543;
@@ -47,7 +47,7 @@ namespace Server
                                 while (loggedIn == false)
                                 {
                                     stream = client.GetStream();
-                                    data = ServerClientConnection.receiveData(client, stream);
+                                    data = ServerClientConnection.ReceiveData(client, stream);
                                     Console.WriteLine("SERVER RECEIVED:\n" + data);
 
                                     //data verwalten und in ein Objekt speichern
@@ -59,7 +59,7 @@ namespace Server
                                         if (attempt == 0)
                                         {
                                             string tempMessage = "AccessDenied";
-                                            sendData(stream, tempMessage);
+                                            SendData(stream, tempMessage);
                                             //string gabadge = ServerClientConnection.receiveData(client, stream);
                                             break;
                                         }
@@ -74,7 +74,7 @@ namespace Server
                                             attempt--;
                                             //client antworten und pw und user neu eingeben
                                             string message = "please try again\n";
-                                            sendData(stream, message);
+                                            SendData(stream, message);
                                         }
                                         else
                                         {
@@ -89,7 +89,7 @@ namespace Server
                                         if (attempt == 0)
                                         {
                                             string tempMessage = "AccessDenied";
-                                            ServerClientConnection.sendData(stream, tempMessage);
+                                            ServerClientConnection.SendData(stream, tempMessage);
                                             Console.WriteLine("Du hast keine Versuche mehr");
                                             Console.ReadLine();
                                             break;
@@ -97,8 +97,8 @@ namespace Server
                                         else
                                         {
                                             string tempMessage = "YouAreRegistred\n";
-                                            registered = DbFunctions.RegisterAtDB(request, stream);
-                                            ServerClientConnection.sendData(stream, tempMessage);
+                                            registered = DbFunctions.RegisterAtDb(request, stream);
+                                            ServerClientConnection.SendData(stream, tempMessage);
                                         }
                                         //setup for register
                                     
@@ -106,7 +106,7 @@ namespace Server
                                         {
                                             attempt--;
                                             string tempMessage = "TryAgain\n";
-                                            ServerClientConnection.sendData(stream, tempMessage);
+                                            ServerClientConnection.SendData(stream, tempMessage);
                                         }
                                     }
                                 }
@@ -116,7 +116,7 @@ namespace Server
 
                                     data = "";
                                     //request.message = "empty";
-                                    data = ServerClientConnection.receiveData(client, stream);
+                                    data = ServerClientConnection.ReceiveData(client, stream);
                                     Console.WriteLine("SERVER RECEIVED:\n" + data);
                                     //daten wieder einlesen
                                     request = MessageHandler.GetRequest(data);
@@ -132,12 +132,12 @@ namespace Server
                                         //statt den rand card muss ich jz die von einem user abfragen
                                         //request.cardDeck = BattleMaker.GetRandCards();
                                         request.stream = stream;
-                                        request.cardCollection = mypostgresDataClass.GetCardsFromDB(request.GetUsernameFromDict());
+                                        request.cardCollection = mypostgresDataClass.GetCardsFromDb(request.GetUsernameFromDict());
                                         
 
                                         if (request.cardCollection.Count < 3)
                                         {
-                                            sendData(stream, "Du musst zuerst karten kaufen");
+                                            SendData(stream, "Du musst zuerst karten kaufen");
                                             continue;
                                         }
 
@@ -153,10 +153,10 @@ namespace Server
                                                 break;
                                             }
                                             //Console.WriteLine(clientList.Count);
-                                            mut.WaitOne();
+                                            _mut.WaitOne();
                                             sieger = BattleMaker.AddToBattleQueue(clientList);
                                             Thread.Sleep(1000);
-                                            mut.ReleaseMutex();
+                                            _mut.ReleaseMutex();
                                         }
                                         if(sieger == request.GetUsernameFromDict())
                                         {
@@ -184,12 +184,12 @@ namespace Server
                                         var tempListForAnswerToClient = DbFunctions.OptainNewCards(userFromDb);
                                         if(tempListForAnswerToClient == null)
                                         {
-                                            sendData(stream, "ZuWenigeCoins");
+                                            SendData(stream, "ZuWenigeCoins");
                                         }
                                         else
                                         {
-                                            string tempStringForAnswerToClient = getAllNames(tempListForAnswerToClient);
-                                            sendData(stream, tempStringForAnswerToClient);
+                                            string tempStringForAnswerToClient = GetAllNames(tempListForAnswerToClient);
+                                            SendData(stream, tempStringForAnswerToClient);
                                         }
                                         
 
@@ -199,31 +199,31 @@ namespace Server
                                     {
                                         //coming soon
                                         //will alle karten anzeigen
-                                        userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDB(userFromDb.userName);
+                                        userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
                                         userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
 
-                                        string answer = getAllNames(userFromDb.cardDeck);
-                                        sendData(stream, answer);
+                                        string answer = GetAllNames(userFromDb.cardDeck);
+                                        SendData(stream, answer);
 
                                     }
                                     else if (request.message.Trim('\n') == "ShowCardCollection")
                                     {
-                                        userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDB(userFromDb.userName);
+                                        userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
                                         userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
 
-                                        string answer = getAllNames(userFromDb.cardCollection);
-                                        sendData(stream, answer);
+                                        string answer = GetAllNames(userFromDb.cardCollection);
+                                        SendData(stream, answer);
                                     }
                                     else if (request.message.Trim('\n') == "Trade4Coins")
                                     {
                                         while(true)
                                         {
                                             //Console.WriteLine("ready to trade");
-                                            userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDB(userFromDb.userName);
-                                            string answer = getAllNames(userFromDb.cardCollection);
-                                            sendData(stream, answer);
+                                            userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
+                                            string answer = GetAllNames(userFromDb.cardCollection);
+                                            SendData(stream, answer);
 
-                                            data = receiveData(client, stream);
+                                            data = ReceiveData(client, stream);
                                             request = MessageHandler.GetRequest(data);
 
                                             if (request.message.Trim('\n') == "END")
@@ -243,8 +243,8 @@ namespace Server
                                                 //noch die coins anzeigen
                                                 if(cardToTrade > userFromDb.cardCollection.Count)
                                                 {
-                                                    sendData(stream, "Wrong input\n do you want to continue?");
-                                                    data = receiveData(client, stream);
+                                                    SendData(stream, "Wrong input\n do you want to continue?");
+                                                    data = ReceiveData(client, stream);
                                                     request = MessageHandler.GetRequest(data);
                                                     if (request.message.Trim('\n') == "YES")
                                                     {
@@ -256,9 +256,9 @@ namespace Server
                                                 int preis = CalcPreis(userFromDb.cardCollection[cardToTrade - 1]);
                                                 //answer ob to sell
                                                 string message = MakeMessageToSellCoinsAsk(preis);
-                                                sendData(stream, message);
+                                                SendData(stream, message);
 
-                                                data = receiveData(client, stream);
+                                                data = ReceiveData(client, stream);
                                                 request = MessageHandler.GetRequest(data);
 
                                                 if(request.message.Trim('\n') =="YES")
@@ -268,8 +268,8 @@ namespace Server
 
                                                     //coins hochzählen
                                                     userFromDb.coins += preis;
-                                                    string MakeQuery4UpdateCoins = DbFunctions.MakeQueryForUpdateCoins(userFromDb);
-                                                    successQueryExecute = DbFunctions.PassQuery(MakeQuery4UpdateCoins);
+                                                    string makeQuery4UpdateCoins = DbFunctions.MakeQueryForUpdateCoins(userFromDb);
+                                                    successQueryExecute = DbFunctions.PassQuery(makeQuery4UpdateCoins);
                                                 }
 
 
@@ -313,21 +313,21 @@ namespace Server
         }
        
 
-        public static string receiveData(TcpClient client, NetworkStream stream)
+        public static string ReceiveData(TcpClient client, NetworkStream stream)
         {
             byte[] bytes = new byte[client.ReceiveBufferSize];
             stream.Read(bytes, 0, (int)client.ReceiveBufferSize);
             string returndata = Encoding.UTF8.GetString(bytes);
             return returndata.Trim('\0');
         }
-        public static void sendData(NetworkStream stream, string message)
+        public static void SendData(NetworkStream stream, string message)
         {
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
             stream.Write(data, 0, data.Length);
             Console.Write("Sent:\n{0}", message);
             Console.WriteLine("\n");
         }
-        public static string getAllNames(List<BaseCards> tempListForAnswerToClient)
+        public static string GetAllNames(List<BaseCards> tempListForAnswerToClient)
         {
             string temp = "";
             int counter = 1;

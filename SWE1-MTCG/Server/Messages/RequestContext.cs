@@ -10,7 +10,7 @@ namespace SWE1_MTCG
     {
         public string message;
 
-        public Dictionary<string, string> KeyValues = new Dictionary<string, string>();
+        public Dictionary<string, string> keyValues = new Dictionary<string, string>();
    
         public List<BaseCards> cardDeck = new List<BaseCards>();
         public List<BaseCards> cardCollection = new List<BaseCards>();
@@ -19,16 +19,16 @@ namespace SWE1_MTCG
 
         public string GetUsernameFromDict()
         {
-            foreach (KeyValuePair<string, string> entry in KeyValues)
+            foreach (KeyValuePair<string, string> entry in keyValues)
             {
                 if (entry.Key == "UserName")
                     return entry.Value;
             }
             return "not Found";
         }
-        public string GetPWDFromDict()
+        public string GetPwdFromDict()
         {
-            foreach (KeyValuePair<string, string> entry in KeyValues)
+            foreach (KeyValuePair<string, string> entry in keyValues)
             {
                 if (entry.Key == "Password")
                     return entry.Value;
@@ -37,7 +37,7 @@ namespace SWE1_MTCG
         }
         public string GetEmailFromDict()
         {
-            foreach (KeyValuePair<string, string> entry in KeyValues)
+            foreach (KeyValuePair<string, string> entry in keyValues)
             {
                 if (entry.Key == "Email")
                     return entry.Value;

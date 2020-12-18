@@ -12,6 +12,7 @@ namespace Client
         readonly string path = "/messages ";
         readonly string http_version = "HTTP/1.1\n";
         readonly string advice = "POST ";
+        private readonly string token = "MTCG-Game-Token";
 
 
         public string CreateMessageForSend(RequestContextClient request)
@@ -99,8 +100,8 @@ namespace Client
             message += "Content-Type: " + content_type;
             message += "Content-Lenght: " + (temp_msg.Length).ToString() + "\n";
             message += "Host: " + request.ip + ":" + request.port.ToString();
-            message += "\nUserName: " + request.username;
-            message += "\nPassword: " + request.pwd; ;
+            message += "\nUserName: " + request.username + "_" + token;
+            message += "\nPassword: " + request.pwd;
             message += "\n\n" + temp_msg + "\n";
 
             return message;

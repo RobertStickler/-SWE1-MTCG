@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading;
+﻿using Cards;
 using SWE1_MTCG;
-using Cards;
-using System.Runtime.Serialization.Formatters;
+using System;
+using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace Server
 {
@@ -17,20 +11,36 @@ namespace Server
         public static ServerDbCOnnection mysql = new ServerDbCOnnection();
         public static DbUser VerifyLogin(RequestContext request, NetworkStream stream)
         {
+            string tempUsername  = request.GetUsernameFromDict();
+
+            //überprüfung, ob der Token passd
+            if (!(CheckToken(tempUsername)))
+            {
+                return null; 
+            }
+
+            string username = "";
+            string[] tempToken = tempUsername.Split(new char[] { '_' });
             
-            DbUser user = mysql.GetOneUser(request.GetUsernameFromDict()); //erstellt ein DB User objekt
+            //falls auch _ im usernamen drinnen sind
+            for (int i = 0; i < tempToken.Length - 1; i++)
+            {
+                username  += tempToken[i];
+            }
+
+            DbUser user = mysql.GetOneUser(username); //erstellt ein DB User objekt
             Console.WriteLine(user.userName);
-            if (request.GetPWDFromDict() == user.pwd)
+            if (request.GetPwdFromDict() == user.pwd)
             {
                 string message = "Succsessful";
-                ServerClientConnection.sendData(stream, message);
+                ServerClientConnection.SendData(stream, message);
                 return user;
             }
             Console.WriteLine("Wrong user or Pwd!");
             return null;
         }
         //following is still in progress lol
-        public static RequestContext makeAnotherRequest(TcpClient client, NetworkStream stream)
+        public static RequestContext MakeAnotherRequest(TcpClient client, NetworkStream stream)
         {
             var request = new RequestContext();
             string message = "please try again";
@@ -41,7 +51,22 @@ namespace Server
 
             return request;
         }
-        public static bool RegisterAtDB(RequestContext request, NetworkStream stream)        
+
+        public static bool CheckToken(string username)
+        {
+            string tokenForCheck = "MTCG-Game-Token";
+            bool temp = false;
+            string[] token = username.Split(new char[] {'_'});
+
+            int lenght = token.Length;
+
+            if (token[lenght - 1] == tokenForCheck)
+            {
+                return true;
+            }
+            return temp;
+        }
+        public static bool RegisterAtDb(RequestContext request, NetworkStream stream)        
         {
             ServerDbCOnnection mysql = new ServerDbCOnnection();            
             //check if username already taken            
@@ -69,7 +94,7 @@ namespace Server
 
             if(succsess == true)
             {
-                Console.WriteLine("You are registrated");
+                Console.WriteLine("You are registered");
             }
             else
             {
@@ -103,7 +128,7 @@ namespace Server
         {
             int size = 10;
             string username = request.GetUsernameFromDict();
-            string password = request.GetPWDFromDict();
+            string password = request.GetPwdFromDict();
             string email = request.GetEmailFromDict();
 
             string uid = CreateUid(size);
@@ -128,7 +153,7 @@ namespace Server
         public static List<BaseCards> OptainNewCards(DbUser userFromDb)
         {
             List<BaseCards> tempList = new List<BaseCards>();
-            BaseCards baseCard = null;
+            BaseCards baseCard;
             ServerDbCOnnection dbConn = new ServerDbCOnnection();
             int cost = 25;
             string query = "SELECT * From cardcollection;";
