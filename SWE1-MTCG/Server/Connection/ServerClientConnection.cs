@@ -173,7 +173,8 @@ namespace Server
                                         {
                                             //elo points erhöhen
                                             Console.WriteLine(sieger);
-                                            //getcards from
+                                            
+                                            
                                         }
                                         else
                                         {

@@ -214,8 +214,13 @@ namespace Server
 
             
             return temp;
+        } public static string MakeQueryForUpdateElo(DbUser userFromDb, int wert)
+        {
+            string temp = "update userdata " +
+                          "set elo_points = " + wert + " " +
+                          "where userName = '" + userFromDb.userName + "';";
+            return temp;
         }
-
 
     }
 }

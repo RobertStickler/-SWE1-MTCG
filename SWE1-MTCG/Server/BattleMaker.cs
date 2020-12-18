@@ -43,7 +43,6 @@ namespace Server
                 {
                     username = liste[0].GetUsernameFromDict();
                     SendWinnerToClient(1, liste);
-                    //defck umbauen oder???
                     liste.RemoveAt(1);
                     liste.RemoveAt(0);
                     return username;
@@ -87,9 +86,6 @@ namespace Server
                 }
                 cardDeck.Add(tempCard);
             }
-
-
-
             return cardDeck;
         }
         public static bool CheckList(BaseCards cardToAdd, List<BaseCards> cardDeck)
