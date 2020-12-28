@@ -391,7 +391,14 @@ namespace Server
                                         {
                                             data = ReceiveData(client, stream);
                                             request = MessageHandler.GetRequest(data);
-                                            int number = Int32.Parse(request.message);
+                                            int number = Int32.Parse(request.message) -1; //wwil bei 0 zu zählen beginnen
+                                            
+                                            if(userFromDb.cardCollection.Count < number)
+                                            {
+                                                SendData(stream, "NumberToHigh");
+                                                continue;
+                                            }
+
                                             tempCard = userFromDb.cardCollection[number];
                                             //tscheck if falide
                                             //eine karte darf z.b nur einmal drinnen sein
@@ -403,6 +410,7 @@ namespace Server
                                             else
                                             {
                                                 SendData(stream, "cardAlreadyUsed");
+                                                continue;
                                             }
                                         }
                                     }
