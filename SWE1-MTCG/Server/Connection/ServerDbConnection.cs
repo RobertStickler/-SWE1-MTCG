@@ -297,5 +297,11 @@ namespace Server
                 Console.WriteLine("error bei execute");
             }
         }
+        public void AddCardsToTrade(DbUser dbUser, int numbercard, string cardType, string damage)
+        {
+            string query = DbFunctions.MakeQuery4AddToTrade(dbUser, numbercard, cardType, damage);
+
+
+        }
     }
 }

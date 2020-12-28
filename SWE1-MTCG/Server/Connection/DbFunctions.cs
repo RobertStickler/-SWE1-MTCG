@@ -38,8 +38,7 @@ namespace Server
             }
             Console.WriteLine("Wrong user or Pwd!");
             return null;
-        }
-        //following is still in progress lol
+        }       
         public static RequestContext MakeAnotherRequest(TcpClient client, NetworkStream stream)
         {
             var request = new RequestContext();
@@ -221,6 +220,10 @@ namespace Server
                           "where userName = '" + userFromDb.userName + "';";
             return temp;
         }
-
+        public static string MakeQuery4AddToTrade(DbUser dbUser, int numbercard, string cardType, string damage)
+        {
+            string temp = $"Insert Into UserData_CardCollection ({dbUser.uid}, {dbUser.cardCollection[numbercard].getUID()}, {cardType}, {damage})";
+            return temp;
+        }
     }
 }

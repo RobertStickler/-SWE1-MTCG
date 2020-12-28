@@ -35,8 +35,9 @@ namespace Server
 
                         new Thread(() =>
                         {
-                            try { 
-                                Console.WriteLine("\nClient Connected!");                            
+                            try
+                            {
+                                Console.WriteLine("\nClient Connected!");
                                 bool loggedIn = false;
                                 DbUser userFromDb = new DbUser();
                                 NetworkStream stream = null;
@@ -69,7 +70,7 @@ namespace Server
                                             userFromDb = DbFunctions.VerifyLogin(request, stream);
                                         }
 
-                                    
+
                                         if ((userFromDb == null))
                                         {
                                             attempt--;
@@ -80,7 +81,7 @@ namespace Server
                                         else
                                         {
                                             loggedIn = true;
-                                        }                                   
+                                        }
 
                                         //wieder auf nachricht warten
                                         //er ist nun eingeloggt
@@ -100,15 +101,15 @@ namespace Server
                                             registered = DbFunctions.RegisterAtDb(request, stream);
 
                                             if (registered == true)
-                                            { 
+                                            {
                                                 string tempMessage = "YouAreRegistred\n";
                                                 ServerClientConnection.SendData(stream, tempMessage);
                                             }
-                                            
-                                            
+
+
                                         }
                                         //setup for register
-                                        if(registered == false)
+                                        if (registered == false)
                                         {
                                             attempt--;
                                             string tempMessage = "TryAgain\n";
@@ -126,20 +127,20 @@ namespace Server
                                     Console.WriteLine("SERVER RECEIVED:\n" + data);
                                     //daten wieder einlesen
                                     request = MessageHandler.GetRequest(data);
-                                
+
 
                                     //also nach dem einloggen, kann ein client man hier her
                                     //brauch ich dann auch für später
                                     if (request.message.Trim('\n') == "StartTheBattle")
                                     {
-                                        
+
 
                                         Console.WriteLine("Das battle beginnt in kürze");
                                         //statt den rand card muss ich jz die von einem user abfragen
                                         //request.cardDeck = BattleMaker.GetRandCards();
                                         request.stream = stream;
                                         request.cardCollection = mypostgresDataClass.GetCardsFromDb(request.GetUsernameFromDict());
-                                        
+
                                         //wenn er zu weinige Karten besitzt
                                         if (request.cardCollection.Count < 3)
                                         {
@@ -159,7 +160,7 @@ namespace Server
                                         //noch lock hinzufügen
                                         while (sieger.Trim('\n') == "noOne")
                                         {
-                                            if(!clientList.Contains(request))
+                                            if (!clientList.Contains(request))
                                             {
                                                 break;
                                             }
@@ -169,12 +170,12 @@ namespace Server
                                             Thread.Sleep(1000);
                                             _mut.ReleaseMutex();
                                         }
-                                        if(sieger == request.GetUsernameFromDict())
+                                        if (sieger == request.GetUsernameFromDict())
                                         {
                                             //elo points erhöhen
                                             Console.WriteLine(sieger);
-                                            
-                                            
+
+
                                         }
                                         else
                                         {
@@ -196,7 +197,7 @@ namespace Server
                                         //string choiceCardShop = Console.ReadLine().Trim(' ', '\n');
 
                                         var tempListForAnswerToClient = DbFunctions.OptainNewCards(userFromDb);
-                                        if(tempListForAnswerToClient == null)
+                                        if (tempListForAnswerToClient == null)
                                         {
                                             SendData(stream, "ZuWenigeCoins");
                                         }
@@ -205,10 +206,10 @@ namespace Server
                                             string tempStringForAnswerToClient = GetAllNames(tempListForAnswerToClient);
                                             SendData(stream, tempStringForAnswerToClient);
                                         }
-                                        
+
 
                                     }
-                                    else 
+                                    else
                                     if (request.message.Trim('\n') == "ShowDeck")
                                     {
                                         userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
@@ -224,7 +225,7 @@ namespace Server
                                                 userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
                                                 answer = GetAllNames(userFromDb.cardDeck);
                                             }
-                                            
+
                                         }
                                         else
                                         {
@@ -241,7 +242,7 @@ namespace Server
                                     }
                                     else if (request.message.Trim('\n') == "Trade4Coins")
                                     {
-                                        while(true)
+                                        while (true)
                                         {
                                             //Console.WriteLine("ready to trade");
                                             userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
@@ -253,7 +254,7 @@ namespace Server
 
                                             if (request.message.Trim('\n') == "END")
                                             {
-                                            
+
                                                 break;
                                             }
                                             else
@@ -266,7 +267,7 @@ namespace Server
                                                 //Console.WriteLine(userFromDb.cardCollection[cardToTrade - 1].getCardName()); //eins abziehen, weil die client eingabe bei 1 startet
                                                 //Console.WriteLine(" ");
                                                 //noch die coins anzeigen
-                                                if(cardToTrade > userFromDb.cardCollection.Count)
+                                                if (cardToTrade > userFromDb.cardCollection.Count)
                                                 {
                                                     SendData(stream, "Wrong input\n do you want to continue?");
                                                     data = ReceiveData(client, stream);
@@ -286,7 +287,7 @@ namespace Server
                                                 data = ReceiveData(client, stream);
                                                 request = MessageHandler.GetRequest(data);
 
-                                                if(request.message.Trim('\n') =="YES")
+                                                if (request.message.Trim('\n') == "YES")
                                                 {
                                                     message = MakeMessageTradCoinsDelete(userFromDb, userFromDb.cardCollection[cardToTrade - 1]);
                                                     bool successQueryExecute = DbFunctions.PassQuery(message);
@@ -295,6 +296,10 @@ namespace Server
                                                     userFromDb.coins += preis;
                                                     string makeQuery4UpdateCoins = DbFunctions.MakeQueryForUpdateCoins(userFromDb);
                                                     successQueryExecute = DbFunctions.PassQuery(makeQuery4UpdateCoins);
+                                                }
+                                                else if (request.message.Trim('\n') == "NO")
+                                                {
+                                                    break;
                                                 }
 
 
@@ -310,11 +315,69 @@ namespace Server
                                         //zweiter spieler wählt eine karte aus, die er tauschen will
                                         //datenbank wird aktualisiert
                                         //beide werden aus der queue gelöscht
+
+                                        string input = "1";
+
+                                        do
+                                        {
+                                            
+
+                                            if (input != "0")
+                                            {
+                                                //choose a card 
+                                                userFromDb.cardDeck = new List<BaseCards>();
+
+                                                BaseCards tempCard = null;
+                                                //hier kann man die Karten auswählen, die im deck sein sollen
+                                                userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
+                                                string answer = String4ShowCardCollection(userFromDb.cardCollection);
+                                                SendData(stream, answer); //schickt die possible karten
+                                                int number;
+
+                                                //die zahl kommt als antwort und die will ich hochladen
+                                                while (true)
+                                                {
+                                                    data = ReceiveData(client, stream);
+                                                    request = MessageHandler.GetRequest(data);
+                                                    number = Int32.Parse(request.message);
+
+                                                    if (number < userFromDb.cardCollection.Count)
+                                                    {
+                                                        SendData(stream, "OK");
+                                                        data = ReceiveData(client, stream);
+                                                        request = MessageHandler.GetRequest(data);
+                                                        input = request.message;
+                                                        break;
+                                                    }
+                                                    else
+                                                    {
+                                                        SendData(stream, "False");
+                                                        data = ReceiveData(client, stream);
+                                                        request = MessageHandler.GetRequest(data);
+                                                    }
+                                                }
+
+
+                                                data = ReceiveData(client, stream);
+                                                request = MessageHandler.GetRequest(data);
+                                                string spellOrMonster = request.message;
+
+                                                data = ReceiveData(client, stream);
+                                                request = MessageHandler.GetRequest(data);
+                                                string requiredDamage = request.message;
+
+                                                mypostgresDataClass.AddCardsToTrade(userFromDb, number, spellOrMonster, requiredDamage);
+                                            }
+
+                                        }
+                                        while (input != "0");
+
+
                                     }
                                     else if (request.message.Trim('\n') == "ChangeTheDeck")
                                     {
                                         userFromDb.cardDeck = new List<BaseCards>();
-                                        
+
                                         BaseCards tempCard = null;
                                         //hier kann man die Karten auswählen, die im deck sein sollen
                                         userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
@@ -328,7 +391,7 @@ namespace Server
                                             tempCard = userFromDb.cardCollection[number];
                                             //tscheck if falide
                                             //eine karte darf z.b nur einmal drinnen sein
-                                            if (CheckIfValide(tempCard, userFromDb))
+                                            if (CheckIfAddToDeckIsValide(tempCard, userFromDb))
                                             {
                                                 userFromDb.cardDeck.Add(tempCard);
                                                 SendData(stream, GetAllNames(userFromDb.cardDeck));
@@ -337,15 +400,7 @@ namespace Server
                                             {
                                                 SendData(stream, "cardAlreadyUsed");
                                             }
-
-
-                                           
-                                            
-                                            
                                         }
-
-                                       
-
                                     }
                                     else
                                     {
@@ -367,16 +422,16 @@ namespace Server
             {
                 Console.WriteLine(e);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Error {0}!", e);
             }
         }
 
-        public static bool CheckIfValide(BaseCards tempCard, DbUser userFromDb)
+        public static bool CheckIfAddToDeckIsValide(BaseCards tempCard, DbUser userFromDb)
         {
             //nun kann ein benutzer eine karte leider auch mehrmals haben
-            int numbeCardcollection = WieOftHatErDieKarte( userFromDb.cardCollection, tempCard.getUID()); //so oft darf er eine bestimmte karte verwenden
+            int numbeCardcollection = WieOftHatErDieKarte(userFromDb.cardCollection, tempCard.getUID()); //so oft darf er eine bestimmte karte verwenden
             int numbeDeck = WieOftHatErDieKarte(userFromDb.cardDeck, tempCard.getUID()); //so oft hat er die karte bereits im deck
 
             if (numbeCardcollection > numbeDeck)
@@ -437,17 +492,17 @@ namespace Server
         {
             string temp = "";
             int counter = 1;
-            foreach(var part in tempListForAnswerToClient)
+            foreach (var part in tempListForAnswerToClient)
             {
                 if (part == null)
                 {
-                    throw  new ArgumentException("Spieler hat keine Karten");
+                    throw new ArgumentException("Spieler hat keine Karten");
                 }
                 temp += $"{counter}. {part.getCardName()}, {part.getCardType()}, {part.getElementTypes()}, ";
                 //temp += counter.ToString() + ". ";
                 //temp += part.getCardName() +", "+ part.getCardType() + ", " + part.getElementTypes() + ", ";
-                    if (part.getCardType() == MyEnum.cardTypes.Monster)
-                        temp += part.getCardProperty() + ", ";
+                if (part.getCardType() == MyEnum.cardTypes.Monster)
+                    temp += part.getCardProperty() + ", ";
                 temp += part.getCardDamage();
                 temp += "\n";
 
@@ -460,7 +515,7 @@ namespace Server
         {
             string temp = "DELETE FROM userdata_cardcollection WHERE ";
 
-            temp += "fk_user_uid = '" + userFromDb.uid + "' AND fk_card_uid = '" + card.getUID() + "';" ;
+            temp += "fk_user_uid = '" + userFromDb.uid + "' AND fk_card_uid = '" + card.getUID() + "';";
 
             return temp;
         }
@@ -469,7 +524,7 @@ namespace Server
             float temp = 0;
 
             temp = card.getCardDamage() * 0.25f - 1f; //weil man in einem Pack 4 Karten bekommt, ein pack 25 coins kostet und der damage von 0 bis 50 sein kann
-            if(temp == 0)
+            if (temp == 0)
             {
                 temp = 1;
             }
@@ -478,7 +533,7 @@ namespace Server
         public static string MakeMessageToSellCoinsAsk(int preis)
         {
             string temp = "";
-            temp += "Du bekommst für deine Karte " + preis +  " coins";      
+            temp += "Du bekommst für deine Karte " + preis + " coins";
 
             return temp;
         }

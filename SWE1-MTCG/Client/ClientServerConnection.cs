@@ -43,65 +43,39 @@ namespace Client
                 string message = "empty";
                 string response = "empty";
 
-                while (loggedIn == false)
+                loggedIn = NotLoggedIn(loggedIn, request, client, stream);
+                if(loggedIn == false)
                 {
-                    
-                    message = msg.CreateMessageForSend(request); //da wird die message erstellt
-                    Console.WriteLine();
-
-                    sendData(stream, message);
-                    Console.Write("Sent:\n{0}", message);
-
-                    response = receiveData(client, stream);
-
-                    Console.Write("Received:\n{0}", response);
-                    //Console.WriteLine("\ndu bist bis hier gekommen!");
-                    if (response.Trim('\n') == "Succsessful") //you are logged in
-                    {
-                        loggedIn = true;
-                        break;
-
-                    }
-                    else if (response.Trim('\n') == "AccessDenied")
-                    {
-                        Console.WriteLine("no more Attempts left!");
-                        return;
-                    }
-                    else if (response.Trim('\n') == "TryAgain")
-                    {
-                        continue;
-                    }
-                    if (response.Trim('\n') == "YouAreRegistred")
-                    {
-                        response = "Succsessful";
-                        loggedIn = true;
-                        break;
-                    }
-
+                    return;
                 }
+
                 while(true) //wenn eingeloggt
                 {
                     Program.PrintMenueTwo();
                     string choiceWhenLoggedIn = "-1";
+
                     //nur richtige eingabe zulassen
-                    while ((choiceWhenLoggedIn != "3") && (choiceWhenLoggedIn != "4") && (choiceWhenLoggedIn != "5") && (choiceWhenLoggedIn != "6") 
-                        && (choiceWhenLoggedIn != "0") && (choiceWhenLoggedIn != "7") && (choiceWhenLoggedIn != "8") && (choiceWhenLoggedIn != "9"))
+                    while (Int32.Parse(choiceWhenLoggedIn) < 0 || Int32.Parse(choiceWhenLoggedIn) > 9)
                     {
                         Console.Write("Enter your choice: ");
                         choiceWhenLoggedIn = Console.ReadLine().Trim('\n');
-                    }
-                    //0 beendet das Programm
-                    if (choiceWhenLoggedIn == "0")
-                        return;
 
-                    request.message_number = choiceWhenLoggedIn;
+                        //0 beendet das Programm
+                        if (choiceWhenLoggedIn == "0")
+                            return;
+                    }
+                    
+
+                    request.message_number = choiceWhenLoggedIn; //die auswahl in die mesasge speichern
                     message = msg.CreateMessageForSend(request); //verwaltet wieder die nachricht
                     sendData(stream, message);
-                    Console.Write("Sent:\n{0}", message);
+                    //Console.Write("Sent:\n{0}", message);
 
                     response = receiveData(client, stream);
 
-                    if(choiceWhenLoggedIn == "7")
+                    
+
+                    if (choiceWhenLoggedIn == "7")
                     {
                         while(true)
                         {  
@@ -126,6 +100,8 @@ namespace Client
                                 sendData(stream, message);
                                 break;
                             }
+
+
                             message = msg.MakeRequest(request, cardToTrade);
                             sendData(stream, message);
 
@@ -139,18 +115,62 @@ namespace Client
                             {
                                 message = msg.MakeRequest(request, "YES");
                                 sendData(stream, message);
+                                //neue liste empfangen
+                                response = receiveData(client, stream);
                             }
                             else
                             {
                                 message = msg.MakeRequest(request, "NO");
                                 sendData(stream, message);
+                                break;
                             }
-
-
-                            //neue liste empfangen
-                            response = receiveData(client, stream);
                         }
                         
+                    }
+
+                    if (choiceWhenLoggedIn == "8")
+                    {
+                        Console.WriteLine("0 .. to exit");
+                        Console.WriteLine("1 .. to add a card");
+                        Console.WriteLine("2 .. to see other cards");
+                        Console.WriteLine(": ");
+                        string cardToTrade = Console.ReadLine();
+
+                        int parsedNumber;
+                        Console.WriteLine(response);
+                        string answerMessage = "";
+
+                        while (answerMessage != "OK")
+                        {
+                            Console.Write("choose a card to trade: ");
+                            cardToTrade = Console.ReadLine();
+                            if (Int32.TryParse(cardToTrade, out parsedNumber) != true)
+                            {
+                                continue;
+                            }
+                            message = msg.MakeRequest(request, cardToTrade);
+                            sendData(stream, message);                                                     
+                        }
+
+                        while(answerMessage != "monster" && answerMessage !="spell")
+                        {
+                            Console.WriteLine("\nDo you want a spell or a monster?\n: ");
+                            answerMessage = Console.ReadLine();
+                        }
+                        message = msg.MakeRequest(request, cardToTrade);
+                        sendData(stream, message);
+
+                        answerMessage = "51";
+
+                        while (Int32.Parse(answerMessage) < 0 && Int32.Parse(answerMessage) > 50)
+                        {
+                            Console.WriteLine("\nWhich damage value do you want?\n: ");
+                            answerMessage = Console.ReadLine();
+                        }
+                        message = msg.MakeRequest(request, answerMessage);
+                        sendData(stream, message);
+
+                        answerMessage = receiveData(client, stream);
                     }
 
                     if (choiceWhenLoggedIn == "9")
@@ -222,6 +242,45 @@ namespace Client
             stream.Write(data, 0, data.Length);
             Console.Write("Sent:\n{0}", message);
             Console.WriteLine("\n");
+        }
+        public static bool NotLoggedIn(bool loggedIn, RequestContextClient request, TcpClient client, NetworkStream stream)
+        {
+            while (loggedIn == false)
+            {
+                var msg = new Message();
+                string response, message;
+                message = msg.CreateMessageForSend(request); //da wird die message erstellt
+                Console.WriteLine();
+
+                sendData(stream, message);
+                Console.Write("Sent:\n{0}", message);
+
+                response = receiveData(client, stream);
+
+                Console.Write("Received:\n{0}", response);
+                //Console.WriteLine("\ndu bist bis hier gekommen!");
+                if (response.Trim('\n') == "Succsessful") //you are logged in
+                {
+                    return true;
+
+                }
+                else if (response.Trim('\n') == "AccessDenied")
+                {
+                    Console.WriteLine("no more Attempts left!");
+                    return false;
+                }
+                else if (response.Trim('\n') == "TryAgain")
+                {
+                    continue;
+                }
+                if (response.Trim('\n') == "YouAreRegistred")
+                {
+                    response = "Succsessful";
+                    return true;
+                }
+
+            }
+            return false;
         }
     }
 
