@@ -337,40 +337,51 @@ namespace Server
                                                 string answer = String4ShowCardCollection(userFromDb.cardCollection);
                                                 SendData(stream, answer); //schickt die possible karten
                                                 int number;
+                                                data = ReceiveData(client, stream);
+                                                request = MessageHandler.GetRequest(data);
+                                                string message = request.message.Trim('\n');
 
-                                                //die zahl kommt als antwort und die will ich hochladen
-                                                while (true)
+                                                if (message == "1")
                                                 {
+                                                    //man will eine karte hinzufügen
+                                                    //die zahl kommt als antwort und die will ich hochladen
+                                                    while (true)
+                                                    {
+                                                        data = ReceiveData(client, stream);
+                                                        request = MessageHandler.GetRequest(data);
+                                                        number = Int32.Parse(request.message);
+
+                                                        if (number <= userFromDb.cardCollection.Count)
+                                                        {
+                                                            SendData(stream, "OK");
+                                                            data = ReceiveData(client, stream);
+                                                            request = MessageHandler.GetRequest(data);
+                                                            input = request.message;
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            SendData(stream, "False");
+                                                        }
+                                                    }
+
+
                                                     data = ReceiveData(client, stream);
                                                     request = MessageHandler.GetRequest(data);
-                                                    number = Int32.Parse(request.message);
+                                                    string spellOrMonster = request.message.Trim('\n');
 
-                                                    if (number < userFromDb.cardCollection.Count)
-                                                    {
-                                                        SendData(stream, "OK");
-                                                        data = ReceiveData(client, stream);
-                                                        request = MessageHandler.GetRequest(data);
-                                                        input = request.message;
-                                                        break;
-                                                    }
-                                                    else
-                                                    {
-                                                        SendData(stream, "False");
-                                                        data = ReceiveData(client, stream);
-                                                        request = MessageHandler.GetRequest(data);
-                                                    }
+                                                    data = ReceiveData(client, stream);
+                                                    request = MessageHandler.GetRequest(data);
+                                                    string requiredDamage = request.message.Trim('\n');
+
+                                                    mypostgresDataClass.AddCardsToTrade(userFromDb, number, spellOrMonster, requiredDamage);
+                                                }
+                                                else if(message == "2")
+                                                {
+                                                    //man will nur tauschen
                                                 }
 
-
-                                                data = ReceiveData(client, stream);
-                                                request = MessageHandler.GetRequest(data);
-                                                string spellOrMonster = request.message;
-
-                                                data = ReceiveData(client, stream);
-                                                request = MessageHandler.GetRequest(data);
-                                                string requiredDamage = request.message;
-
-                                                mypostgresDataClass.AddCardsToTrade(userFromDb, number, spellOrMonster, requiredDamage);
+                                                
                                             }
 
                                         }

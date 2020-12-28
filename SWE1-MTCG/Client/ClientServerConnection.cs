@@ -196,34 +196,50 @@ namespace Client
             string answerMessage = "";
 
 
-            while (answerMessage != "OK")
+            do
             {
                 Console.Write("choose a card to trade: ");
                 cardToTrade = MyChoice3();
                 message = msg.MakeRequest(request, cardToTrade);
                 sendData(stream, message);
-                //to continue
+                answerMessage = receiveData(client, stream);
             }
+            while (answerMessage != "OK");
 
-            while (answerMessage != "monster" && answerMessage != "spell")
-            {
-                Console.WriteLine("\nDo you want a spell or a monster?\n: ");
-                answerMessage = Console.ReadLine();
-            }
+
+            answerMessage = SpellOrMonsterFunc(answerMessage);
             message = msg.MakeRequest(request, cardToTrade);
             sendData(stream, message);
 
-            answerMessage = "51";
+            answerMessage = DamageValue();
 
-            while (Int32.Parse(answerMessage) < 0 && Int32.Parse(answerMessage) > 50)
-            {
-                Console.WriteLine("\nWhich damage value do you want?\n: ");
-                answerMessage = Console.ReadLine();
-            }
+            
             message = msg.MakeRequest(request, answerMessage);
             sendData(stream, message);
 
-            answerMessage = receiveData(client, stream);
+            
+        }
+        public static string DamageValue()
+        {
+            string answerMessage = Int32.MaxValue.ToString();
+            while (Int32.Parse(answerMessage) < 0 || Int32.Parse(answerMessage) > 50)
+            {
+                Console.WriteLine("\nWhich damage value do you want?\n: ");
+                answerMessage = Console.ReadLine().Trim('\n');
+            }
+            return answerMessage;
+        }
+        public static string SpellOrMonsterFunc(string answerMessage)
+        {
+            Console.WriteLine("1 .. monster");
+            Console.WriteLine("2 .. spell");
+
+            while (answerMessage != "1" && answerMessage != "2")
+            {
+                Console.WriteLine("\nDo you want a spell or a monster?\n: ");
+                answerMessage = Console.ReadLine().Trim('\n');
+            }
+            return answerMessage;
         }
         public static string MyChoice3()
         {

@@ -301,7 +301,7 @@ namespace Server
         {
             string query = DbFunctions.MakeQuery4AddToTrade(dbUser, numbercard, cardType, damage);
 
-
+            ExecuteQuery(query);
         }
     }
 }
