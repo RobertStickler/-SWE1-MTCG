@@ -281,6 +281,10 @@ namespace Server
 
                                                 int preis = CalcPreis(userFromDb.cardCollection[cardToTrade - 1]);
                                                 //answer ob to sell
+                                                if(preis == 0)
+                                                {
+                                                    preis = 1;
+                                                }
                                                 string message = MakeMessageToSellCoinsAsk(preis);
                                                 SendData(stream, message);
 
