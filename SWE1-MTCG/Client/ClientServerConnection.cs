@@ -183,41 +183,55 @@ namespace Client
         }
         public static void TradeWithPeopleFunc(string response, RequestContextClient request, TcpClient client, NetworkStream stream)
         {
+            var msg = new Message();
+            string message;
+            int parsedNumber;
+            string answerMessage = "";
+
             Console.WriteLine("0 .. to exit");
             Console.WriteLine("1 .. to add a card");
             Console.WriteLine("2 .. to see other cards");
             Console.WriteLine(": ");
-            string cardToTrade = Console.ReadLine();
-
-            var msg = new Message();
-            string message;
-            int parsedNumber;
+            string cardToTrade = Console.ReadLine(); //eingabe prüfen
+                       
             Console.WriteLine(response);
-            string answerMessage = "";
-
-
-            do
-            {
-                Console.Write("choose a card to trade: ");
-                cardToTrade = MyChoice3();
-                message = msg.MakeRequest(request, cardToTrade);
-                sendData(stream, message);
-                answerMessage = receiveData(client, stream);
-            }
-            while (answerMessage != "OK");
-
-
-            answerMessage = SpellOrMonsterFunc(answerMessage);
             message = msg.MakeRequest(request, cardToTrade);
             sendData(stream, message);
 
-            answerMessage = DamageValue();
+            if(cardToTrade == "1")
+            {
+                do
+                {
+                    Console.Write("choose a card to trade: ");
+                    cardToTrade = MyChoice3();
+                    message = msg.MakeRequest(request, cardToTrade);
+                    sendData(stream, message);
+                    answerMessage = receiveData(client, stream);
+                }
+                while (answerMessage != "OK");
 
-            
-            message = msg.MakeRequest(request, answerMessage);
-            sendData(stream, message);
+                answerMessage = SpellOrMonsterFunc(answerMessage);
+                message = msg.MakeRequest(request, answerMessage);
+                sendData(stream, message);
 
+                answerMessage = DamageValue();
+
+                message = msg.MakeRequest(request, answerMessage);
+                sendData(stream, message);
+            }
+            else if(cardToTrade =="2")
+            {
+                answerMessage = receiveData(client, stream);
+                Console.WriteLine(answerMessage);
+
+                Console.WriteLine("Choose a number from a traiding offer:");
+                string cardToTreade = Console.ReadLine();
+
+            }
             
+
+
+
         }
         public static string DamageValue()
         {

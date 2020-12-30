@@ -8,7 +8,7 @@ namespace Server
 {
     public class DbFunctions
     {
-        public static ServerDbCOnnection mysql = new ServerDbCOnnection();
+        public static ServerDbConnection mysql = new ServerDbConnection();
         public static DbUser VerifyLogin(RequestContext request, NetworkStream stream)
         {
             string tempUsername  = request.GetUsernameFromDict();
@@ -67,7 +67,7 @@ namespace Server
         }
         public static bool RegisterAtDb(RequestContext request, NetworkStream stream)        
         {
-            ServerDbCOnnection mysql = new ServerDbCOnnection();            
+            ServerDbConnection mysql = new ServerDbConnection();            
             //check if username already taken            
             if ((mysql.GetOneUser(request.GetUsernameFromDict()).userName != null))
             {
@@ -153,7 +153,7 @@ namespace Server
         {
             List<BaseCards> tempList = new List<BaseCards>();
             BaseCards baseCard;
-            ServerDbCOnnection dbConn = new ServerDbCOnnection();
+            ServerDbConnection dbConn = new ServerDbConnection();
             int cost = 25;
             string query = "SELECT * From cardcollection;";
 
@@ -164,7 +164,7 @@ namespace Server
                 {
                     //welche karte bekommt man
                     int cardsNumber = dbConn.GetCardsCountFromDb();
-                    baseCard = dbConn.GetOneCardFromDb(query, cardsNumber);
+                    baseCard = dbConn.GetOneRandCardFromDb(query, cardsNumber);
                     Console.WriteLine(baseCard.getCardName());
                     //karte in datenbank einfügen
                     dbConn.GetCardToUser(baseCard, userFromDb);
@@ -222,8 +222,66 @@ namespace Server
         }
         public static string MakeQuery4AddToTrade(DbUser dbUser, int numbercard, string cardType, string damage)
         {
-            string temp = $"Insert Into UserData_CardCollection ({dbUser.uid}, {dbUser.cardCollection[numbercard].getUID()}, {cardType}, {damage})";
+            if (cardType == "1")
+            {
+                cardType = "Monster";
+            }
+            else if (cardType == "2")
+            {
+                cardType = "Spell";
+            }
+            else
+                cardType = "error";
+
+            string temp = $"Insert Into UserData_CardCollectiontotrade(fk_user_uid, fk_card_uid, card_type, required_damage) values " +
+                $"('{dbUser.uid}', '{dbUser.cardCollection[numbercard].getUID()}', '{cardType}', {damage})";
+            
             return temp;
+        }
+        public static string MakeMessageTradDelete(DbUser userFromDb, BaseCards card)
+        {
+            string temp = "DELETE FROM userdata_cardcollection WHERE ";
+
+            temp += "fk_user_uid = '" + userFromDb.uid + "' AND fk_card_uid = '" + card.getUID() + "';";
+
+            return temp;
+        }
+        public static string  ReturnCardsToTrade()
+        {
+            BaseCards tempCard = null;
+            //List<BaseCards> cards = new List<BaseCards>();
+            string[] answerCardsToTrade = null;
+            string query = "SELECT * FROM userdata_cardcollectiontotrade";
+            int counter = 0;
+            string conditions = "";
+
+            //das ist ein string von allen karten, die zum tausch bereit stehen
+            string cardsToTrade = mysql.GetCardsToTrade(query);
+            string[] rows = cardsToTrade.Split('\n');
+
+            foreach (string element in rows)
+            {
+                if(element == "")
+                {
+                    break;
+                }
+                string[] parts = element.Split('-');
+                //cards.Add(mysql.GetOneCard(parts[1]));
+                tempCard = mysql.GetOneCard(parts[1]);
+
+                conditions += counter+1 + ": The Player wants a " + parts[2] + " with min damage " + parts[3] + "\n";
+                //conditions += parts[0] +"-"+ parts[2] + "-" + parts[3] ;
+                conditions += "Offerd is a " + tempCard.getCardType() + " Card with element " + tempCard.getElementTypes();
+                if(tempCard.getCardType() == MyEnum.cardTypes.Monster)
+                {
+                    conditions += " and Property" + tempCard.getCardProperty();
+                }
+                conditions += ", the card has " + tempCard.getCardDamage() + " damage\n\n";
+                counter++;
+            }
+            Console.WriteLine(answerCardsToTrade);
+
+            return conditions;
         }
     }
 }

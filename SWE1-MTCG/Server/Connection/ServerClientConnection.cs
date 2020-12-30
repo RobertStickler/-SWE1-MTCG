@@ -42,7 +42,7 @@ namespace Server
                                 DbUser userFromDb = new DbUser();
                                 NetworkStream stream = null;
                                 RequestContext request = new RequestContext();
-                                ServerDbCOnnection mypostgresDataClass = new ServerDbCOnnection();
+                                ServerDbConnection mypostgresDataClass = new ServerDbConnection();
                                 int attempt = 3; //muss ich noch hinzufügen
                                 bool registered = false;
 
@@ -142,7 +142,7 @@ namespace Server
                                         request.cardCollection = mypostgresDataClass.GetCardsFromDb(request.GetUsernameFromDict());
 
                                         //wenn er zu weinige Karten besitzt
-                                        if (request.cardCollection.Count < 3)
+                                        if (userFromDb.cardCollection.Count < 3)
                                         {
                                             SendData(stream, "Du musst zuerst karten kaufen");
                                             continue;
@@ -281,7 +281,7 @@ namespace Server
 
                                                 int preis = CalcPreis(userFromDb.cardCollection[cardToTrade - 1]);
                                                 //answer ob to sell
-                                                if(preis == 0)
+                                                if (preis == 0)
                                                 {
                                                     preis = 1;
                                                 }
@@ -293,7 +293,7 @@ namespace Server
 
                                                 if (request.message.Trim('\n') == "YES")
                                                 {
-                                                    message = MakeMessageTradCoinsDelete(userFromDb, userFromDb.cardCollection[cardToTrade - 1]);
+                                                    message = DbFunctions.MakeMessageTradDelete(userFromDb, userFromDb.cardCollection[cardToTrade - 1]);
                                                     bool successQueryExecute = DbFunctions.PassQuery(message);
 
                                                     //coins hochzählen
@@ -320,72 +320,68 @@ namespace Server
                                         //datenbank wird aktualisiert
                                         //beide werden aus der queue gelöscht
 
-                                        string input = "1";
+                                        string input = "";
 
-                                        do
+
+
+                                        //choose a card 
+                                        userFromDb.cardDeck = new List<BaseCards>();
+
+                                        BaseCards tempCard = null;
+                                        //hier kann man die Karten auswählen, die im deck sein sollen
+                                        userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
+                                        string answer = String4ShowCardCollection(userFromDb.cardCollection);
+                                        SendData(stream, answer); //schickt die possible karten
+                                        int number;
+                                        data = ReceiveData(client, stream);
+                                        request = MessageHandler.GetRequest(data);
+                                        input = request.message.Trim('\n');
+
+                                        if (input == "1")
                                         {
-                                            
-
-                                            if (input != "0")
+                                            //man will eine karte hinzufügen
+                                            //die zahl kommt als antwort und die will ich hochladen
+                                            while (true)
                                             {
-                                                //choose a card 
-                                                userFromDb.cardDeck = new List<BaseCards>();
-
-                                                BaseCards tempCard = null;
-                                                //hier kann man die Karten auswählen, die im deck sein sollen
-                                                userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
-                                                string answer = String4ShowCardCollection(userFromDb.cardCollection);
-                                                SendData(stream, answer); //schickt die possible karten
-                                                int number;
                                                 data = ReceiveData(client, stream);
                                                 request = MessageHandler.GetRequest(data);
-                                                string message = request.message.Trim('\n');
+                                                number = Int32.Parse(request.message);
 
-                                                if (message == "1")
+                                                if (number <= userFromDb.cardCollection.Count)
                                                 {
-                                                    //man will eine karte hinzufügen
-                                                    //die zahl kommt als antwort und die will ich hochladen
-                                                    while (true)
-                                                    {
-                                                        data = ReceiveData(client, stream);
-                                                        request = MessageHandler.GetRequest(data);
-                                                        number = Int32.Parse(request.message);
-
-                                                        if (number <= userFromDb.cardCollection.Count)
-                                                        {
-                                                            SendData(stream, "OK");
-                                                            data = ReceiveData(client, stream);
-                                                            request = MessageHandler.GetRequest(data);
-                                                            input = request.message;
-                                                            break;
-                                                        }
-                                                        else
-                                                        {
-                                                            SendData(stream, "False");
-                                                        }
-                                                    }
-
-
-                                                    data = ReceiveData(client, stream);
-                                                    request = MessageHandler.GetRequest(data);
-                                                    string spellOrMonster = request.message.Trim('\n');
-
-                                                    data = ReceiveData(client, stream);
-                                                    request = MessageHandler.GetRequest(data);
-                                                    string requiredDamage = request.message.Trim('\n');
-
-                                                    mypostgresDataClass.AddCardsToTrade(userFromDb, number, spellOrMonster, requiredDamage);
+                                                    SendData(stream, "OK");
+                                                    break;
                                                 }
-                                                else if(message == "2")
+                                                else
                                                 {
-                                                    //man will nur tauschen
+                                                    SendData(stream, "False");
                                                 }
-
-                                                
                                             }
 
+
+                                            data = ReceiveData(client, stream);
+                                            request = MessageHandler.GetRequest(data);
+                                            string spellOrMonster = request.message.Trim('\n');
+
+                                            data = ReceiveData(client, stream);
+                                            request = MessageHandler.GetRequest(data);
+                                            string requiredDamage = request.message.Trim('\n');
+
+                                            mypostgresDataClass.AddCardsToTrade(userFromDb, number - 1, spellOrMonster, requiredDamage);
+                                            
                                         }
-                                        while (input != "0");
+                                        else if (input == "2")
+                                        {
+                                            //man will nur tauschen
+                                            //zeigt alle karten in der liste zum tauschen an
+                                            string answerToTrade = DbFunctions.ReturnCardsToTrade();
+                                            SendData(stream, answerToTrade);
+                                            data = ReceiveData(client, stream);
+                                            request = MessageHandler.GetRequest(data);
+
+                                            string cardToTrade = request.message.Trim('\n');
+                                        }
+
 
 
                                     }
@@ -402,9 +398,9 @@ namespace Server
                                         {
                                             data = ReceiveData(client, stream);
                                             request = MessageHandler.GetRequest(data);
-                                            int number = Int32.Parse(request.message) -1; //wwil bei 0 zu zählen beginnen
-                                            
-                                            if(userFromDb.cardCollection.Count < number)
+                                            int number = Int32.Parse(request.message) - 1; //wwil bei 0 zu zählen beginnen
+
+                                            if (userFromDb.cardCollection.Count < number)
                                             {
                                                 SendData(stream, "NumberToHigh");
                                                 continue;
@@ -534,14 +530,7 @@ namespace Server
             temp += "\n";
             return temp;
         }
-        public static string MakeMessageTradCoinsDelete(DbUser userFromDb, BaseCards card)
-        {
-            string temp = "DELETE FROM userdata_cardcollection WHERE ";
 
-            temp += "fk_user_uid = '" + userFromDb.uid + "' AND fk_card_uid = '" + card.getUID() + "';";
-
-            return temp;
-        }
         public static int CalcPreis(BaseCards card)
         {
             float temp = 0;

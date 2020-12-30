@@ -14,7 +14,7 @@ namespace Server
 {
     //eine funktioin um die karten vom user herauszufinden
     //eine funktion um die besten 4 karten herauszufinden
-    public class ServerDbCOnnection
+    public class ServerDbConnection
     {
         private static readonly string Host = "localhost";
         private static readonly string User = "postgres";
@@ -27,7 +27,7 @@ namespace Server
 
 
 
-        public ServerDbCOnnection()
+        public ServerDbConnection()
         {
             SetConnect();
             return;
@@ -56,7 +56,7 @@ namespace Server
 
             NpgsqlCommand commandDatabase = new NpgsqlCommand(query, _databaseConnection);
             DbUser userObjekt = new DbUser();
-            
+
             try
             {
                 //databaseConnection.Open();
@@ -146,7 +146,7 @@ namespace Server
                         }
                         else if (tempCardTypes == cardTypes.Spell)
                         {
-                            temp = new SpellCard(uid, damage, name, tempElementTypes);                            
+                            temp = new SpellCard(uid, damage, name, tempElementTypes);
                         }
                         cards.Add(temp);
                     }
@@ -167,7 +167,7 @@ namespace Server
         {
             int howManyCards = 100;
 
-            while(howManyCards > 0)
+            while (howManyCards > 0)
             {
                 BaseCards baseCard = CardShop.GetRandCard(rand);
 
@@ -175,7 +175,7 @@ namespace Server
 
                 string query = DbFunctions.MakeQueryForCreateNewCard(baseCard);
 
-                if(ExecuteQuery(query) == false)
+                if (ExecuteQuery(query) == false)
                 {
                     //error weiterreichen
                     Console.WriteLine("error bei execute");
@@ -185,7 +185,7 @@ namespace Server
                 howManyCards--;
             }
         }
-        public bool ExecuteQuery (string query)
+        public bool ExecuteQuery(string query)
         {
             NpgsqlCommand commandDatabase = new NpgsqlCommand(query, _databaseConnection);
             commandDatabase.CommandTimeout = 60;
@@ -203,9 +203,9 @@ namespace Server
             _databaseConnection.Close();
             return true;
         }
-        public BaseCards GetOneCardFromDb(string query, int cardsNumber)
+        public BaseCards GetOneRandCardFromDb(string query, int cardsNumber)
         {
-            
+
             BaseCards temp = null;
             NpgsqlCommand commandDatabase = new NpgsqlCommand(query, _databaseConnection);
             commandDatabase.CommandTimeout = 60;
@@ -299,9 +299,95 @@ namespace Server
         }
         public void AddCardsToTrade(DbUser dbUser, int numbercard, string cardType, string damage)
         {
+
             string query = DbFunctions.MakeQuery4AddToTrade(dbUser, numbercard, cardType, damage);
 
             ExecuteQuery(query);
+
+            //karten aus card collection des users löschen
+            query = DbFunctions.MakeMessageTradDelete(dbUser, dbUser.cardCollection[numbercard]);
+            ExecuteQuery(query);
         }
+        public string GetCardsToTrade(string query)
+        {
+            string temp = "";
+
+            var commandDatabase = new NpgsqlCommand(query, _databaseConnection);
+            commandDatabase.CommandTimeout = 60;
+            try
+            {
+                _databaseConnection.Open();
+                var myReader = commandDatabase.ExecuteReader();
+                //Console.WriteLine(myReader);
+                if (myReader.HasRows)
+                {
+                    Console.WriteLine("Query Generated result:");
+                    while (myReader.Read())
+                    {
+
+                        Console.WriteLine(myReader.GetValue(0) + "-" + myReader.GetString(1) + " - " + myReader.GetString(2) + " - " + myReader.GetValue(3));
+                        //nur zur übersicht   
+                        temp += myReader.GetString(0) + "-" + myReader.GetString(1) + "-" + myReader.GetString(2) + "-" + myReader.GetValue(3).ToString() + "\n";
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Query Error!");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Query Error: " + e.Message);
+            }
+            _databaseConnection.Close();
+            return temp;
+        }
+        public BaseCards GetOneCard(string card_uid)
+        {
+            BaseCards card = null;
+            string query = "Select * from cardcollection where card_uid = '" + card_uid + "'";
+            //SetConnect();
+
+
+            var commandDatabase = new NpgsqlCommand(query, _databaseConnection);
+            commandDatabase.CommandTimeout = 60;
+            try
+            {
+                _databaseConnection.Open();
+                var myReader = commandDatabase.ExecuteReader();
+                //Console.WriteLine(myReader);
+                while (myReader.Read())
+                {
+
+                    string cardUid = myReader.GetString(0);
+                    elementTypes tempElementTypes = (elementTypes)Enum.Parse(typeof(elementTypes), myReader.GetString(1));
+                    cardTypes tempCardTypes = (cardTypes)Enum.Parse(typeof(cardTypes), myReader.GetString(2));
+                    cardProperty tempCardProperty = (cardProperty)Enum.Parse(typeof(cardProperty), myReader.GetString(3));
+                    string name = myReader.GetString(4);
+                    int damage = myReader.GetInt32(5);
+
+                    if (tempCardTypes == cardTypes.Monster)
+                    {
+                        card = new MonsterCard(cardUid, damage, name, tempElementTypes, tempCardProperty);
+                    }
+                    else if (tempCardTypes == cardTypes.Spell)
+                    {
+                        card = new SpellCard(cardUid, damage, name, tempElementTypes);
+                    }
+
+                }
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Query Error: " + e.Message);
+            }
+            _databaseConnection.Close();
+
+
+            return card;
+        }
+
+
     }
 }
