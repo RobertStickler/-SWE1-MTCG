@@ -21,6 +21,7 @@ namespace Server
             Console.Write("Waiting for a connection... ");
             TcpListener listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
+            
 
             try
             {

@@ -49,6 +49,11 @@ namespace Client
         {
             Console.WriteLine("choose a card to traid");
         }
+        public static void PrtinMenueZero()
+        {
+            Console.WriteLine("Do you want to start a demo mode?");
+            Console.WriteLine("y/n:");
+        }
     }
 }
 

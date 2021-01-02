@@ -15,7 +15,7 @@ namespace Client
         private readonly string token = "MTCG-Game-Token";
 
 
-        public string CreateMessageForSend(RequestContextClient request)
+        public string CreateMessageForSend(RequestContextClient request, string incomeChoice)
         {         
             string temp_msg = null;
             string message = "";
@@ -29,14 +29,24 @@ namespace Client
 
             if (request.message_number == "1")
             {
+                if (incomeChoice == "n")
+                {
+                    Console.WriteLine("Username: ");
+                    request.username = Console.ReadLine();
+                    Console.WriteLine("Password: ");
+                    request.pwd = Console.ReadLine();
+                    temp_msg = "Login";
+                    message = MakeRequest(request, temp_msg);
+                }
+                else
+                {
+                    Console.WriteLine("Username: ");
+                    request.username = "Robert";
+                    Console.WriteLine("Password: ");
+                    request.pwd = "admin";
 
-                Console.WriteLine("Username: ");
-                request.username = Console.ReadLine();
-                Console.WriteLine("Password: ");
-                request.pwd = Console.ReadLine();
-                temp_msg = "Login";
-                message = MakeRequest(request, temp_msg);
-
+                    message = MakeRequest(request, "Login");
+                }     
             }
             else if (request.message_number == "2")
             {

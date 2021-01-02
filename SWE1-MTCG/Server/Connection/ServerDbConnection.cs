@@ -25,8 +25,6 @@ namespace Server
         private static NpgsqlConnection _databaseConnection;
         private static readonly string ConnString = String.Format("Server={0};Username={1};Database={2};Port={3};Password={4};SSLMode=Prefer", Host, User, DBname, Port, Password);
 
-
-
         public ServerDbConnection()
         {
             SetConnect();

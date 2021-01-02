@@ -13,9 +13,29 @@ namespace Client
 
         public void SocketConnection()
         {
+            Program.PrtinMenueZero();
+            string incomeChoice = "";
+            int counter4Demo = 3;
 
+            while(incomeChoice != "y" && incomeChoice != "n")
+            {                
+                incomeChoice = Console.ReadLine().Trim('\n');
+                if (incomeChoice == "0")
+                    return;
+            }
+
+            string choiceWhenLoggedOut;
             Program.PrintMenueOne();
-            string choiceWhenLoggedOut = MyChoice1(); //inut error handling
+
+            //überall sachen adden für demo mode
+            if(incomeChoice == "n")
+            {
+                choiceWhenLoggedOut = MyChoice1(); //inut error handling
+            }
+            else
+            {
+                choiceWhenLoggedOut = "1";
+            }
 
             //0 beendet das Programm
             if (choiceWhenLoggedOut == "0")
@@ -34,13 +54,13 @@ namespace Client
 
             try
             {
-                loggedIn = NotLoggedIn(loggedIn, request, client, stream);
+                loggedIn = NotLoggedIn(loggedIn, request, client, stream, incomeChoice);
                 if(loggedIn == false)
                 {
                     return;
                 }
 
-                LoggedInFunc(request, client, stream);
+                LoggedInFunc(request, client, stream, incomeChoice, counter4Demo);
 
             }
             catch (Exception e)
@@ -66,8 +86,8 @@ namespace Client
         {
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
             stream.Write(data, 0, data.Length);
-            Console.Write("Sent:\n{0}", message);
-            Console.WriteLine("\n");
+            //Console.Write("Sent:\n{0}", message);
+            //Console.WriteLine("\n");
         }
         public static string MyChoice1()
         {
@@ -95,43 +115,51 @@ namespace Client
             return choiceWhenLoggedIn;
         }
 
-        public static void LoggedInFunc(RequestContextClient request, TcpClient client, NetworkStream stream)
+        public static void LoggedInFunc(RequestContextClient request, TcpClient client, NetworkStream stream, string incomeChoice, int counter4Demo)
         {
             while (true) //wenn eingeloggt
             {
                 Program.PrintMenueTwo();
                 var msg = new Message();
-                string response, message;
+                string response, message, choiceWhenLoggedIn;
 
                 //nur richtige eingabe zulassen
-                string choiceWhenLoggedIn = MyChoice2();
+                if (incomeChoice == "n")
+                {
+                     choiceWhenLoggedIn = MyChoice2();
+                }
+                else
+                {
+                    choiceWhenLoggedIn = counter4Demo.ToString();
+                    Console.WriteLine("The coice was {0}", choiceWhenLoggedIn);
+                }
                 //0 beendet das Programm
                 if (choiceWhenLoggedIn == "0")
                     return;
 
-
+                //handelt eig alles, wo man keine zusätzliche user eingabe machen muss
                 request.message_number = choiceWhenLoggedIn; //die auswahl in die mesasge speichern
-                message = msg.CreateMessageForSend(request); //verwaltet wieder die nachricht
+                message = msg.CreateMessageForSend(request, incomeChoice); //verwaltet wieder die nachricht
                 sendData(stream, message);
-                //Console.Write("Sent:\n{0}", message);
-
                 response = receiveData(client, stream);
 
+                //alles was zusätzliche user eingabe benötigt
                 if (choiceWhenLoggedIn == "7")
                 {
-                    Trade4CoinsFunc(response, request, client, stream);
+                    Trade4CoinsFunc(response, request, client, stream, incomeChoice);
                 }
 
                 if (choiceWhenLoggedIn == "8")
                 {
-                    TradeWithPeopleFunc(response, request, client, stream);
+                    TradeWithPeopleFunc(response, request, client, stream, incomeChoice);
                 }
 
                 if (choiceWhenLoggedIn == "9")
                 {
-                    EditYourDeckFunc(response, request, client, stream);                    
+                    EditYourDeckFunc(response, request, client, stream, counter4Demo);                    
                 }
 
+                //einige spezielle antworten des servers abfragen und auch ausgeben
                 if (response == "TradeWithPlayer")
                 {
                     Console.WriteLine("coming soon");
@@ -146,9 +174,11 @@ namespace Client
                 }
                 Console.WriteLine("");
                 Console.Write("Received:\n{0}\n\n", response);
+
+                counter4Demo++; //hochzählen nicht vergessen
             }
         }
-        public static void EditYourDeckFunc(string response, RequestContextClient request, TcpClient client, NetworkStream stream)
+        public static void EditYourDeckFunc(string response, RequestContextClient request, TcpClient client, NetworkStream stream, int counter4Demo)
         {
             //response = receiveData(client, stream);
             Console.WriteLine(response);
@@ -181,18 +211,26 @@ namespace Client
 
             }
         }
-        public static void TradeWithPeopleFunc(string response, RequestContextClient request, TcpClient client, NetworkStream stream)
+        public static void TradeWithPeopleFunc(string response, RequestContextClient request, TcpClient client, NetworkStream stream, string incomeChoice)
         {
             var msg = new Message();
             string message;
-            int parsedNumber;
-            string answerMessage = "";
+            string answerMessage, cardToTrade;
+            ;
 
             Console.WriteLine("0 .. to exit");
             Console.WriteLine("1 .. to add a card");
             Console.WriteLine("2 .. to see other cards");
             Console.WriteLine(": ");
-            string cardToTrade = Console.ReadLine(); //eingabe prüfen
+
+            if (incomeChoice == "n")
+            {
+                cardToTrade = Console.ReadLine(); //eingabe prüfen
+            }
+            else
+            {
+                cardToTrade = "2";
+            }
                        
             Console.WriteLine(response);
             message = msg.MakeRequest(request, cardToTrade);
@@ -225,24 +263,35 @@ namespace Client
                 Console.WriteLine(answerMessage);
 
                 Console.WriteLine("Choose a number from a traiding offer:");
-                string cardToTreade = Console.ReadLine();
+                if (incomeChoice == "n")
+                {
+                    cardToTrade = Console.ReadLine();
+                }
+                else
+                {
+                    cardToTrade = "2";
+                }
 
-                message = msg.MakeRequest(request, cardToTreade);
+                message = msg.MakeRequest(request, cardToTrade);
                 sendData(stream, message);
                 answerMessage = receiveData(client, stream);
                 Console.WriteLine(answerMessage);
 
                 Console.Write("choose one of your cards to trade: ");
-                cardToTrade = Console.ReadLine();
+                if (incomeChoice == "n")
+                {
+                    cardToTrade = Console.ReadLine();
+                }
+                else
+                {
+                    cardToTrade = "10";
+                }
                 message = msg.MakeRequest(request, cardToTrade);
                 sendData(stream, message);
 
                 answerMessage = receiveData(client, stream);
                 Console.WriteLine(answerMessage);
-            }
-            
-
-
+            }        
 
         }
         public static string DamageValue()
@@ -283,7 +332,7 @@ namespace Client
             //damit auch eine kombination aus zahlen und buchstaben richtig erkannt wird
             return parsedNumber.ToString();
         }
-        public static void Trade4CoinsFunc(string response, RequestContextClient request, TcpClient client, NetworkStream stream)
+        public static void Trade4CoinsFunc(string response, RequestContextClient request, TcpClient client, NetworkStream stream, string incomeChoice)
         {
             var msg = new Message();
             string message;
@@ -291,8 +340,17 @@ namespace Client
             while (true)
             {
                 Console.WriteLine(response);
+                string cardToTrade;
 
-                string cardToTrade = MyChoice3();                        
+                //überall sachen adden für demo mode
+                if (incomeChoice == "n")
+                {
+                    cardToTrade = MyChoice3();
+                }
+                else
+                {
+                    cardToTrade = "7";
+                }
 
                 if (cardToTrade == "0")
                 {
@@ -308,7 +366,16 @@ namespace Client
                 Console.WriteLine(response);
                 Console.WriteLine("y/n ?");
                 Console.Write(": ");
-                string choice = Console.ReadLine();
+                string choice;
+
+                if (incomeChoice == "n")
+                {
+                    choice = Console.ReadLine();
+                }
+                else
+                {
+                    choice = "y";
+                }
 
                 if (choice.Trim('\n') == "y")
                 {
@@ -326,14 +393,14 @@ namespace Client
             }
         }
         
-        public static bool NotLoggedIn(bool loggedIn, RequestContextClient request, TcpClient client, NetworkStream stream)
+        public static bool NotLoggedIn(bool loggedIn, RequestContextClient request, TcpClient client, NetworkStream stream, string incomeChoice)
         {
             while (loggedIn == false)
             {
                 var msg = new Message();
                 string response, message;
-                message = msg.CreateMessageForSend(request); //da wird die message zum anmelden erstellt
-                Console.WriteLine();
+                message = msg.CreateMessageForSend(request, incomeChoice); //da wird die message zum anmelden erstellt
+                //Console.WriteLine();
 
                 sendData(stream, message);
                 //Console.Write("Sent:\n{0}", message);
