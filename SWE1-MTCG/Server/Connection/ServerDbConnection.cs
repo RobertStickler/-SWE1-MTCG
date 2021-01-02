@@ -388,7 +388,7 @@ namespace Server
             return card;
         }
 
-        public bool UpdateCardsByTrade(DbUser dbUser, BaseCards card)
+        public bool UpdateCardsByTrade(DbUser dbUser, BaseCards card, TradingObject tradingListe)
         {
             bool indicator = false;
             //löschen aus cartencollction
@@ -399,8 +399,8 @@ namespace Server
                 indicator = true;
             }
             //löschen aus tauschliste
-            queryDelete = "delete from userdata_cardcollectiontotrade where fk_user_uid = '" + dbUser.uid
-                + "' and fk_card_uid = '" + card.getUID() + "'";
+            queryDelete = "delete from userdata_cardcollectiontotrade where fk_user_uid = '" + tradingListe.userUid
+                + "' and fk_card_uid = '" + tradingListe.cardUid + "'";
             if(ExecuteQuery(queryDelete))
             {
                 if(indicator == false)
@@ -408,9 +408,32 @@ namespace Server
                     return false;
                 }
             }
+            return true;
+        }
+        public bool PutInLists(DbUser dbUser ,BaseCards ownCard, TradingObject wantToHave)
+        {
+            bool indicator = false;
+
+            BaseCards wantedCard = wantToHave.card;
+
+            //ich selbst
+            string query = DbFunctions.MakeQueryForInsertCard(wantedCard, dbUser);
+            if (ExecuteQuery(query))
+            {
+                indicator = true;
+            }
+            //der andere
+            dbUser.uid = wantToHave.userUid;
+            query = DbFunctions.MakeQueryForInsertCard(ownCard, dbUser);
+            if (ExecuteQuery(query))
+            {
+                if (indicator == false)
+                {
+                    return false;
+                }
+            }
 
             return true;
-
         }
 
     }

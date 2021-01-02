@@ -397,9 +397,19 @@ namespace Server
                                             //lösche aus eigener kartenliste und tauschliste
                                             if(checker == true)
                                             {
-                                                checker = mypostgresDataClass.UpdateCardsByTrade(userFromDb, userFromDb.cardCollection[Int32.Parse(choiceToTrade) - 1]);
+                                                checker = mypostgresDataClass.UpdateCardsByTrade(userFromDb, userFromDb.cardCollection[Int32.Parse(choiceToTrade) - 1], tradingListe[Int32.Parse(cardWantToHave) -1]);
                                             }
-                                            //lösche aus tausch und füge in eigene liste ein 
+                                            if(checker == true)
+                                            {
+                                                SendData(stream, "correctChoice");
+                                            }
+                                            else
+                                            {
+                                                SendData(stream, "wrongChoice");
+
+                                            }
+                                            //füge in eigene liste ein 
+                                            mypostgresDataClass.PutInLists(userFromDb, userFromDb.cardCollection[Int32.Parse(choiceToTrade) - 1], tradingListe[Int32.Parse(cardWantToHave) -1]);
                                         }
 
 

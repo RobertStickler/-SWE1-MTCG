@@ -285,6 +285,11 @@ namespace Server
 
             cardsListTrading = mysql.GetCardsToTrade(query);
 
+            foreach (TradingObject part in cardsListTrading)
+            {
+                part.card = mysql.GetOneCard(part.cardUid);
+            }
+
             return cardsListTrading;
         }
 
@@ -295,7 +300,7 @@ namespace Server
             TradingObject tempObject = cardListToTrade[Int32.Parse(cardWantToHave) - 1];
             bool indicator = false;
 
-            int damage = tempObject.requiredDamage;
+            int damage = tempObject.requiredDamage; //damage den man will
             string temp = tempObject.wantedCardType;
 
             if (temp.Contains("Spell"))

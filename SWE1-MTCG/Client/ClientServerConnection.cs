@@ -236,6 +236,9 @@ namespace Client
                 cardToTrade = Console.ReadLine();
                 message = msg.MakeRequest(request, cardToTrade);
                 sendData(stream, message);
+
+                answerMessage = receiveData(client, stream);
+                Console.WriteLine(answerMessage);
             }
             
 
