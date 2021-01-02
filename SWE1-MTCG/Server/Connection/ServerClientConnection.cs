@@ -374,12 +374,32 @@ namespace Server
                                         {
                                             //man will nur tauschen
                                             //zeigt alle karten in der liste zum tauschen an
-                                            string answerToTrade = DbFunctions.ReturnCardsToTrade();
+                                            List<TradingObject> tradingListe = DbFunctions.ReturnCardsToTradeCards();
+                                            string answerToTrade = DbFunctions.ReturnCardsToTradeString();
                                             SendData(stream, answerToTrade);
                                             data = ReceiveData(client, stream);
                                             request = MessageHandler.GetRequest(data);
 
-                                            string cardToTrade = request.message.Trim('\n');
+                                            string cardWantToHave = request.message.Trim('\n');
+
+                                            //wähle aus eigenen karten aus 
+                                            userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(userFromDb.userName);
+                                            answer = String4ShowCardCollection(userFromDb.cardCollection);
+                                            SendData(stream, answer); //schickt die possible karten
+
+                                            data = ReceiveData(client, stream);
+                                            request = MessageHandler.GetRequest(data);
+                                            string choiceToTrade = request.message.Trim('\n');
+
+                                            //prüfe, ob valide
+                                            bool checker = DbFunctions.ChekTrade(cardWantToHave, tradingListe, choiceToTrade, userFromDb.cardCollection, answerToTrade);
+
+                                            //lösche aus eigener kartenliste und tauschliste
+                                            if(checker == true)
+                                            {
+                                                checker = mypostgresDataClass.UpdateCardsByTrade(userFromDb, userFromDb.cardCollection[Int32.Parse(choiceToTrade) - 1]);
+                                            }
+                                            //lösche aus tausch und füge in eigene liste ein 
                                         }
 
 

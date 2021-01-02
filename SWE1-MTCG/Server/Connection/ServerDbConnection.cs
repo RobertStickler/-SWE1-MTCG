@@ -308,9 +308,10 @@ namespace Server
             query = DbFunctions.MakeMessageTradDelete(dbUser, dbUser.cardCollection[numbercard]);
             ExecuteQuery(query);
         }
-        public string GetCardsToTrade(string query)
+        public List<TradingObject> GetCardsToTrade(string query)
         {
-            string temp = "";
+            
+            List<TradingObject> tradingList = new List<TradingObject>();
 
             var commandDatabase = new NpgsqlCommand(query, _databaseConnection);
             commandDatabase.CommandTimeout = 60;
@@ -324,10 +325,16 @@ namespace Server
                     Console.WriteLine("Query Generated result:");
                     while (myReader.Read())
                     {
-
+                        TradingObject temp = new TradingObject();
                         Console.WriteLine(myReader.GetValue(0) + "-" + myReader.GetString(1) + " - " + myReader.GetString(2) + " - " + myReader.GetValue(3));
                         //nur zur übersicht   
-                        temp += myReader.GetString(0) + "-" + myReader.GetString(1) + "-" + myReader.GetString(2) + "-" + myReader.GetValue(3).ToString() + "\n";
+                        //temp += myReader.GetString(0) + "-" + myReader.GetString(1) + "-" + myReader.GetString(2) + "-" + myReader.GetValue(3).ToString() + "\n";
+                        temp.userUid = myReader.GetString(0);
+                        temp.cardUid = myReader.GetString(1);
+                        temp.wantedCardType = myReader.GetString(2);
+                        temp.requiredDamage = myReader.GetInt32(3);                        
+                        //temp.card = GetOneCard(temp.cardUid);                        
+                        tradingList.Add(temp);
                     }
                 }
                 else
@@ -340,15 +347,13 @@ namespace Server
                 Console.WriteLine("Query Error: " + e.Message);
             }
             _databaseConnection.Close();
-            return temp;
+            return tradingList;
         }
         public BaseCards GetOneCard(string card_uid)
         {
             BaseCards card = null;
             string query = "Select * from cardcollection where card_uid = '" + card_uid + "'";
-            //SetConnect();
-
-
+           
             var commandDatabase = new NpgsqlCommand(query, _databaseConnection);
             commandDatabase.CommandTimeout = 60;
             try
@@ -358,7 +363,6 @@ namespace Server
                 //Console.WriteLine(myReader);
                 while (myReader.Read())
                 {
-
                     string cardUid = myReader.GetString(0);
                     elementTypes tempElementTypes = (elementTypes)Enum.Parse(typeof(elementTypes), myReader.GetString(1));
                     cardTypes tempCardTypes = (cardTypes)Enum.Parse(typeof(cardTypes), myReader.GetString(2));
@@ -374,20 +378,40 @@ namespace Server
                     {
                         card = new SpellCard(cardUid, damage, name, tempElementTypes);
                     }
-
-                }
-                
+                }                
             }
             catch (Exception e)
             {
                 Console.WriteLine("Query Error: " + e.Message);
             }
             _databaseConnection.Close();
-
-
             return card;
         }
 
+        public bool UpdateCardsByTrade(DbUser dbUser, BaseCards card)
+        {
+            bool indicator = false;
+            //löschen aus cartencollction
+            string queryDelete = "Delete From userdata_cardcollection where fk_user_uid = '" + dbUser.uid
+                + "' and fk_card_uid = '" + card.getUID() + "'";
+            if(ExecuteQuery(queryDelete))
+            {
+                indicator = true;
+            }
+            //löschen aus tauschliste
+            queryDelete = "delete from userdata_cardcollectiontotrade where fk_user_uid = '" + dbUser.uid
+                + "' and fk_card_uid = '" + card.getUID() + "'";
+            if(ExecuteQuery(queryDelete))
+            {
+                if(indicator == false)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+
+        }
 
     }
 }

@@ -227,6 +227,15 @@ namespace Client
                 Console.WriteLine("Choose a number from a traiding offer:");
                 string cardToTreade = Console.ReadLine();
 
+                message = msg.MakeRequest(request, cardToTreade);
+                sendData(stream, message);
+                answerMessage = receiveData(client, stream);
+                Console.WriteLine(answerMessage);
+
+                Console.Write("choose one of your cards to trade: ");
+                cardToTrade = Console.ReadLine();
+                message = msg.MakeRequest(request, cardToTrade);
+                sendData(stream, message);
             }
             
 
