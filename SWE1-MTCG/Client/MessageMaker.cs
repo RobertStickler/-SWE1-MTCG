@@ -42,8 +42,11 @@ namespace Client
                 {
                     Console.WriteLine("Username: ");
                     request.username = "Robert";
+                    Console.WriteLine("User: {0}", request.username);
                     Console.WriteLine("Password: ");
                     request.pwd = "admin";
+                    Console.WriteLine("Pw: {0}", request.pwd);
+
 
                     message = MakeRequest(request, "Login");
                 }     

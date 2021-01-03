@@ -20,19 +20,12 @@ namespace Server
 
             return cards4Battle1;
         }
-        public static string AddToBattleQueue(List<RequestContext> liste)
+        public static string AddToBattleQueue(List<DbUser> liste)
         {
 
 
             if ((liste.Count >= 2))
             {
-                //start battle
-                /*
-                var playerOne = Liste[0];
-                var playerTwo = Liste[1];
-                Liste.RemoveAt(1);
-                Liste.RemoveAt(0);
-                */
                 string username = "";
 
                 //int sieger = BattleLogic.StartBattle(playerOne.cardDeck, playerTwo.cardDeck);
@@ -41,7 +34,7 @@ namespace Server
 
                 if (sieger == 1)
                 {
-                    username = liste[0].GetUsernameFromDict();
+                    username = liste[0].userName;
                     SendWinnerToClient(1, liste);
                     liste.RemoveAt(1);
                     liste.RemoveAt(0);
@@ -49,7 +42,7 @@ namespace Server
                 }
                 if (sieger == 2)
                 {
-                    username = liste[1].GetUsernameFromDict();
+                    username = liste[1].userName;
                     SendWinnerToClient(2, liste);
                     liste.RemoveAt(1);
                     liste.RemoveAt(0);
@@ -57,9 +50,6 @@ namespace Server
                 }
                 return "noOne";
             }
-            //start the battel
-            //Console.WriteLine("two players found!");
-
             return "noOne";
         }
         public static List<BaseCards> The4BestCards(List<BaseCards> cardCollection)
@@ -101,7 +91,7 @@ namespace Server
             return false;
         }
 
-        public static void SendWinnerToClient(int winner, List<RequestContext> liste)
+        public static void SendWinnerToClient(int winner, List<DbUser> liste)
         {
             string messageWinner = "you have won the Battle\n";
             string messageLooser = "you have lost the Battle\n";

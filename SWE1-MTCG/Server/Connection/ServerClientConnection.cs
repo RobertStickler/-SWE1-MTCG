@@ -16,12 +16,12 @@ namespace Server
         private static Mutex _mut = new Mutex();
         public static void StartServer()
         {
-            List<RequestContext> clientList = new List<RequestContext>();
+            List<DbUser> clientList = new List<DbUser>();
             int port = 6543;
             Console.Write("Waiting for a connection... ");
             TcpListener listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
-            
+
 
             try
             {
@@ -141,7 +141,17 @@ namespace Server
                                         //statt den rand card muss ich jz die von einem user abfragen
                                         //request.cardDeck = BattleMaker.GetRandCards();
                                         request.stream = stream;
-                                        request.cardCollection = mypostgresDataClass.GetCardsFromDb(request.GetUsernameFromDict());
+                                        userFromDb.stream = stream;
+                                        string tempusername = request.GetUsernameFromDict();
+                                        string username = "";
+                                        string[] tempToken = tempusername.Split(new char[] { '_' });
+
+                                        //falls auch _ im usernamen drinnen sind
+                                        for (int i = 0; i < tempToken.Length - 1; i++)
+                                        {
+                                            username += tempToken[i];
+                                        }
+                                        userFromDb.cardCollection = mypostgresDataClass.GetCardsFromDb(username);
 
                                         //wenn er zu weinige Karten besitzt
                                         if (userFromDb.cardCollection.Count < 3)
@@ -151,22 +161,21 @@ namespace Server
                                         }
 
                                         //standardmäßig mal das auswählen
-                                        if (request.cardDeck == null)
+                                        if (userFromDb.cardDeck.Count == 0)
                                         {
-                                            request.cardDeck = BattleMaker.The4BestCards(request.cardCollection);
+                                            userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
                                         }
 
 
-                                        clientList.Add(request);
+                                        clientList.Add(userFromDb);
 
                                         //noch lock hinzufügen
                                         while (sieger.Trim('\n') == "noOne")
                                         {
-                                            if (!clientList.Contains(request))
+                                            if (!clientList.Contains(userFromDb))
                                             {
                                                 break;
                                             }
-                                            //Console.WriteLine(clientList.Count);
                                             _mut.WaitOne();
                                             sieger = BattleMaker.AddToBattleQueue(clientList);
                                             Thread.Sleep(1000);
@@ -176,19 +185,18 @@ namespace Server
                                         {
                                             //elo points erhöhen
                                             Console.WriteLine(sieger);
-
-
+                                            string query = DbFunctions.MakeQueryForUpdateElo(userFromDb, "+3");
+                                            mypostgresDataClass.ExecuteQuery(query);
                                         }
                                         else
                                         {
                                             //elo points minus
                                             Console.WriteLine(request.GetUsernameFromDict());
-
+                                            string query = DbFunctions.MakeQueryForUpdateElo(userFromDb, "-5");
+                                            mypostgresDataClass.ExecuteQuery(query);
                                         }
                                         //clientList.RemoveAt(0);
-                                        clientList.Remove(request);
-                                        //string message = "And the winner is: " + sieger + "\n";
-                                        //sendData(stream, message);
+                                        clientList.Remove(userFromDb);
                                     }
 
 
@@ -370,7 +378,7 @@ namespace Server
                                             string requiredDamage = request.message.Trim('\n');
 
                                             mypostgresDataClass.AddCardsToTrade(userFromDb, number - 1, spellOrMonster, requiredDamage);
-                                            
+
                                         }
                                         else if (input == "2")
                                         {
@@ -397,11 +405,11 @@ namespace Server
                                             bool checker = DbFunctions.ChekTrade(cardWantToHave, tradingListe, choiceToTrade, userFromDb.cardCollection, answerToTrade);
 
                                             //lösche aus eigener kartenliste und tauschliste
-                                            if(checker == true)
+                                            if (checker == true)
                                             {
-                                                checker = mypostgresDataClass.UpdateCardsByTrade(userFromDb, userFromDb.cardCollection[Int32.Parse(choiceToTrade) - 1], tradingListe[Int32.Parse(cardWantToHave) -1]);
+                                                checker = mypostgresDataClass.UpdateCardsByTrade(userFromDb, userFromDb.cardCollection[Int32.Parse(choiceToTrade) - 1], tradingListe[Int32.Parse(cardWantToHave) - 1]);
                                             }
-                                            if(checker == true)
+                                            if (checker == true)
                                             {
                                                 SendData(stream, "correctChoice");
                                             }
@@ -411,7 +419,7 @@ namespace Server
 
                                             }
                                             //füge in eigene liste ein 
-                                            mypostgresDataClass.PutInLists(userFromDb, userFromDb.cardCollection[Int32.Parse(choiceToTrade) - 1], tradingListe[Int32.Parse(cardWantToHave) -1]);
+                                            mypostgresDataClass.PutInLists(userFromDb, userFromDb.cardCollection[Int32.Parse(choiceToTrade) - 1], tradingListe[Int32.Parse(cardWantToHave) - 1]);
                                         }
 
 

@@ -208,16 +208,13 @@ namespace Server
         public static bool PassQuery(string message)
         {
             bool temp = false;
-
             temp = mysql.ExecuteQuery(message);
-
-
             return temp;
         }
-        public static string MakeQueryForUpdateElo(DbUser userFromDb, int wert)
+        public static string MakeQueryForUpdateElo(DbUser userFromDb, string wert)
         {
             string temp = "update userdata " +
-                          "set elo_points = " + wert + " " +
+                          "set elo_points = elo_points " + wert + " " +
                           "where userName = '" + userFromDb.userName + "';";
             return temp;
         }

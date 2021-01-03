@@ -1,10 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Net;
-using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Client
 {
@@ -16,6 +12,11 @@ namespace Client
             Program.PrtinMenueZero();
             string incomeChoice = "";
             int counter4Demo = 3;
+
+            if (counter4Demo == 10)
+            {
+                counter4Demo = 0;
+            }
 
             while(incomeChoice != "y" && incomeChoice != "n")
             {                
@@ -374,7 +375,7 @@ namespace Client
                 }
                 else
                 {
-                    choice = "y";
+                    choice = "n";
                 }
 
                 if (choice.Trim('\n') == "y")
@@ -406,6 +407,7 @@ namespace Client
                 //Console.Write("Sent:\n{0}", message);
 
                 response = receiveData(client, stream);
+
 
                 //Console.Write("Received:\n{0}", response);
                 //Console.WriteLine("\ndu bist bis hier gekommen!");
