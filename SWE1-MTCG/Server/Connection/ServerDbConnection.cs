@@ -124,7 +124,7 @@ namespace Server
                 //Console.WriteLine(myReader);
                 if (myReader.HasRows)
                 {
-                    Console.WriteLine("Query Generated result:");
+                    //Console.WriteLine("Query Generated result:");
                     while (myReader.Read())
                     {
                         BaseCards temp = null;

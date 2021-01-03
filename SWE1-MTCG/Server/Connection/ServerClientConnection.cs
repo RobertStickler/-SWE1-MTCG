@@ -52,7 +52,7 @@ namespace Server
 
                                     stream = client.GetStream();
                                     data = ServerClientConnection.ReceiveData(client, stream);
-                                    Console.WriteLine("SERVER RECEIVED:\n" + data);
+                                    //Console.WriteLine("SERVER RECEIVED:\n" + data);
 
                                     //data verwalten und in ein Objekt speichern
                                     request = MessageHandler.GetRequest(data);
@@ -126,7 +126,7 @@ namespace Server
                                     data = "";
                                     //request.message = "empty";
                                     data = ServerClientConnection.ReceiveData(client, stream);
-                                    Console.WriteLine("SERVER RECEIVED:\n" + data);
+                                    //Console.WriteLine("SERVER RECEIVED:\n" + data);
                                     //daten wieder einlesen
                                     request = MessageHandler.GetRequest(data);
 
@@ -310,13 +310,12 @@ namespace Server
                                                     userFromDb.coins += preis;
                                                     string makeQuery4UpdateCoins = DbFunctions.MakeQueryForUpdateCoins(userFromDb);
                                                     successQueryExecute = DbFunctions.PassQuery(makeQuery4UpdateCoins);
+                                                    
                                                 }
                                                 else if (request.message.Trim('\n') == "NO")
                                                 {
                                                     break;
                                                 }
-
-
                                             }
                                         }
 
@@ -544,8 +543,8 @@ namespace Server
         {
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
             stream.Write(data, 0, data.Length);
-            Console.Write("Sent:\n{0}", message);
-            Console.WriteLine("\n");
+            //Console.Write("Sent:\n{0}", message);
+            //Console.WriteLine("\n");
         }
         public static string GetAllNames(List<BaseCards> tempListForAnswerToClient)
         {

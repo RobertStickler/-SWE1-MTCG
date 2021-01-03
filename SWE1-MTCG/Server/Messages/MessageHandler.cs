@@ -55,28 +55,7 @@ namespace SWE1_MTCG
                         request.message = request.message.Trim('\n', '\0');
                         request.message += "\n";
                     }    
-            }
-            
-
-            /*
-        }
-
-        catch(System.IndexOutOfRangeException e)
-        {
-            Console.WriteLine("client died");
-        }
-        */
-
-            //to output the dict
-            /*
-            Console.WriteLine("that is in the dict!");
-            Console.WriteLine("___________________!");
-            foreach ( KeyValuePair<string, string> kvp in request.KeyValues)
-            {
-                Console.WriteLine("{0}: {1}",kvp.Key, kvp.Value);
-            }
-            Console.WriteLine("___________________!");
-            */
+            } 
             return request;
         }       
     }

@@ -20,12 +20,6 @@ namespace Client
             string temp_msg = null;
             string message = "";
 
-            /*
-            while ((temp = Console.ReadLine()) != ".")
-            {                
-                temp_msg += temp + "\n";
-            }
-            */
 
             if (request.message_number == "1")
             {

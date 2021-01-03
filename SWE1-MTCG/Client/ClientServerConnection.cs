@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Text;
+using Org.BouncyCastle.Asn1.IsisMtt.Ocsp;
 
 namespace Client
 {
@@ -13,10 +14,7 @@ namespace Client
             string incomeChoice = "";
             int counter4Demo = 3;
 
-            if (counter4Demo == 10)
-            {
-                counter4Demo = 0;
-            }
+
 
             while(incomeChoice != "y" && incomeChoice != "n")
             {                
@@ -131,7 +129,7 @@ namespace Client
                 }
                 else
                 {
-                    choiceWhenLoggedIn = counter4Demo.ToString();
+                    choiceWhenLoggedIn = counter4Demo.ToString(); //wieso so kompliziert hochzählen haha
                     Console.WriteLine("The coice was {0}", choiceWhenLoggedIn);
                 }
                 //0 beendet das Programm
@@ -157,7 +155,7 @@ namespace Client
 
                 if (choiceWhenLoggedIn == "9")
                 {
-                    EditYourDeckFunc(response, request, client, stream, counter4Demo);                    
+                    EditYourDeckFunc(response, request, client, stream, incomeChoice);                    
                 }
 
                 //einige spezielle antworten des servers abfragen und auch ausgeben
@@ -174,30 +172,44 @@ namespace Client
                     Console.WriteLine("Du hast keine Karten");
                 }
                 Console.WriteLine("");
-                Console.Write("Received:\n{0}\n\n", response);
+                //Console.Write("Received:\n{0}\n\n", response);
 
                 counter4Demo++; //hochzählen nicht vergessen
+
+                if (counter4Demo == 10)
+                {
+                    counter4Demo = 0;
+                    Console.WriteLine("you have rached the end");
+                }
             }
         }
-        public static void EditYourDeckFunc(string response, RequestContextClient request, TcpClient client, NetworkStream stream, int counter4Demo)
+        public static void EditYourDeckFunc(string response, RequestContextClient request, TcpClient client, NetworkStream stream, string incomeChoice)
         {
-            //response = receiveData(client, stream);
             Console.WriteLine(response);
             Console.WriteLine("Enter Cards for Deck (exact 4)");
             string number, message;
             var msg = new Message();
+            int counter = 1;
 
             for (int i = 0; i < 4; i++)
             {
                 Console.WriteLine(": ");
-                number = Console.ReadLine();
+                if (incomeChoice == "n")
+                {
+                    number = Console.ReadLine();
+                }
+                else
+                {
+                    number = counter.ToString();
+                    Console.WriteLine("Choice was {0}", counter);
+                }
 
                 message = msg.MakeRequest(request, number);
                 sendData(stream, message);
 
                 Console.WriteLine("Your current Deck");
                 response = receiveData(client, stream);
-                //Console.WriteLine(response);
+                Console.WriteLine(response);
 
                 if (response == "cardAlreadyUsed")
                 {
@@ -210,14 +222,17 @@ namespace Client
                     i--;
                 }
 
+                counter++;
+
             }
         }
         public static void TradeWithPeopleFunc(string response, RequestContextClient request, TcpClient client, NetworkStream stream, string incomeChoice)
+        
         {
             var msg = new Message();
             string message;
             string answerMessage, cardToTrade;
-            ;
+            
 
             Console.WriteLine("0 .. to exit");
             Console.WriteLine("1 .. to add a card");
@@ -231,6 +246,7 @@ namespace Client
             else
             {
                 cardToTrade = "2";
+                Console.WriteLine("Choice was 2");
             }
                        
             Console.WriteLine(response);
@@ -271,6 +287,7 @@ namespace Client
                 else
                 {
                     cardToTrade = "2";
+                    Console.WriteLine("Choice was 2");
                 }
 
                 message = msg.MakeRequest(request, cardToTrade);
@@ -286,6 +303,7 @@ namespace Client
                 else
                 {
                     cardToTrade = "10";
+                    Console.WriteLine("Choice was 10");
                 }
                 message = msg.MakeRequest(request, cardToTrade);
                 sendData(stream, message);
@@ -337,10 +355,11 @@ namespace Client
         {
             var msg = new Message();
             string message;
-
+            int counterForDemo = 0;
+            Console.WriteLine(response);
+            
             while (true)
             {
-                Console.WriteLine(response);
                 string cardToTrade;
 
                 //überall sachen adden für demo mode
@@ -350,7 +369,16 @@ namespace Client
                 }
                 else
                 {
-                    cardToTrade = "7";
+                    if (counterForDemo == 0)
+                    {
+                        cardToTrade = "7";
+                        Console.WriteLine("Choosen card = 7");
+                    }
+                    else
+                    {
+                        cardToTrade = "0";
+                        Console.WriteLine("entered 0 to leave");
+                    }
                 }
 
                 if (cardToTrade == "0")
@@ -375,10 +403,11 @@ namespace Client
                 }
                 else
                 {
-                    choice = "n";
+                    choice = "y";
+                    Console.WriteLine("Choice is y");
                 }
-
-                if (choice.Trim('\n') == "y")
+                //wenn man die karte tauschen will
+                if (choice.Trim('\n') == "y") 
                 {
                     message = msg.MakeRequest(request, "YES");
                     sendData(stream, message);
@@ -391,6 +420,8 @@ namespace Client
                     sendData(stream, message);
                     break;
                 }
+
+                counterForDemo++;
             }
         }
         
