@@ -49,6 +49,7 @@ namespace Server
 
                                 while (loggedIn == false)
                                 {
+
                                     stream = client.GetStream();
                                     data = ServerClientConnection.ReceiveData(client, stream);
                                     Console.WriteLine("SERVER RECEIVED:\n" + data);
