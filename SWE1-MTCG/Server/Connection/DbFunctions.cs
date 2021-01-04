@@ -149,7 +149,7 @@ namespace Server
                            "order by card_damage desc";
             return temp;
         }
-        public static List<BaseCards> OptainNewCards(DbUser userFromDb)
+        public static List<BaseCards> OptainNewCards(DbUser userFromDb, Random rand)
         {
             List<BaseCards> tempList = new List<BaseCards>();
             BaseCards baseCard;
@@ -164,7 +164,7 @@ namespace Server
                 {
                     //welche karte bekommt man
                     int cardsNumber = dbConn.GetCardsCountFromDb();
-                    baseCard = dbConn.GetOneRandCardFromDb(query, cardsNumber);
+                    baseCard = dbConn.GetOneRandCardFromDb(query, cardsNumber, rand);
                     Console.WriteLine(baseCard.getCardName());
                     //karte in datenbank einfügen
                     dbConn.GetCardToUser(baseCard, userFromDb);

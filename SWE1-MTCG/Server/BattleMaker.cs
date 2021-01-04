@@ -110,8 +110,5 @@ namespace Server
                 ServerClientConnection.SendData(liste[0].stream, messageLooser);
             }
         }
-
-
-
     }
 }

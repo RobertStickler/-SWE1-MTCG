@@ -181,7 +181,7 @@ namespace Server
                                             Thread.Sleep(1000);
                                             _mut.ReleaseMutex();
                                         }
-                                        if (sieger == request.GetUsernameFromDict())
+                                        if (request.GetUsernameFromDict().Contains(sieger))
                                         {
                                             //elo points erhöhen
                                             Console.WriteLine(sieger);
@@ -206,7 +206,7 @@ namespace Server
                                         Console.WriteLine("4 cards cost 25 Coins"!);
                                         //string choiceCardShop = Console.ReadLine().Trim(' ', '\n');
 
-                                        var tempListForAnswerToClient = DbFunctions.OptainNewCards(userFromDb);
+                                        var tempListForAnswerToClient = DbFunctions.OptainNewCards(userFromDb, Server.rand);
                                         if (tempListForAnswerToClient == null)
                                         {
                                             SendData(stream, "ZuWenigeCoins");
@@ -216,8 +216,6 @@ namespace Server
                                             string tempStringForAnswerToClient = GetAllNames(tempListForAnswerToClient);
                                             SendData(stream, tempStringForAnswerToClient);
                                         }
-
-
                                     }
                                     else
                                     if (request.message.Trim('\n') == "ShowDeck")
@@ -235,14 +233,12 @@ namespace Server
                                                 userFromDb.cardDeck = BattleMaker.The4BestCards(userFromDb.cardCollection);
                                                 answer = GetAllNames(userFromDb.cardDeck);
                                             }
-
                                         }
                                         else
                                         {
                                             answer = GetAllNames(userFromDb.cardDeck);
                                         }
                                         SendData(stream, answer);
-
                                     }
                                     else if (request.message.Trim('\n') == "ShowCardCollection")
                                     {
@@ -459,6 +455,11 @@ namespace Server
                                                 continue;
                                             }
                                         }
+                                    }
+                                    else if (request.message.Trim('\n') == "ShowScoreboard")
+                                    {
+                                        string playerScore = mypostgresDataClass.GetEloPoints();
+                                        SendData(stream, playerScore);
                                     }
                                     else
                                     {

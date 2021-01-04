@@ -41,13 +41,10 @@ namespace Client
             Console.WriteLine("7...Trade for Coins");
             Console.WriteLine("8...Trade with other Player");
             Console.WriteLine("9...Edit your Deck");
+            Console.WriteLine("10...Show Scoreboard");
 
             Console.WriteLine("0...quit");
 
-        }
-        public static void PrintMenueThree()
-        {
-            Console.WriteLine("choose a card to traid");
         }
         public static void PrtinMenueZero()
         {

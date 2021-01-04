@@ -161,8 +161,42 @@ namespace Server
             _databaseConnection.Close();
             return cards;
         }
+        public string GetEloPoints()
+        {
+            string query = "select username, elo_points from userdata";
+            string temp = "";
+            //Console.WriteLine(query);
+            var commandDatabase = new NpgsqlCommand(query, _databaseConnection);
+            commandDatabase.CommandTimeout = 60;
+            try
+            {
+                _databaseConnection.Open();
+                var myReader = commandDatabase.ExecuteReader();
+                //Console.WriteLine(myReader);
+                if (myReader.HasRows)
+                {
+                    //Console.WriteLine("Query Generated result:");
+                    while (myReader.Read())
+                    {
+                        temp += myReader.GetString(0) +" has " + myReader.GetInt32(1).ToString() + " Elo Points\n";
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Query Error!");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Query Error: " + e.Message);
+            }
+            _databaseConnection.Close();
+            return temp;
+        }
         public void GenerateNewCards(Random rand)
         {
+            Thread.Sleep(rand.Next(1, 17));
+            
             int howManyCards = 100;
 
             while (howManyCards > 0)
@@ -178,7 +212,7 @@ namespace Server
                     //error weiterreichen
                     Console.WriteLine("error bei execute");
                 }
-                Thread.Sleep(Server.rand.Next(1, 17));
+                
 
                 howManyCards--;
             }
@@ -201,7 +235,7 @@ namespace Server
             _databaseConnection.Close();
             return true;
         }
-        public BaseCards GetOneRandCardFromDb(string query, int cardsNumber)
+        public BaseCards GetOneRandCardFromDb(string query, int cardsNumber, Random rand)
         {
 
             BaseCards temp = null;
@@ -218,7 +252,7 @@ namespace Server
                 if (myReader.HasRows)
                 {
                     Console.WriteLine("Query Generated result:");
-                    int cardPlace = Server.rand.Next(0, cardsNumber);
+                    int cardPlace = rand.Next(0, cardsNumber);
                     while (myReader.Read())
                     {
 

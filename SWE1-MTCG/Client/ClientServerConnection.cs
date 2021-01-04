@@ -98,10 +98,10 @@ namespace Client
             }
             return choiceWhenLoggedOut;
         }
-        public static string MyChoice2()
+        public static string MyChoiceBigMenue()
         {
             string choiceWhenLoggedIn = "-1";
-            while (Int32.Parse(choiceWhenLoggedIn) < 3 || Int32.Parse(choiceWhenLoggedIn) > 9)
+            while (Int32.Parse(choiceWhenLoggedIn) < 3 || Int32.Parse(choiceWhenLoggedIn) > 10)
             {
                 Console.Write("Enter your choice: ");
                 choiceWhenLoggedIn = Console.ReadLine().Trim('\n');  
@@ -125,7 +125,7 @@ namespace Client
                 //nur richtige eingabe zulassen
                 if (incomeChoice == "n")
                 {
-                     choiceWhenLoggedIn = MyChoice2();
+                     choiceWhenLoggedIn = MyChoiceBigMenue();
                 }
                 else
                 {
@@ -172,11 +172,11 @@ namespace Client
                     Console.WriteLine("Du hast keine Karten");
                 }
                 Console.WriteLine("");
-                //Console.Write("Received:\n{0}\n\n", response);
+                Console.Write("Received:\n{0}\n\n", response);
 
                 counter4Demo++; //hochzählen nicht vergessen
 
-                if (counter4Demo == 10)
+                if (counter4Demo == 11)
                 {
                     counter4Demo = 0;
                     Console.WriteLine("you have rached the end");
@@ -293,7 +293,7 @@ namespace Client
                 message = msg.MakeRequest(request, cardToTrade);
                 sendData(stream, message);
                 answerMessage = receiveData(client, stream);
-                Console.WriteLine(answerMessage);
+                //Console.WriteLine(answerMessage);
 
                 Console.Write("choose one of your cards to trade: ");
                 if (incomeChoice == "n")

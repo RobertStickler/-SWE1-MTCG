@@ -99,6 +99,12 @@ namespace Client
                 temp_msg = "ChangeTheDeck";
                 message = MakeRequest(request, temp_msg);
             }
+            else if (request.message_number == "10")
+            {
+                //kommt erst, wenn eingeloggt
+                temp_msg = "ShowScoreboard";
+                message = MakeRequest(request, temp_msg);
+            }
             else
             {
                 temp_msg = "Error";
