@@ -1,35 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading;
+﻿using Cards;
 using SWE1_MTCG;
-using Cards;
-using System.Runtime.Serialization.Formatters;
+using System;
+using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace Server
 {
     public class DbFunctions
     {
+        public static ServerDbConnection mysql = new ServerDbConnection();
         public static DbUser VerifyLogin(RequestContext request, NetworkStream stream)
-        {            
-            MySqlDataClass mysql = new MySqlDataClass();
-            DbUser user = mysql.GetOneUser(request.GetUsernameFromDict()); //erstellt ein DB User objekt
+        {
+            string tempUsername = request.GetUsernameFromDict();
+
+            //überprüfung, ob der Token passd
+            if (!(CheckToken(tempUsername)))
+            {
+                return null;
+            }
+
+            string username = "";
+            string[] tempToken = tempUsername.Split(new char[] { '_' });
+
+            //falls auch _ im usernamen drinnen sind
+            for (int i = 0; i < tempToken.Length - 1; i++)
+            {
+                username += tempToken[i];
+            }
+
+            DbUser user = mysql.GetOneUser(username); //erstellt ein DB User objekt
             Console.WriteLine(user.userName);
-            if (request.GetPWDFromDict() == user.pwd)
+            if (request.GetPwdFromDict() == user.pwd)
             {
                 string message = "Succsessful";
-                ServerClientConnection.sendData(stream, message);
+                ServerClientConnection.SendData(stream, message);
                 return user;
             }
             Console.WriteLine("Wrong user or Pwd!");
             return null;
         }
-        //following is still in progress lol
-        public static RequestContext makeAnotherRequest(TcpClient client, NetworkStream stream)
+        public static RequestContext MakeAnotherRequest(TcpClient client, NetworkStream stream)
         {
             var request = new RequestContext();
             string message = "please try again";
@@ -40,14 +50,29 @@ namespace Server
 
             return request;
         }
-        public static bool RegisterAtDB(RequestContext request, NetworkStream stream)        
+
+        public static bool CheckToken(string username)
         {
-            MySqlDataClass mysql = new MySqlDataClass();            
+            string tokenForCheck = "MTCG-Game-Token";
+            bool temp = false;
+            string[] token = username.Split(new char[] { '_' });
+
+            int lenght = token.Length;
+
+            if (token[lenght - 1] == tokenForCheck)
+            {
+                return true;
+            }
+            return temp;
+        }
+        public static bool RegisterAtDb(RequestContext request, NetworkStream stream)
+        {
+            ServerDbConnection mysql = new ServerDbConnection();
             //check if username already taken            
-            if (!(mysql.GetOneUser(request.GetUsernameFromDict()).userName == null))
+            if ((mysql.GetOneUser(request.GetUsernameFromDict()).userName != null))
             {
                 //wenns den user bereits gibt
-                Console.WriteLine("Username does already exist!");
+                Console.WriteLine("Wrong username");
                 return false;
             }
 
@@ -56,19 +81,19 @@ namespace Server
             if (!((mysql.GetOneUser(request.GetUsernameFromDict()).email == null) && (isValidEmail == true)))
             {
                 //wenns die email ned okay ist
-                Console.WriteLine("Email does already exist!");
+                Console.WriteLine("Wrong email!");
                 return false;
             }
 
             //Query statement bilden
             string query = MakeRegisterQuery(request);
 
-            var temp = new MySqlDataClass();
-            bool succsess = temp.ExecuteQuery(query);
+            //var temp = new ServerDbCOnnection();
+            bool succsess = mysql.VerifyRegister(query);
 
-            if(succsess == true)
+            if (succsess == true)
             {
-                Console.WriteLine("You are registrated");
+                Console.WriteLine("You are registered");
             }
             else
             {
@@ -81,7 +106,7 @@ namespace Server
         public static string CreateUid(int size)
         {
             string teststring = string.Format("{0:N}", Guid.NewGuid()); //erstellt eine unique Id 
-            teststring =  teststring.Substring(0, size); //kürzt die ID auf 8 stellen
+            teststring = teststring.Substring(0, size); //kürzt die ID auf 8 stellen
             return teststring;
         }
 
@@ -102,15 +127,15 @@ namespace Server
         {
             int size = 10;
             string username = request.GetUsernameFromDict();
-            string password = request.GetPWDFromDict();
+            string password = request.GetPwdFromDict();
             string email = request.GetEmailFromDict();
 
             string uid = CreateUid(size);
 
             string temp = "Insert Into UserData\n " +
-                           "(user_uid, userName, email, pwd, coins)\n" +
+                           "(user_uid, userName, email, pwd, coins, elo_points)\n" +
                            "VALUES\n" +
-                           "('" + uid + "', '" + username + "', '" + email + "', '" + password + "', '" + 100 + "')";
+                           "('" + uid + "', '" + username + "', '" + email + "', '" + password + "', '" + 100 + "', '" + 100 + "')";
             return temp;
         }
         public static string MakeQueryGetCards(string username)
@@ -120,25 +145,26 @@ namespace Server
                            "ON cardcollection.card_uid = userdata_cardcollection.fk_card_uid\n" +
                            "JOIN userdata\n" +
                            "on userdata.user_uid = userdata_cardcollection.fk_user_uid\n" +
-                           "where username = '" + username + "'";
+                           "where username = '" + username + "'" +
+                           "order by card_damage desc";
             return temp;
-        } 
-        public static List<BaseCards> OptainNewCards(DbUser userFromDb)
+        }
+        public static List<BaseCards> OptainNewCards(DbUser userFromDb, Random rand)
         {
             List<BaseCards> tempList = new List<BaseCards>();
-            BaseCards baseCard = null;
-            MySqlDataClass dbConn = new MySqlDataClass();
+            BaseCards baseCard;
+            ServerDbConnection dbConn = new ServerDbConnection();
             int cost = 25;
             string query = "SELECT * From cardcollection;";
 
             if (userFromDb.coins >= cost)
             {
                 userFromDb.coins -= cost; //coins abziehen
-                for(int i = 0; i < 4; i++ )
+                for (int i = 0; i < 4; i++)
                 {
                     //welche karte bekommt man
                     int cardsNumber = dbConn.GetCardsCountFromDb();
-                    baseCard = dbConn.GetOneCardFromDb(query, cardsNumber);
+                    baseCard = dbConn.GetOneRandCardFromDb(query, cardsNumber, rand);
                     Console.WriteLine(baseCard.getCardName());
                     //karte in datenbank einfügen
                     dbConn.GetCardToUser(baseCard, userFromDb);
@@ -148,6 +174,11 @@ namespace Server
                 query = MakeQueryForUpdateCoins(userFromDb);
                 dbConn.ExecuteQuery(query);
             }
+            else
+            {
+                //nicht genug coins
+                return null;
+            }
             return tempList;
         }
         public static string MakeQueryForUpdateCoins(DbUser userFromDb)
@@ -155,7 +186,7 @@ namespace Server
             string temp = "update userdata " +
                           "set coins = " + userFromDb.coins + " " +
                           "where userName = '" + userFromDb.userName + "';";
-            return temp;                          
+            return temp;
         }
         public static string MakeQueryForCreateNewCard(BaseCards baseCard)
         {
@@ -174,16 +205,122 @@ namespace Server
                           "('" + user.uid + "', '" + baseCard.getUID() + "');";
             return temp;
         }
-        public static bool PassQuery (string message)
+        public static bool PassQuery(string message)
         {
             bool temp = false;
-            MySqlDataClass dbConn = new MySqlDataClass();
+            temp = mysql.ExecuteQuery(message);
+            return temp;
+        }
+        public static string MakeQueryForUpdateElo(DbUser userFromDb, string wert)
+        {
+            string temp = "update userdata " +
+                          "set elo_points = elo_points " + wert + " " +
+                          "where userName = '" + userFromDb.userName + "';";
+            return temp;
+        }
+        public static string MakeQuery4AddToTrade(DbUser dbUser, int numbercard, string cardType, string damage)
+        {
+            if (cardType == "1")
+            {
+                cardType = "Monster";
+            }
+            else if (cardType == "2")
+            {
+                cardType = "Spell";
+            }
+            else
+                cardType = "error";
 
-            temp = dbConn.ExecuteQuery(message);
+            string temp = $"Insert Into UserData_CardCollectiontotrade(fk_user_uid, fk_card_uid, card_type, required_damage) values " +
+                $"('{dbUser.uid}', '{dbUser.cardCollection[numbercard].getUID()}', '{cardType}', {damage})";
 
             return temp;
         }
+        public static string MakeMessageTradDelete(DbUser userFromDb, BaseCards card)
+        {
+            string temp = "DELETE FROM userdata_cardcollection WHERE ";
 
+            temp += "fk_user_uid = '" + userFromDb.uid + "' AND fk_card_uid = '" + card.getUID() + "';";
 
+            return temp;
+        }
+        public static string ReturnCardsToTradeString()
+        {
+            List<TradingObject> cardsListTrading = new List<TradingObject>();
+            TradingObject tempObject = new TradingObject();
+            string query = "SELECT * FROM userdata_cardcollectiontotrade";
+            int counter = 0;
+            string answer = "";
+
+            cardsListTrading = mysql.GetCardsToTrade(query);
+
+            foreach(TradingObject part in cardsListTrading)
+            {
+                part.card = mysql.GetOneCard(part.cardUid);
+            }
+
+            foreach (TradingObject part in cardsListTrading)
+            {
+                answer += $"{ counter + 1} : The Player wants a , {cardsListTrading[counter].wantedCardType},  card with min damage , {cardsListTrading[counter].requiredDamage}\n";
+                answer += $"Offeded is a , {cardsListTrading[counter].card.getCardType()} card with element {cardsListTrading[counter].card.getElementTypes()} ";
+
+                if (cardsListTrading[counter].card.getCardType() == MyEnum.cardTypes.Monster)
+                {
+                    answer += " and Property " + cardsListTrading[counter].card.getCardProperty();
+                }
+
+                answer += $"with min damage {cardsListTrading[counter].card.getCardDamage()}\n\n";
+                counter++;
+            }
+            return answer;
+        }
+
+        public static List<TradingObject> ReturnCardsToTradeCards()
+        {
+            List<TradingObject> cardsListTrading = new List<TradingObject>();            
+            string query = "SELECT * FROM userdata_cardcollectiontotrade";
+
+            cardsListTrading = mysql.GetCardsToTrade(query);
+
+            foreach (TradingObject part in cardsListTrading)
+            {
+                part.card = mysql.GetOneCard(part.cardUid);
+            }
+
+            return cardsListTrading;
+        }
+
+        public static bool ChekTrade(string cardWantToHave, List<TradingObject> cardListToTrade, string choiceToTrade, List<BaseCards> userCardcollection, string answerToTrade)
+        {
+            BaseCards card = userCardcollection[Int32.Parse(choiceToTrade) - 1];
+            BaseCards checkFromCard = cardListToTrade[Int32.Parse(cardWantToHave) - 1].card;
+            TradingObject tempObject = cardListToTrade[Int32.Parse(cardWantToHave) - 1];
+            bool indicator = false;
+
+            int damage = tempObject.requiredDamage; //damage den man will
+            string temp = tempObject.wantedCardType;
+
+            if (temp.Contains("Spell"))
+            {
+                if (MyEnum.cardTypes.Spell == card.getCardType())
+                {
+                    if (card.getCardDamage() >= damage)
+                    {
+                        indicator = true;
+                    }
+                }
+            }
+            else if (temp.Contains("Monster"))
+            {
+                if (MyEnum.cardTypes.Monster == card.getCardType())
+                {
+                    if (card.getCardDamage() >= damage)
+                    {
+                        indicator = true;
+                    }
+                }
+            }
+            return indicator;
+        }
     }
 }

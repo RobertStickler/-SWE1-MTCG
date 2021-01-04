@@ -27,9 +27,9 @@ namespace SWE1_MTCG
             { */
                 //zuerst die erste zeile einlesen
                 string[] tempfirstline = line[0].Split(" "); //die erste Zeile an den Leerzeichen trennen
-                request.KeyValues.Add("method", tempfirstline[0]);
-                request.KeyValues.Add("path", tempfirstline[1]);
-                request.KeyValues.Add("version", tempfirstline[2]);
+                request.keyValues.Add("method", tempfirstline[0]);
+                request.keyValues.Add("path", tempfirstline[1]);
+                request.keyValues.Add("version", tempfirstline[2]);
 
                 foreach (string oneLine in line)
                 {
@@ -47,7 +47,7 @@ namespace SWE1_MTCG
                     if (tempcount == 2)
                     {
                         string[] temp = oneLine.Split(":");
-                        request.KeyValues.Add(temp[0], temp[1].Trim(' '));
+                        request.keyValues.Add(temp[0], temp[1].Trim(' '));
                     }
                     if (tempcount == 3)
                     {
@@ -55,28 +55,7 @@ namespace SWE1_MTCG
                         request.message = request.message.Trim('\n', '\0');
                         request.message += "\n";
                     }    
-            }
-            
-
-            /*
-        }
-
-        catch(System.IndexOutOfRangeException e)
-        {
-            Console.WriteLine("client died");
-        }
-        */
-
-            //to output the dict
-            /*
-            Console.WriteLine("that is in the dict!");
-            Console.WriteLine("___________________!");
-            foreach ( KeyValuePair<string, string> kvp in request.KeyValues)
-            {
-                Console.WriteLine("{0}: {1}",kvp.Key, kvp.Value);
-            }
-            Console.WriteLine("___________________!");
-            */
+            } 
             return request;
         }       
     }

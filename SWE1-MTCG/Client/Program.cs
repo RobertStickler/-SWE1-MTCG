@@ -40,12 +40,16 @@ namespace Client
             Console.WriteLine("6...Show your Card Collection");
             Console.WriteLine("7...Trade for Coins");
             Console.WriteLine("8...Trade with other Player");
+            Console.WriteLine("9...Edit your Deck");
+            Console.WriteLine("10...Show Scoreboard");
+
             Console.WriteLine("0...quit");
 
         }
-        public static void PrintMenueThree()
+        public static void PrtinMenueZero()
         {
-            Console.WriteLine("choose a card to traid");
+            Console.WriteLine("Do you want to start a demo mode?");
+            Console.WriteLine("y/n:");
         }
     }
 }

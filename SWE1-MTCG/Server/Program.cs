@@ -18,9 +18,9 @@ namespace Server
         static void Main(string[] args)
         {
 
-            MySqlDataClass mysql = new MySqlDataClass();
+            ServerDbConnection mysql = new ServerDbConnection();
 
-            ServerClientConnection.startServer(); 
+            ServerClientConnection.StartServer(); 
 
 
             //GenerateNewCards();
@@ -30,8 +30,8 @@ namespace Server
         {
             Console.WriteLine("if you are ready, press something");
             Console.ReadLine();
-            MySqlDataClass DbClass = new MySqlDataClass();
-            DbClass.GenerateNewCards(rand);
+            ServerDbConnection dbClass = new ServerDbConnection();
+            dbClass.GenerateNewCards(rand);
             Console.ReadLine();
         }
 

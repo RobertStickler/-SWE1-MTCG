@@ -12,30 +12,38 @@ namespace Client
         readonly string path = "/messages ";
         readonly string http_version = "HTTP/1.1\n";
         readonly string advice = "POST ";
+        private readonly string token = "MTCG-Game-Token";
 
 
-        public string CreateMessageForSend(RequestContextClient request)
+        public string CreateMessageForSend(RequestContextClient request, string incomeChoice)
         {         
             string temp_msg = null;
             string message = "";
 
-            /*
-            while ((temp = Console.ReadLine()) != ".")
-            {                
-                temp_msg += temp + "\n";
-            }
-            */
 
             if (request.message_number == "1")
             {
+                if (incomeChoice == "n")
+                {
+                    Console.WriteLine("Username: ");
+                    request.username = Console.ReadLine();
+                    Console.WriteLine("Password: ");
+                    request.pwd = Console.ReadLine();
+                    temp_msg = "Login";
+                    message = MakeRequest(request, temp_msg);
+                }
+                else
+                {
+                    Console.WriteLine("Username: ");
+                    request.username = "Robert";
+                    Console.WriteLine("User: {0}", request.username);
+                    Console.WriteLine("Password: ");
+                    request.pwd = "admin";
+                    Console.WriteLine("Pw: {0}", request.pwd);
 
-                Console.WriteLine("Username: ");
-                request.username = Console.ReadLine();
-                Console.WriteLine("Password: ");
-                request.pwd = Console.ReadLine();
-                temp_msg = "Login";
-                message = MakeRequest(request, temp_msg);
 
+                    message = MakeRequest(request, "Login");
+                }     
             }
             else if (request.message_number == "2")
             {
@@ -85,6 +93,18 @@ namespace Client
                 temp_msg = "TradeWithPlayer";
                 message = MakeRequest(request, temp_msg);
             }
+            else if (request.message_number == "9")
+            {
+                //kommt erst, wenn eingeloggt
+                temp_msg = "ChangeTheDeck";
+                message = MakeRequest(request, temp_msg);
+            }
+            else if (request.message_number == "10")
+            {
+                //kommt erst, wenn eingeloggt
+                temp_msg = "ShowScoreboard";
+                message = MakeRequest(request, temp_msg);
+            }
             else
             {
                 temp_msg = "Error";
@@ -99,8 +119,8 @@ namespace Client
             message += "Content-Type: " + content_type;
             message += "Content-Lenght: " + (temp_msg.Length).ToString() + "\n";
             message += "Host: " + request.ip + ":" + request.port.ToString();
-            message += "\nUserName: " + request.username;
-            message += "\nPassword: " + request.pwd; ;
+            message += "\nUserName: " + request.username + "_" + token;
+            message += "\nPassword: " + request.pwd;
             message += "\n\n" + temp_msg + "\n";
 
             return message;

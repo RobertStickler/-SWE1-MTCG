@@ -11,56 +11,45 @@ namespace Server
     {
         public static List<BaseCards> GetRandCards()
         {
-            List<BaseCards> Cards4Battle1 = new List<BaseCards>();
+            List<BaseCards> cards4Battle1 = new List<BaseCards>();
 
-            Cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
-            Cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
-            Cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
-            Cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
+            cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
+            cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
+            cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
+            cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
 
-            return Cards4Battle1;
+            return cards4Battle1;
         }
-        public static string AddToBattleQueue(List<RequestContext> Liste)
+        public static string AddToBattleQueue(List<DbUser> liste)
         {
 
 
-            if ((Liste.Count >= 2))
+            if ((liste.Count >= 2))
             {
-                //start battle
-                /*
-                var playerOne = Liste[0];
-                var playerTwo = Liste[1];
-                Liste.RemoveAt(1);
-                Liste.RemoveAt(0);
-                */
                 string username = "";
 
                 //int sieger = BattleLogic.StartBattle(playerOne.cardDeck, playerTwo.cardDeck);
-                int sieger = BattleLogic.StartBattle(Liste[0].cardDeck, Liste[1].cardDeck);
+                int sieger = BattleLogic.StartBattle(liste[0].cardDeck, liste[1].cardDeck);
                 //noch das deck umbauen
 
                 if (sieger == 1)
                 {
-                    username = Liste[0].GetUsernameFromDict();
-                    SendWinnerToClient(1, Liste);
-                    //defck umbauen oder???
-                    Liste.RemoveAt(1);
-                    Liste.RemoveAt(0);
+                    username = liste[0].userName;
+                    SendWinnerToClient(1, liste);
+                    liste.RemoveAt(1);
+                    liste.RemoveAt(0);
                     return username;
                 }
                 if (sieger == 2)
                 {
-                    username = Liste[1].GetUsernameFromDict();
-                    SendWinnerToClient(2, Liste);
-                    Liste.RemoveAt(1);
-                    Liste.RemoveAt(0);
+                    username = liste[1].userName;
+                    SendWinnerToClient(2, liste);
+                    liste.RemoveAt(1);
+                    liste.RemoveAt(0);
                     return username;
                 }
                 return "noOne";
             }
-            //start the battel
-            //Console.WriteLine("two players found!");
-
             return "noOne";
         }
         public static List<BaseCards> The4BestCards(List<BaseCards> cardCollection)
@@ -87,9 +76,6 @@ namespace Server
                 }
                 cardDeck.Add(tempCard);
             }
-
-
-
             return cardDeck;
         }
         public static bool CheckList(BaseCards cardToAdd, List<BaseCards> cardDeck)
@@ -105,7 +91,7 @@ namespace Server
             return false;
         }
 
-        public static void SendWinnerToClient(int winner, List<RequestContext> Liste)
+        public static void SendWinnerToClient(int winner, List<DbUser> liste)
         {
             string messageWinner = "you have won the Battle\n";
             string messageLooser = "you have lost the Battle\n";
@@ -114,18 +100,15 @@ namespace Server
             if(winner == 1)
             {
                 //player1 hat gewonnen
-                ServerClientConnection.sendData(Liste[0].stream, messageWinner);
-                ServerClientConnection.sendData(Liste[1].stream, messageLooser);
+                ServerClientConnection.SendData(liste[0].stream, messageWinner);
+                ServerClientConnection.SendData(liste[1].stream, messageLooser);
             }
             else if(winner == 2)
             {
                 //player2 hat gewonnen
-                ServerClientConnection.sendData(Liste[1].stream, messageWinner);
-                ServerClientConnection.sendData(Liste[0].stream, messageLooser);
+                ServerClientConnection.SendData(liste[1].stream, messageWinner);
+                ServerClientConnection.SendData(liste[0].stream, messageLooser);
             }
         }
-
-
-
     }
 }

@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bogus" Version="31.0.3" />
+    <PackageReference Include="Bogus" Version="32.0.2" />
     <PackageReference Include="MySql.Data" Version="8.0.22" />
+    <PackageReference Include="Npgsql" Version="5.0.1.1" />
   </ItemGroup>
 
 </Project>
