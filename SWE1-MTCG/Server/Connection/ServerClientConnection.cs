@@ -22,7 +22,6 @@ namespace Server
             TcpListener listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
 
-
             try
             {
                 while (true) //akzeptiert alle clients die kommen
