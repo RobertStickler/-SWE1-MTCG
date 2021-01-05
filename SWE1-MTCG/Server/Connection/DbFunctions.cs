@@ -39,17 +39,6 @@ namespace Server
             Console.WriteLine("Wrong user or Pwd!");
             return null;
         }
-        public static RequestContext MakeAnotherRequest(TcpClient client, NetworkStream stream)
-        {
-            var request = new RequestContext();
-            string message = "please try again";
-            // Translate the Message into ASCII.
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
-            // Send the message to the connected TcpServer. 
-            stream.Write(data, 0, data.Length);
-
-            return request;
-        }
 
         public static bool CheckToken(string username)
         {
@@ -119,7 +108,7 @@ namespace Server
             }
             catch
             {
-                Console.WriteLine("its not a  valide!");
+                Console.WriteLine("its not a valide email!");
                 return false;
             }
         }

@@ -6,8 +6,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using Npgsql;
-using Org.BouncyCastle.Asn1.Crmf;
 
 namespace Server
 {
@@ -21,7 +19,6 @@ namespace Server
             Console.Write("Waiting for a connection... ");
             TcpListener listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
-
 
             try
             {
@@ -135,8 +132,6 @@ namespace Server
                                     //brauch ich dann auch für später
                                     if (request.message.Trim('\n') == "StartTheBattle")
                                     {
-
-
                                         Console.WriteLine("Das battle beginnt in kürze");
                                         //statt den rand card muss ich jz die von einem user abfragen
                                         //request.cardDeck = BattleMaker.GetRandCards();

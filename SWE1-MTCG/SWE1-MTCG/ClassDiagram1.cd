@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Cards.BaseCards">
+    <Position X="7.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAACUAAAEAAAAAIAQCwAAAAEAAAAAAAAAgA=</HashCode>
+      <FileName>Cards\BaseCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE1_MTCG.Cards.Monster.MonsterCard">
+    <Position X="5.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cards\MonsterCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE1_MTCG.Cards.Zauber.SpellCard">
+    <Position X="9" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cards\SpellCard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE1_MTCG.CardShop">
+    <Position X="18.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAASAABEIAABAAAAQAAAAAAACAAACAAAEA=</HashCode>
+      <FileName>Shop\CardShop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE1_MTCG.BattleLogic">
+    <Position X="17" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEUAAAAAAAAAAAIAAAAIAAAAAIgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BattleLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE1_MTCG.Program">
+    <Position X="15.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="MyEnum.elementTypes">
+    <Position X="11.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cards\Enum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MyEnum.cardProperty">
+    <Position X="13" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAABgAAAAAAAAAIAAAgAAIIAAAAAAA=</HashCode>
+      <FileName>Cards\Enum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MyEnum.cardTypes">
+    <Position X="9.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAgAAAAAAAAA=</HashCode>
+      <FileName>Cards\Enum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NamesCollection.CardMainNamesMonster">
+    <Position X="13.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAEAAAAQAAEEIAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Shop\NamesCollection.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NamesCollection.CardAttributeInNameMonster">
+    <Position X="11.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAoAAAAACAAAAAAAAAAQAABAAEAQBAAAAA=</HashCode>
+      <FileName>Shop\NamesCollection.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NamesCollection.CardTypeForNameMonster">
+    <Position X="15" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAEAAAAAAABAFAgAAAAAAAAAACAAAgAAAAAAAAA=</HashCode>
+      <FileName>Shop\NamesCollection.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NamesCollection.CardMainNamesSpell">
+    <Position X="16.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAICAQAAAAAAAIAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Shop\NamesCollection.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

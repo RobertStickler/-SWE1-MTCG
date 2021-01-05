@@ -22,8 +22,6 @@ namespace Server
         }
         public static string AddToBattleQueue(List<DbUser> liste)
         {
-
-
             if ((liste.Count >= 2))
             {
                 string username = "";

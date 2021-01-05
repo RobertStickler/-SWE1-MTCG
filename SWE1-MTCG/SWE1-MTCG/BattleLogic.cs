@@ -97,7 +97,6 @@ namespace SWE1_MTCG
                     return defender;
                 case cardTypes.Monster when defender.getCardType() == cardTypes.Spell:
                     // monster attacks Spell
-                    // nur wenn nicht beide NORMAL sind
                     damageAttacker = GetEffektivDemage(attacker, defender);
                     damageDefender = GetEffektivDemage(defender, attacker);
 

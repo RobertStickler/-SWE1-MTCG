@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Server.DbFunctions">
+    <Position X="13.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABCEABAAAIBBACBAAAAgAIAAACgAAgABgAEAAAgEAAA=</HashCode>
+      <FileName>Connection\DbFunctions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.ServerClientConnection">
+    <Position X="4" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAICAAIAAACAgBAAAAAAAAAAAAAAABAQAAAAAAAA=</HashCode>
+      <FileName>Connection\ServerClientConnection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.ServerDbConnection">
+    <Position X="10.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAhAAAAAAIAAAAAABEAgEBACEgASAIDAQAAAAggBAA=</HashCode>
+      <FileName>Connection\ServerDbConnection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.BattleMaker">
+    <Position X="8" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAEIAgAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>BattleMaker.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.DbUser">
+    <Position X="11.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAoAAAAAAABAAAAgAAACAAAAAECCAA=</HashCode>
+      <FileName>DbUser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Server">
+    <Position X="1.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.TradingObject">
+    <Position X="8" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAQAAAAAAAAAAgAAAAAAAAAAAEAAAABAAAAAA=</HashCode>
+      <FileName>TradingObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE1_MTCG.MessageHandler">
+    <Position X="4" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Messages\MessageHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE1_MTCG.RequestContext">
+    <Position X="5.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAABAgAAAAAACQAAIAACACA=</HashCode>
+      <FileName>Messages\RequestContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
