@@ -135,8 +135,6 @@ namespace Server
                                     //brauch ich dann auch für später
                                     if (request.message.Trim('\n') == "StartTheBattle")
                                     {
-
-
                                         Console.WriteLine("Das battle beginnt in kürze");
                                         //statt den rand card muss ich jz die von einem user abfragen
                                         //request.cardDeck = BattleMaker.GetRandCards();

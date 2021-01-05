@@ -212,7 +212,6 @@ namespace Server
                     //error weiterreichen
                     Console.WriteLine("error bei execute");
                 }
-                
 
                 howManyCards--;
             }

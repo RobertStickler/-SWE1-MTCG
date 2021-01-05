@@ -7,12 +7,6 @@ namespace SWE1_MTCG
 {
     public class MessageHandler
     {
-        public void PrintUsage()
-        {
-            Console.WriteLine("Usage Example Insomnia:");
-            Console.WriteLine("<ip-Adress>:<Port></Path>");
-            Console.WriteLine("<For Example: \nlocalhost:6543/messages/1>");
-        }
         //###################################################################################
         public static RequestContext GetRequest(string data)
         {

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Server\Server.csproj" />
     <ProjectReference Include="..\SWE1-MTCG\SWE1_MTCG.csproj" />
   </ItemGroup>
 
