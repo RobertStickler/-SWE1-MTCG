@@ -234,13 +234,17 @@ namespace Server
             _databaseConnection.Close();
             return true;
         }
-        public BaseCards GetOneRandCardFromDb(string query, int cardsNumber, Random rand)
+        public BaseCards GetOneRandCardFromDb(string query, int cardsNumber, int rand)
         {
 
             BaseCards temp = null;
             NpgsqlCommand commandDatabase = new NpgsqlCommand(query, _databaseConnection);
             commandDatabase.CommandTimeout = 60;
+            int cardPlace = rand;
+            cardPlace = cardPlace % cardsNumber;
 
+            if (cardPlace == 0)
+                cardPlace = 1;
 
             int counter = 0;
             try
@@ -251,10 +255,9 @@ namespace Server
                 if (myReader.HasRows)
                 {
                     Console.WriteLine("Query Generated result:");
-                    int cardPlace = rand.Next(0, cardsNumber);
+                    
                     while (myReader.Read())
                     {
-
                         //Console.WriteLine(myReader.GetValue(0) + " - " + myReader.GetString(1) + " - " + myReader.GetString(2) + " - " + myReader.GetValue(3) + " - " + myReader.GetValue(4) + " - " + myReader.GetValue(5));
                         //nur zur übersicht
                         string cardUid = myReader.GetString(0);
@@ -289,6 +292,11 @@ namespace Server
             }
             _databaseConnection.Close();
             return temp;
+        }
+
+        public void CloseDbCon()
+        {
+            _databaseConnection.Close();
         }
         public int GetCardsCountFromDb()
         {

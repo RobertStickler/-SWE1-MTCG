@@ -13,10 +13,11 @@ namespace Server
         {
             List<BaseCards> cards4Battle1 = new List<BaseCards>();
 
+            /*cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
             cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
             cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
             cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
-            cards4Battle1.Add(CardShop.GetRandCard(Server.rand));
+            */
 
             return cards4Battle1;
         }

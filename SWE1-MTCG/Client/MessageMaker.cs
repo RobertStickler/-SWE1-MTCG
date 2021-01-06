@@ -131,7 +131,7 @@ namespace Client
             message += "Content-Type: " + content_type;
             message += "Content-Lenght: " + (temp_msg.Length).ToString() + "\n";
             message += "Host: " + request.ip + ":" + request.port.ToString();
-            message += "\nUserName: " + request.username;
+            message += "\nUserName: " + request.username + "_" + token;
             message += "\nPassword: " + request.pwd; ;
             message += "\nEmail: " + request.email; ;
             message += "\n\n" + temp_msg + "\n";
