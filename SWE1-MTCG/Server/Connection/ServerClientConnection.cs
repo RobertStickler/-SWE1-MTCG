@@ -11,6 +11,7 @@ namespace Server
 {
     public class ServerClientConnection
     {
+        public static Random rand = new Random();
         private static Mutex _mut = new Mutex();
         public static void StartServer()
         {
@@ -103,6 +104,9 @@ namespace Server
                                             {
                                                 string tempMessage = "YouAreRegistred\n";
                                                 ServerClientConnection.SendData(stream, tempMessage);
+                                                
+                                                userFromDb = DbFunctions.VerifyLogin(request, stream);
+                                                break;
                                             }
 
 

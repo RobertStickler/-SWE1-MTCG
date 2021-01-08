@@ -458,6 +458,7 @@ namespace Client
                 if (response.Trim('\n') == "YouAreRegistred")
                 {
                     response = "Succsessful";
+                    receiveData(client, stream);
                     return true;
                 }
             }

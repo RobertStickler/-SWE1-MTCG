@@ -64,6 +64,7 @@ namespace Server
                 Console.WriteLine("Wrong username");
                 return false;
             }
+            
 
             //chek if email already taken
             bool isValidEmail = ValidEmail(request.GetEmailFromDict());
@@ -118,13 +119,22 @@ namespace Server
             string username = request.GetUsernameFromDict();
             string password = request.GetPwdFromDict();
             string email = request.GetEmailFromDict();
+            string newUsername = "";
+                
+            string[] tempToken = username.Split(new char[] { '_' });
+
+            //falls auch _ im usernamen drinnen sind
+            for (int i = 0; i < tempToken.Length - 1; i++)
+            {
+                newUsername += tempToken[i];
+            }
 
             string uid = CreateUid(size);
 
             string temp = "Insert Into UserData\n " +
                            "(user_uid, userName, email, pwd, coins, elo_points)\n" +
                            "VALUES\n" +
-                           "('" + uid + "', '" + username + "', '" + email + "', '" + password + "', '" + 100 + "', '" + 100 + "')";
+                           "('" + uid + "', '" + newUsername + "', '" + email + "', '" + password + "', '" + 100 + "', '" + 100 + "')";
             return temp;
         }
         public static string MakeQueryGetCards(string username)
@@ -145,6 +155,9 @@ namespace Server
             ServerDbConnection dbConn = new ServerDbConnection();
             int cost = 25;
             string query = "SELECT * From cardcollection;";
+            int temprand = rand.Next(100000);
+
+            dbConn.CloseDbCon();
 
             if (userFromDb.coins >= cost)
             {
@@ -153,7 +166,8 @@ namespace Server
                 {
                     //welche karte bekommt man
                     int cardsNumber = dbConn.GetCardsCountFromDb();
-                    baseCard = dbConn.GetOneRandCardFromDb(query, cardsNumber, rand);
+                    int cardPlace = rand.Next(0, cardsNumber);
+                    baseCard = dbConn.GetOneRandCardFromDb(query, cardsNumber, cardPlace * temprand);
                     Console.WriteLine(baseCard.getCardName());
                     //karte in datenbank einfügen
                     dbConn.GetCardToUser(baseCard, userFromDb);
